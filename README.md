@@ -73,7 +73,8 @@ DDD에서 출연한 기본적인 용어들과 개념들을 통해 같이 혼합�
 
 그리고 후기를 남겨줄 것이다. 
 
-이러한 정보를 큼직한 그림으로 그려보겠다.
+## 그림 그리기
+위의 분석 내용을 큼직한 그림으로 그려보겠다.
 
 ![image](https://github.com/thelovemsg/design_pattern_msg_v1/assets/70519480/37bb6d26-de19-42de-bf9b-1166c4f6a64b)
 
