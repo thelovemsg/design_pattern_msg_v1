@@ -74,31 +74,9 @@ DDD에서 출연한 기본적인 용어들과 개념들을 통해 같이 혼합�
 그리고 후기를 남겨줄 것이다. 
 
 ## 그림 그리기
-위의 분석 내용을 큼직한 그림으로 그려보겠다.
 
-![image](https://github.com/thelovemsg/design_pattern_msg_v1/assets/70519480/37bb6d26-de19-42de-bf9b-1166c4f6a64b)
-
-필자가 대략적으로 그려보았다.
-
-내가 생각하기에 현재는 4개의 애그리거트로 나뉠 것 같다. 
-
-고객, 객실, 요금, 달력이 이것이다. 
-
-그러면 색을 칠해서 정리해보겠다.
-
-![image](https://github.com/thelovemsg/design_pattern_msg_v1/assets/70519480/baa8d81e-5bec-487c-be1d-f465a6866bbc)
-
-여기서 각각 애그리거트의 루트 애그리거트를 표시하면 다음과 같다. 
-
-![image](https://github.com/thelovemsg/design_pattern_msg_v1/assets/70519480/468df463-54c2-453b-bc01-479046872f3a)
-
-고객(Customer)의 경우에는 사실 어떤 정보가 더 있는지 몰라서 밸류인 Address를 넣어놨고, 진상 손님이라도 관리하지 않을까 해서 Black Consumer List를 만들었다.
-
-객실(Room)의 경우에는 당연 객실이 핵심일 것이다. 여기에 하위 도메인이라고 하면 Block정보들, 예약(Reservation) 정보들, 그리고 숙박(Stay) 정보가 있을 것이다. 
-
-아! 그림에 보이지 않는다고? 아직 이러한 사항을 논의해가며 만들어가는 과정이기 때문에 필요하거나 더 낫다고 생각되는 정보들을 업데이트 해주면 된다. 
-
-![image](https://github.com/thelovemsg/design_pattern_msg_v1/assets/70519480/8a5b4142-9894-4c31-b7eb-dc1bcbb22341)
+다이어그램? 이라고해야하나? 한 번 관계도를 그려보긴 했는데 이게... 괜찮은거 같기도 하고...? ㅎ...
+해당 정보는 Issue에 _애그리거트 및 다이어그램_ 에 올려놓앗다.
 
 다른 애그리거트간에 연결은 루트 애그리거트를 통해서 보통 통신을 한다고 하는데,
 
