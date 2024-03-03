@@ -1,5 +1,6 @@
 package org.reservation.system.utils;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -12,13 +13,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+import static lombok.AccessLevel.PRIVATE;
 
+@Component
+@NoArgsConstructor(access = PRIVATE)
 public class BadWordsUtils {
     private static Set<String> badWords;
 
     static {
-        try (InputStream inputStream = BadWordsUtils.class.getClassLoader().getResourceAsStream("bad_words.txt");
+        try (InputStream inputStream = BadWordsUtils.class.getClassLoader().getResourceAsStream("static/bad_words.txt");
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             badWords = reader.lines().collect(Collectors.toSet());
         } catch (IOException e) {

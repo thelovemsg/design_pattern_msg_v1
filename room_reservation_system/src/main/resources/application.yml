@@ -10,9 +10,12 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: create
-      naming:
     show-sql: true
     properties:
+      javax:
+        persistence:
+          validation:
+            mode=auto:
       hibernate.format_sql: true
       dialect: org.hibernate.dialect.MySQL8InnoDBDialect
 
