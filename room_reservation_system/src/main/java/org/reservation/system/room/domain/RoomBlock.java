@@ -1,9 +1,6 @@
 package org.reservation.system.room.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 
@@ -14,6 +11,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "T_ROOM_BLOCK")
 @Getter
+@AttributeOverride(name = "id", column = @Column(name = "room_blck_id"))
 public class RoomBlock extends BaseEntity {
 
     private String roomBlockType;
@@ -22,6 +20,6 @@ public class RoomBlock extends BaseEntity {
     private ZonedDateTime blockEndPlanDate;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "room_id")
     private Room room;
 }

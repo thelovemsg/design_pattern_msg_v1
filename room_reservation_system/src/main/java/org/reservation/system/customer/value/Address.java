@@ -1,4 +1,4 @@
-package org.reservation.system.customer.domain;
+package org.reservation.system.customer.value;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

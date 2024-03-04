@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Table(name = "T_ROOM")
 @Getter
-@AttributeOverride(name = "id", column = @Column(name = "id"))
+@AttributeOverride(name = "id", column = @Column(name = "room_id"))
 public class Room extends BaseEntity {
 
     private Integer roomNo;
@@ -18,7 +18,10 @@ public class Room extends BaseEntity {
     @Column(length = 300)
     private String remark;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
     private List<RoomBlock> roomBlockList;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.REMOVE)
+    private List<RoomInfoHistory> roomInfoHistoryList;
 
 }
