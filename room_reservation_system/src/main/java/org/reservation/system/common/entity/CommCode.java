@@ -9,7 +9,7 @@ import lombok.Getter;
 @Entity
 @Table(name = "T_COMM_CODE")
 @Getter
-@AttributeOverride(name = "id", column = @Column(name = "id"))
+@AttributeOverride(name = "id", column = @Column(name = "code_id"))
 public class CommCode extends BaseEntity{
 
     private String groupCode;

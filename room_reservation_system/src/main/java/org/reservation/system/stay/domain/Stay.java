@@ -1,19 +1,20 @@
-package org.reservation.system.reservation.domain;
+package org.reservation.system.stay.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
+import org.reservation.system.stay.enums.CheckinDivEnum;
 import org.reservation.system.stay.enums.StayStusEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
-@Table(name = "T_ROOM_RESERVATION_HISTORY")
-@AttributeOverride(name = "id", column = @Column(name = "rsvr_his_id"))
-public class ReservationHistory extends BaseEntity {
+public class Stay extends BaseEntity {
 
     private String guestName;
     private String guestTelno;
@@ -23,13 +24,16 @@ public class ReservationHistory extends BaseEntity {
     private String reserverTelno;
     private LocalDate enterRoomDate;
     private LocalDate leaveRoomDate;
+    private LocalDate checkInDate;
+    private LocalTime checkInTime;
+    private LocalTime checkOutDate;
+    private LocalTime checkOutTime;
     private BigDecimal discountAmount;
     private BigDecimal salesAmount;
     private BigDecimal productAmount;
     private BigDecimal taxAmount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rsvr_id")
-    private Reservation reservation;
+    @Enumerated(EnumType.STRING)
+    private CheckinDivEnum checkinDivCd;
 
 }

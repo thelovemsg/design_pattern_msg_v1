@@ -18,6 +18,7 @@ public class RoomBlock extends BaseEntity {
     private ZonedDateTime blockStartDate;
     private ZonedDateTime blockEndDate;
     private ZonedDateTime blockEndPlanDate;
+    private String remark;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "room_id")
