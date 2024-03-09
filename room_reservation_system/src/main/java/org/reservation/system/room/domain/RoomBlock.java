@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
@@ -20,7 +21,6 @@ public class RoomBlock extends BaseEntity {
     private ZonedDateTime blockEndPlanDate;
     private String remark;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "room_id")
-    private Room room;
+    @OneToMany(mappedBy = "roomBlock")
+    private List<RoomAndRoomBlock> roomAndRoomBlock;
 }

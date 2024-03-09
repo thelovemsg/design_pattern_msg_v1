@@ -16,7 +16,7 @@ public class Message extends BaseEntity {
     private String name;
     private String telNo;
     private ZonedDateTime sendDate;
-    private Boolean isSended;
+    private Boolean isSent;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.REMOVE)
     private List<MessageTag> messageTagList;
