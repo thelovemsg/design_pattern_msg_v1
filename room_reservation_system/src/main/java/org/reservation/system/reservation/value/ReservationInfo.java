@@ -2,8 +2,6 @@ package org.reservation.system.reservation.value;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
-import org.reservation.system.reservation.enums.FeeApplyCdEnum;
-import org.reservation.system.stay.enums.StayStusEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +11,7 @@ import java.time.LocalDate;
 public class ReservationInfo {
     private String guestName;
     private String guestTelno;
-    private StayStusEnum stayStatus;
+    private String stayStatus;
     private Integer stayDayCnt;
     private String reserverName;
     private String reserverTelno;
@@ -23,5 +21,5 @@ public class ReservationInfo {
     private BigDecimal salesAmount;
     private BigDecimal productAmount;
     private BigDecimal taxAmount;
-    private FeeApplyCdEnum feeApplyCd;
+    private String feeApplyCd;
 }

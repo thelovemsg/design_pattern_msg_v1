@@ -2,10 +2,7 @@ package org.reservation.system.fee.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import org.reservation.system.calander.enums.PeakDivCdEnum;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.enums.BasisCdEnum;
-import org.reservation.system.room.domain.Room;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,11 +17,8 @@ public class Fee extends BaseEntity {
     private String remark;
     private BigDecimal feeAmount;
 
-    @Enumerated(EnumType.STRING)
-    private BasisCdEnum basisCd;
-
-    @Enumerated(EnumType.STRING)
-    private PeakDivCdEnum peakDivCd;
+    private String basisCd;
+    private String peakDivCd;
 
     @OneToMany(mappedBy = "fee")
     private List<RoomFee> roomFee;

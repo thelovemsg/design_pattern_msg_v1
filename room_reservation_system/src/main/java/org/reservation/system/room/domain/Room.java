@@ -1,27 +1,29 @@
 package org.reservation.system.room.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.domain.Fee;
 import org.reservation.system.fee.domain.RoomFee;
 import org.reservation.system.reservation.domain.other.RoomReservation;
 import org.reservation.system.stay.domain.other.RoomStay;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
 @Table(name = "T_ROOM")
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "room_id"))
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Room extends BaseEntity {
 
     private Integer roomNo;
     private String roomName;
     private String roomType;
-    private String unit;
-    private BigDecimal measure;
     @Column(length = 300)
     private String remark;
 

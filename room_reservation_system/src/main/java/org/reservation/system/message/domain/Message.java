@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "T_MSG")
 @AttributeOverride(name = "id", column = @Column(name = "msg_id"))
 public class Message extends BaseEntity {
 

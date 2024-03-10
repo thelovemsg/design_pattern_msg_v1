@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "T_MSG_TMPL")
 @AttributeOverride(name = "id", column = @Column(name = "msg_tmpl_id"))
 public class MessageTemplate extends BaseEntity {
 

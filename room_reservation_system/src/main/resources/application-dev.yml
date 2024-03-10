@@ -1,15 +1,18 @@
 spring:
+  config:
+    activate:
+      on-profile: dev
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/reservation?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: root
     password: 1234
 
-
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     show-sql: true
     properties:
       javax:

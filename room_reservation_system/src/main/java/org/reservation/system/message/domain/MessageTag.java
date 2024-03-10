@@ -8,6 +8,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
+@Table(name = "T_MSG_TAG")
 @AttributeOverride(name = "id", column = @Column(name = "msg_tag_id"))
 public class MessageTag extends BaseEntity {
 

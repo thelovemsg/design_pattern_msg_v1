@@ -8,6 +8,7 @@ import org.reservation.system.stay.domain.Stay;
 
 @Entity
 @Getter
+@Table(name = "T_ROOM_STAY")
 @AttributeOverride(name = "id", column = @Column(name = "room_stay_id"))
 public class RoomStay extends BaseEntity {
 

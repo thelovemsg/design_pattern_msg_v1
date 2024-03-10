@@ -2,7 +2,6 @@ package org.reservation.system.common.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.ZonedDateTime;
 
 @Getter
-@Setter
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @SQLRestriction("deleted = false")

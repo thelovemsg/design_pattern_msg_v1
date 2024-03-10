@@ -3,21 +3,16 @@ package org.reservation.system.reservation.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
+import org.reservation.system.fee.domain.DailyFee;
 import org.reservation.system.message.domain.Message;
 import org.reservation.system.reservation.domain.other.RoomReservation;
-import org.reservation.system.reservation.enums.FeeApplyCdEnum;
-import org.reservation.system.reservation.enums.ReservationMethodEnum;
 import org.reservation.system.reservation.value.ReservationInfo;
-import org.reservation.system.stay.enums.StayStusEnum;
+import org.reservation.system.stay.domain.Stay;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
-import static jakarta.persistence.EnumType.STRING;
-
 @Entity
-@Table(name = "T_ROOM_RESERVATION")
+@Table(name = "T_RSV")
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "rsvr_id"))
 public class Reservation extends BaseEntity {
@@ -25,8 +20,7 @@ public class Reservation extends BaseEntity {
     @Embedded
     private ReservationInfo reservationInfo;
 
-    @Enumerated(STRING)
-    private ReservationMethodEnum reservationMethod;
+    private String reservationMethod;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
     private List<ReservationHistory> reservationHistoryList;
@@ -36,5 +30,11 @@ public class Reservation extends BaseEntity {
 
     @OneToMany(mappedBy = "reservation")
     private List<RoomReservation> roomReservationList;
+
+    @OneToMany(mappedBy = "reservation")
+    private List<DailyFee> dailyFeeList;
+
+    @OneToOne(mappedBy = "reservation", orphanRemoval = true)
+    private Stay stay;
 
 }
