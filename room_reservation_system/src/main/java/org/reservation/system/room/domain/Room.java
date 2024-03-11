@@ -21,7 +21,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Room extends BaseEntity {
 
+    @Column(unique=true)
     private Integer roomNo;
+    @Column(unique=true)
     private String roomName;
     private String roomType;
     @Column(length = 300)
