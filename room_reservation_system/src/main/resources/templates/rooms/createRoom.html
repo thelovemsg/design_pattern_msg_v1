@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Page</title>
+</head>
+<body>
+<h1>Create Room Test</h1>
+<form th:action="@{/rooms}" th:object="${roomCreationDto}" method="post">
+    <p>Room Number: <input type="text" th:field="*{roomNo}" />
+        <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}">Room Number Error</span>
+    </p>
+    <p>Room Name: <input type="text" th:field="*{roomName}" />
+        <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}">Room Name Error</span>
+    </p>
+    <p>Room Type: <input type="text" th:field="*{roomType}" />
+        <span th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}">Room Type Error</span>
+    </p>
+    <p>Remark: <textarea th:field="*{remark}"></textarea></p>
+    <p><button type="submit">Create</button></p>
+</form>
+<a th:href="@{/}">Return to home</a>
+</body>
+</html>
