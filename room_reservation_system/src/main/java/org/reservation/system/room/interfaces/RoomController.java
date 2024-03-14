@@ -24,12 +24,18 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
+    public String showRoomList(Model model) {
+        model.addAttribute("roomCreationDto", new RoomCreationDTO());
+        return "rooms/roomList.html";
+    }
+
+    @GetMapping("/rooms/new")
     public String showCreateRoomForm(Model model) {
         model.addAttribute("roomCreationDto", new RoomCreationDTO());
         return "rooms/createRoom";
     }
 
-    @PostMapping("/rooms")
+    @PostMapping("/rooms/new")
     public String createRoom(@ModelAttribute("roomCreationDto") @Valid RoomCreationDTO roomCreationDto, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "rooms/createRoom";

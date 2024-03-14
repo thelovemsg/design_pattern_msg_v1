@@ -1,14 +1,18 @@
-package org.reservation.system.reservation.value;
+package org.reservation.system.reservation.application.dto;
 
-import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Embeddable
 @Getter
-public class ReservationInfo {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ReservationCreationDTO {
     private String guestName;
     private String guestTelno;
     private String stayStatus;
@@ -21,6 +25,7 @@ public class ReservationInfo {
     private BigDecimal salesAmount;
     private BigDecimal productAmount;
     private BigDecimal taxAmount;
+    private String reservationMethod;
     private String vipDivCd;
     private String couponCode;
 }

@@ -1,10 +1,10 @@
-package org.reservation.system.fee.domain;
+package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.value.Money;
-import org.reservation.system.reservation.domain.Reservation;
+import org.reservation.system.reservation.domain.model.Reservation;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

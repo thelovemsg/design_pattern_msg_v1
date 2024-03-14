@@ -1,9 +1,9 @@
-package org.reservation.system.reservation.domain;
+package org.reservation.system.reservation.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.domain.DailyFee;
+import org.reservation.system.fee.domain.model.DailyFee;
 import org.reservation.system.message.domain.Message;
 import org.reservation.system.reservation.domain.other.RoomReservation;
 import org.reservation.system.reservation.value.ReservationInfo;

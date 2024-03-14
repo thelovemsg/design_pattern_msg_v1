@@ -1,4 +1,4 @@
-package org.reservation.system.fee.domain;
+package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,15 +17,9 @@ public class Fee extends BaseEntity {
     private String remark;
     private BigDecimal feeAmount;
 
-    private String basisCd;
-    private String peakDivCd;
-
     @OneToMany(mappedBy = "fee")
     private List<RoomFee> roomFee;
 
     @OneToMany(mappedBy = "fee")
     private List<DailyFee> dailyFeeList;
-
-
-
 }

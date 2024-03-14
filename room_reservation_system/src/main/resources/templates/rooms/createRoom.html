@@ -2,23 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <title>Example Page</title>
 </head>
 <body>
-<h1>Create Room Test</h1>
-<form th:action="@{/rooms}" th:object="${roomCreationDto}" method="post">
-    <p>Room Number: <input type="text" th:field="*{roomNo}" />
-        <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}">Room Number Error</span>
-    </p>
-    <p>Room Name: <input type="text" th:field="*{roomName}" />
-        <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}">Room Name Error</span>
-    </p>
-    <p>Room Type: <input type="text" th:field="*{roomType}" />
-        <span th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}">Room Type Error</span>
-    </p>
-    <p>Remark: <textarea th:field="*{remark}"></textarea></p>
-    <p><button type="submit">Create</button></p>
-</form>
-<a th:href="@{/}">Return to home</a>
+<div class="m-lg-2">
+    <h1>Create Room Test</h1>
+    <form th:action="@{/rooms}" th:object="${roomCreationDto}" method="post">
+        <fieldset>
+            <div class="w-50">
+                <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
+                <input type="text" class="form-control" id="roomNo" placeholder="Enter room number">
+                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room Number Error</span>
+            </div>
+            <div class="w-50">
+                <label for="roomName" class="form-label mt-4 col-sm-2">Room No</label>
+                <input type="text" class="form-control" th:field="*{roomName}" id="roomName"
+                       placeholder="Enter room name"/>
+                <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger">Room Name Error</span>
+            </div>
+            <div class="w-50">
+                <label for="roomType" class="form-label mt-4 col-sm-2">Room Type</label>
+                <input type="text" class="form-control" id="roomType" placeholder="Enter room type">
+                <span th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}" class="text-danger">Room Type Error</span>
+            </div>
+            <div class="w-50">
+                <label for="remark" class="form-label mt-4">remark</label>
+                <textarea th:field="*{remark}" class="form-control" id="remark" rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Create</button>
+        </fieldset>
+    </form>
+</div>
+<a th:href="@{/rooms}">Return to list</a>
 </body>
 </html>

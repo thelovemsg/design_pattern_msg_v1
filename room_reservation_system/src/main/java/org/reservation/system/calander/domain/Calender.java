@@ -15,7 +15,8 @@ import java.time.LocalDate;
 @AttributeOverride(name = "id", column = @Column(name = "clnd_id"))
 public class Calender extends BaseEntity {
     private String dayDivCd;
-    private String operationDivCd;
+    private String peakDivCd;
+    private String seasonDivCd;
     private LocalDate solarDate;
     private LocalDate lunarDate;
 }

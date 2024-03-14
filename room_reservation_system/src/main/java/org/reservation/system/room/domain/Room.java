@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.domain.RoomFee;
+import org.reservation.system.fee.domain.model.RoomFee;
 import org.reservation.system.reservation.domain.other.RoomReservation;
 import org.reservation.system.stay.domain.other.RoomStay;
 
