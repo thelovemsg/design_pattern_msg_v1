@@ -18,7 +18,7 @@ public class RoomCreationDTO {
     @NotBlank(message = "{room.name.notBlank}")
     private String roomName;
     @NotBlank(message = "{room.type.notBlank}")
-    private String roomType;
+    private Long roomTypeId;
     private String remark;
 
 }

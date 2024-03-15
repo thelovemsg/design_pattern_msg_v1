@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.reservation.domain.model.Reservation;
-import org.reservation.system.room.domain.Room;
+import org.reservation.system.room.domain.model.Room;
 
 @Entity
 @Getter

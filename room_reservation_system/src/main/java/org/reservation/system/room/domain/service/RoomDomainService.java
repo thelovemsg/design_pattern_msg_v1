@@ -1,6 +1,6 @@
 package org.reservation.system.room.domain.service;
 
-import org.reservation.system.room.domain.Room;
+import org.reservation.system.room.domain.model.Room;
 
 public class RoomDomainService {
 

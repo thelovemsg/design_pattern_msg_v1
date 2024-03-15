@@ -2,7 +2,7 @@ package org.reservation.system.room;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.reservation.system.room.domain.Room;
+import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;

@@ -1,4 +1,4 @@
-package org.reservation.system.room.domain;
+package org.reservation.system.room.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.domain.model.RoomFee;
 import org.reservation.system.reservation.domain.other.RoomReservation;
 import org.reservation.system.stay.domain.other.RoomStay;
 
@@ -25,7 +24,11 @@ public class Room extends BaseEntity {
     private Integer roomNo;
     @Column(unique=true)
     private String roomName;
-    private String roomType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
+
     @Column(length = 300)
     private String remark;
 
@@ -40,8 +43,5 @@ public class Room extends BaseEntity {
 
     @OneToMany(mappedBy = "room")
     private List<RoomStay> roomStayList;
-
-    @OneToMany(mappedBy = "room")
-    private List<RoomFee> roomFeeList;
 
 }

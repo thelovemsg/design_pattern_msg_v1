@@ -3,7 +3,7 @@ package org.reservation.system.stay.domain.other;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.room.domain.Room;
+import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.stay.domain.Stay;
 
 @Entity

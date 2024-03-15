@@ -3,6 +3,7 @@ package org.reservation.system.fee.domain.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
+import org.reservation.system.room.domain.model.RoomType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,9 +18,10 @@ public class Fee extends BaseEntity {
     private String remark;
     private BigDecimal feeAmount;
 
-    @OneToMany(mappedBy = "fee")
-    private List<RoomFee> roomFee;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
 
     @OneToMany(mappedBy = "fee")
-    private List<DailyFee> dailyFeeList;
+    private List<DailyRoomFee> dailyRoomFeeList;
 }

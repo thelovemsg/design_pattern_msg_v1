@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponse;
 import org.reservation.system.room.application.service.RoomService;
-import org.reservation.system.room.domain.Room;
+import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -35,7 +35,7 @@ class RoomServiceTest {
         RoomCreationDTO mockRoom = RoomCreationDTO.builder()
                 .roomNo(1001)
                 .roomName("객실1")
-                .roomType("D22")
+                .roomTypeId("D22")
                 .remark("객실생성1")
                 .build();
 
@@ -85,7 +85,7 @@ class RoomServiceTest {
         RoomCreationDTO newRoomDTO = RoomCreationDTO.builder()
                 .roomNo(1001) // 이미 존재하는 번호
                 .roomName("New Room")
-                .roomType("Type")
+                .roomTypeId("Type")
                 .remark("Remark")
                 .build();
 

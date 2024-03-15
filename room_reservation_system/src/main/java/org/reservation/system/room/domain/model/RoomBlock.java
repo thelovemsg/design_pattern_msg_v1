@@ -1,4 +1,4 @@
-package org.reservation.system.room.domain;
+package org.reservation.system.room.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,8 +6,6 @@ import org.reservation.system.common.entity.BaseEntity;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "T_ROOM_BLOCK")

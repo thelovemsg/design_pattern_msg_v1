@@ -10,10 +10,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "T_DLY_FEE")
+@Table(name = "T_DLY_ROOM_FEE")
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "dly_fee_id"))
-public class DailyFee extends BaseEntity {
+public class DailyRoomFee extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rsvr_id")
@@ -26,6 +26,7 @@ public class DailyFee extends BaseEntity {
     private LocalDate occurDate;
     private String currentCode;
     private LocalTime closeTime;
+
 
     @Embedded
     private Money money;

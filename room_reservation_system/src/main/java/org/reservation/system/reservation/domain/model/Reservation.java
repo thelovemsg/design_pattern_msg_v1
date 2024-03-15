@@ -3,7 +3,7 @@ package org.reservation.system.reservation.domain.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.domain.model.DailyFee;
+import org.reservation.system.fee.domain.model.DailyRoomFee;
 import org.reservation.system.message.domain.Message;
 import org.reservation.system.reservation.domain.other.RoomReservation;
 import org.reservation.system.reservation.value.ReservationInfo;
@@ -32,7 +32,7 @@ public class Reservation extends BaseEntity {
     private List<RoomReservation> roomReservationList;
 
     @OneToMany(mappedBy = "reservation")
-    private List<DailyFee> dailyFeeList;
+    private List<DailyRoomFee> dailyRoomFeeList;
 
     @OneToOne(mappedBy = "reservation", orphanRemoval = true)
     private Stay stay;

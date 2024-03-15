@@ -1,4 +1,4 @@
-package org.reservation.system.room.domain;
+package org.reservation.system.room.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
