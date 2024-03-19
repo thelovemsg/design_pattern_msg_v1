@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @Builder
 @RequiredArgsConstructor
-public class RoomResponse {
+public class RoomResponseDTO {
 
     private final Long id;
     private final Integer roomNo;

@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("dev")
-public class RoomTypeRepositoryTest {
+class RoomTypeRepositoryTest {
 
     @Autowired
     private RoomTypeRepository roomTypeRepository;
@@ -25,12 +25,12 @@ public class RoomTypeRepositoryTest {
     @Test
     void 객실유형생성() {
         final RoomType roomType = RoomType.builder()
-                .roomType("type")
+                .roomTypeCd("type")
                 .build();
 
         RoomType result = roomTypeRepository.save(roomType);
 
-        Assertions.assertThat(roomType.getRoomType()).isEqualTo(result.getRoomType());
+        Assertions.assertThat(roomType.getRoomTypeCd()).isEqualTo(result.getRoomTypeCd());
 
     }
 

@@ -1,26 +1,33 @@
-package org.reservation.system.room.application.service;
+package org.reservation.system.room.application.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
-import org.reservation.system.room.application.dto.RoomResponse;
+import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
 import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class RoomService {
+public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomTypeRepository roomTypeRepository;
 
+    @Override
     @Transactional
-    public RoomResponse createRoom(RoomCreationDTO dto) {
-        RoomType roomType = roomTypeRepository.findByRoomType(dto.getRoomType());
+    public RoomResponseDTO createRoom(RoomCreationDTO dto) {
+        RoomType roomType = roomTypeRepository.findByRoomTypeCd(dto.getRoomTypeCd());
         if(roomType == null)
             throw new EntityNotFoundException("RoomType not found");
 
@@ -32,12 +39,31 @@ public class RoomService {
         Room newRoom = Room.builder().roomNo(dto.getRoomNo()).roomName(dto.getRoomName()).roomType(roomType).remark(dto.getRemark()).build();
         Room savedRoom = roomRepository.save(newRoom);
 
-        return RoomResponse.builder()
+        return RoomResponseDTO.builder()
                 .id(savedRoom.getId())
                 .roomType(savedRoom.getRoomType().getRoomTypeCd())
                 .roomName(savedRoom.getRoomName())
                 .roomNo(savedRoom.getRoomNo())
                 .remark(savedRoom.getRemark())
                 .build();
+    }
+
+    @Override
+    public Page<RoomResponseDTO> selectRoomList(Pageable pageable) {
+        Page<Room> roomList = roomRepository.findAll(pageable);
+        List<RoomResponseDTO> roomResponseList = new ArrayList<>();
+
+        for (Room room : roomList) {
+            RoomResponseDTO responseDTO = RoomResponseDTO.builder()
+                    .roomNo(room.getRoomNo())
+                    .roomName(room.getRoomName())
+                    .roomType(room.getRoomType().getRoomTypeCd())
+                    .remark(room.getRemark())
+                    .build();
+
+            roomResponseList.add(responseDTO);
+        }
+
+        return new PageImpl<>(roomResponseList, pageable, roomList.getTotalElements());
     }
 }

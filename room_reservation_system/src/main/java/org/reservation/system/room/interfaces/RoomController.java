@@ -3,7 +3,10 @@ package org.reservation.system.room.interfaces;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
-import org.reservation.system.room.application.service.RoomService;
+import org.reservation.system.room.application.service.impl.RoomServiceImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class RoomController {
 
-    private RoomService roomService;
+    private RoomServiceImpl roomServiceImpl;
 
     @GetMapping("/testPage")
     public String showTestPage(Model model) {
@@ -24,7 +27,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public String showRoomList(Model model) {
+    public String showRoomList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("roomCreationDto", new RoomCreationDTO());
         return "rooms/roomList.html";
     }
@@ -40,7 +43,7 @@ public class RoomController {
         if (bindingResult.hasErrors()) {
             return "rooms/createRoom";
         }
-        roomService.createRoom(roomCreationDto);
+        roomServiceImpl.createRoom(roomCreationDto);
         return "redirect:/rooms";
     }
 }
