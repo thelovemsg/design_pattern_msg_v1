@@ -3,7 +3,6 @@ package org.reservation.system.room.application.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.reservation.system.room.domain.model.RoomType;
 
 @Getter
 @Builder
@@ -12,7 +11,7 @@ public class RoomResponse {
 
     private final Long id;
     private final Integer roomNo;
-    private final RoomType roomType;
+    private final String roomType;
     private final String roomName;
     private final String remark;
 }

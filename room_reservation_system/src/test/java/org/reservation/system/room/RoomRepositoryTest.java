@@ -3,7 +3,9 @@ package org.reservation.system.room;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.reservation.system.room.domain.model.Room;
+import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
+import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -18,6 +20,9 @@ class RoomRepositoryTest {
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private RoomTypeRepository roomTypeRepository;
+
     @Test
     void roomRepositoryIsNotNull() {
         Assertions.assertThat(roomRepository).isNotNull();
@@ -26,24 +31,27 @@ class RoomRepositoryTest {
     @Test
     void 객실정보등록() {
         // given
+        RoomType roomType = roomTypeRepository.save(new RoomType("A"));
 
         final Room room = Room.builder()
-                .roomNo(1001).roomType("D45").roomName("A11").remark("test").build();
+                .roomNo(1001).roomType(roomType).roomName("A11").remark("test").build();
         // when
         final Room result = roomRepository.save(room);
 
         // then
         Assertions.assertThat(result.getRoomNo()).isEqualTo(1001);
-        Assertions.assertThat(result.getRoomType()).isEqualTo("D45");
+        Assertions.assertThat(result.getRoomType()).isEqualTo(roomType);
         Assertions.assertThat(result.getRoomName()).isEqualTo("A11");
         Assertions.assertThat(result.getRemark()).isEqualTo("test");
     }
 
     @Test
     void 객실조회() {
+        final RoomType roomType = roomTypeRepository.save(new RoomType("A"));
+
         // given
         final Room room = Room.builder()
-                .roomNo(1001).roomType("D45").roomName("A11").remark("test").build();
+                .roomNo(1001).roomType(roomType).roomName("A11").remark("test").build();
 
         // when
         final Room result = roomRepository.save(room);
@@ -59,26 +67,30 @@ class RoomRepositoryTest {
     @Test
     void 이미있는객실() {
         // given
+        final RoomType roomType = roomTypeRepository.save(new RoomType("A"));
+
         final Room room1 = Room.builder()
-                .roomNo(1001).roomType("D45").roomName("A11").remark("test").build();
+                .roomNo(1001).roomType(roomType).roomName("A11").remark("test").build();
 
         // when
         final Room result = roomRepository.saveAndFlush(room1);
 
 //        // then
-        Assertions.assertThatThrownBy(() -> {
-            final Room room2 = Room.builder()
-                    .roomNo(1001).roomType("D45").roomName("A11").remark("test").build();
-            roomRepository.saveAndFlush(room2); // 두 번째 객체 저장 시도 후 즉시 flush
-        }).isInstanceOf(DataIntegrityViolationException.class);
+        final Room room2 = Room.builder()
+                .roomNo(1001).roomType(roomType).roomName("A11").remark("test").build();
+
+        Assertions.assertThatThrownBy(() -> roomRepository.saveAndFlush(room2))
+                .isInstanceOf(DataIntegrityViolationException.class);
 
     }
 
     @Test
-    public void 객실번호조회() {
+    void 객실번호조회() {
         // given
+        final RoomType roomType = roomTypeRepository.saveAndFlush(new RoomType("A"));
+
         final Room room1 = Room.builder()
-                .roomNo(1001).roomType("D45").roomName("A11").remark("test").build();
+                .roomNo(1001).roomType(roomType).roomName("A11").remark("test").build();
 
         // when
         final Room result = roomRepository.save(room1);

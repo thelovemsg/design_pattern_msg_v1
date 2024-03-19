@@ -20,9 +20,9 @@ public class RoomService {
 
     @Transactional
     public RoomResponse createRoom(RoomCreationDTO dto) {
-        RoomType roomType = roomTypeRepository
-                .findById(dto.getRoomTypeId())
-                .orElseThrow(() -> new EntityNotFoundException("RoomType not found"));
+        RoomType roomType = roomTypeRepository.findByRoomType(dto.getRoomType());
+        if(roomType == null)
+            throw new EntityNotFoundException("RoomType not found");
 
         final Room byRoomNo = roomRepository.findByRoomNo(dto.getRoomNo());
         if(byRoomNo != null) {
@@ -34,7 +34,7 @@ public class RoomService {
 
         return RoomResponse.builder()
                 .id(savedRoom.getId())
-                .roomType(savedRoom.getRoomType())
+                .roomType(savedRoom.getRoomType().getRoomTypeCd())
                 .roomName(savedRoom.getRoomName())
                 .roomNo(savedRoom.getRoomNo())
                 .remark(savedRoom.getRemark())

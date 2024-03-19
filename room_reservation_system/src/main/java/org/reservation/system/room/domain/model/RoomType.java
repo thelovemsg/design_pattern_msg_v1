@@ -9,6 +9,7 @@ import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.domain.model.Fee;
 
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "T_ROOM_TYPE")
@@ -19,11 +20,29 @@ import java.util.List;
 @Getter
 public class RoomType extends BaseEntity {
 
-    private String roomType;
+    private String roomTypeCd;
 
     @OneToMany(mappedBy = "roomType")
     private List<Room> roomList;
 
     @OneToMany(mappedBy = "roomType")
     private List<Fee> feeList;
+
+    public RoomType(String roomTypeCd) {
+        super();
+        this.roomTypeCd = roomTypeCd;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RoomType roomType1 = (RoomType) o;
+        return Objects.equals(roomTypeCd, roomType1.roomTypeCd);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomTypeCd, roomList, feeList);
+    }
 }

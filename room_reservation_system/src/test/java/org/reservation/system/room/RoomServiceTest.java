@@ -10,7 +10,9 @@ import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponse;
 import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.domain.model.Room;
+import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
+import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -22,6 +24,9 @@ class RoomServiceTest {
 
     @Mock
     private RoomRepository roomRepository;
+
+    @Mock
+    private RoomTypeRepository roomTypeRepository;
 
     @InjectMocks
     private RoomService roomService;
@@ -35,7 +40,7 @@ class RoomServiceTest {
         RoomCreationDTO mockRoom = RoomCreationDTO.builder()
                 .roomNo(1001)
                 .roomName("객실1")
-                .roomTypeId("D22")
+                .roomType("A")
                 .remark("객실생성1")
                 .build();
 
@@ -46,7 +51,7 @@ class RoomServiceTest {
 
         Room room = Room.builder()
                 .roomNo(1001)
-                .roomType("D22")
+                .roomType(new RoomType("A"))
                 .roomName("객실1")
                 .remark("객실생성1")
                 .build();
@@ -59,7 +64,7 @@ class RoomServiceTest {
 //        // then: 반환된 RoomResponse 객체의 내용을 검증합니다.
         Assertions.assertThat(result).isNotNull();
         Assertions.assertThat(result.getRoomNo()).isEqualTo(1001);
-        Assertions.assertThat(result.getRoomType()).isEqualTo("D22");
+        Assertions.assertThat(result.getRoomType()).isEqualTo("A");
         Assertions.assertThat(result.getRoomName()).isEqualTo("객실1");
         Assertions.assertThat(result.getRemark()).isEqualTo("객실생성1");
 //
@@ -71,21 +76,24 @@ class RoomServiceTest {
     @Test
     void 객실이이미존재() {
         // 이미 존재하는 객실 정보 모의
+        RoomType existingRoomType = new RoomType("A");
+
         Room existingRoom = Room.builder()
                 .roomNo(1001)
                 .roomName("Existing Room")
-                .roomType("Type")
+                .roomType(existingRoomType)
                 .remark("Remark")
                 .build();
 
         // findByRoomNo 호출 시 이미 존재하는 Room 객체 반환
         when(roomRepository.findByRoomNo(1001)).thenReturn(existingRoom);
+        when(roomTypeRepository.findByRoomType("A")).thenReturn(existingRoomType);
 
         // RoomCreationDTO 준비
         RoomCreationDTO newRoomDTO = RoomCreationDTO.builder()
                 .roomNo(1001) // 이미 존재하는 번호
                 .roomName("New Room")
-                .roomTypeId("Type")
+                .roomType("A")
                 .remark("Remark")
                 .build();
 
@@ -96,6 +104,7 @@ class RoomServiceTest {
 
         // findByRoomNo가 호출되었는지 확인
         verify(roomRepository).findByRoomNo(1001);
+        verify(roomTypeRepository).findByRoomType("A");
 //
     }
 

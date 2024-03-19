@@ -42,9 +42,6 @@ class RoomControllerTest {
     void 객실생성실패_필수값누락() throws Exception {
         final String url = "/rooms/new";
 
-        // 필수 필드 중 일부를 누락한 요청 본문 생성
-        RoomCreationDTO roomCreationDTO = RoomCreationDTO.builder().roomName("test room").build();
-
         mockMvc.perform(post(url)
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("roomType","")
