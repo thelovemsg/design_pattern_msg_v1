@@ -1,4 +1,4 @@
-package org.reservation.system.room.application.service.impl;
+package org.reservation.system.room.application.service;
 
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;

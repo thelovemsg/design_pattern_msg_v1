@@ -2,7 +2,6 @@ package org.reservation.system.room;
 
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,24 +9,21 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
+import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.application.service.impl.RoomServiceImpl;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
 import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.given;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +38,7 @@ class RoomServiceImplTest {
     private RoomTypeRepository roomTypeRepository;
 
     @InjectMocks
-    private RoomServiceImpl roomServiceImpl;
+    private RoomServiceImpl roomService;
 
     @Test
     void 객실저장() {
@@ -72,7 +68,7 @@ class RoomServiceImplTest {
         when(roomRepository.save(any(Room.class))).thenReturn(room);
 //
 //        // when: 서비스 메소드를 호출합니다.
-        RoomResponseDTO result = roomServiceImpl.createRoom(mockRoom);
+        RoomResponseDTO result = roomService.createRoom(mockRoom);
 //
 //        // then: 반환된 RoomResponse 객체의 내용을 검증합니다.
         assertThat(result).isNotNull();
@@ -111,7 +107,7 @@ class RoomServiceImplTest {
                 .build();
 
         // createRoom 호출 시 예외가 발생하는지 검증
-        Assertions.assertThatThrownBy(() -> roomServiceImpl.createRoom(newRoomDTO))
+        Assertions.assertThatThrownBy(() -> roomService.createRoom(newRoomDTO))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("ROOM_ALREADY_EXIST");
 
@@ -130,7 +126,7 @@ class RoomServiceImplTest {
         Room build2 = Room.builder().roomNo(1001).roomName("test1").roomType(roomType).build();
         when(roomRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(build1, build2)));
 
-        Page<RoomResponseDTO> roomResponseDTOS = roomServiceImpl.selectRoomList(pageRequest);
+        Page<RoomResponseDTO> roomResponseDTOS = roomService.selectRoomList(pageRequest);
 
         assertThat(roomResponseDTOS).isNotNull();
         assertThat(roomResponseDTOS.getSize()).isEqualTo(3); // 페이지 당 크기 검증

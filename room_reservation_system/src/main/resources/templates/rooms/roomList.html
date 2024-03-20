@@ -10,28 +10,35 @@
     <h1>Room List</h1>
     <a th:href="@{/rooms/new}">Create New Room</a>
 </div>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Sequence</th>
+        <th>Room Name</th>
+        <th>Room Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="table-dark" th:each="room, iterStat: ${roomList}">
+        <td th:text="${iterStat.count + (roomList.number * roomList.size)}">1</td>
+        <td th:text="${room.roomName}">Room Name</td>
+        <td th:text="${room.roomType}">Room Type</td>
+    </tr>
+    </tbody>
+</table>
+
 <div>
     <ul class="pagination">
-        <li class="page-item disabled">
-            <a class="page-link" href="#">&laquo;</a>
+        <li th:if="${roomList.hasPrevious()}" th:class="${roomList.first ? 'disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/rooms(page=${roomList.number - 1}, size=${roomList.size})}">Previous</a>
         </li>
-        <li class="page-item active">
-            <a class="page-link" href="#">1</a>
+        <li th:each="pageNum : ${#numbers.sequence(roomList.number > 5 ? roomList.number - 5 : 0, roomList.totalPages > roomList.number + 5 ? roomList.number + 5 : roomList.totalPages - 1)}"
+            th:class="${pageNum == roomList.number ? 'active page-item' : 'page-item'}">
+            <a class="page-link" th:href="@{/rooms(page=${pageNum}, size=${roomList.size})}"
+               th:text="${pageNum + 1}">1</a>
         </li>
-        <li class="page-item">
-            <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">4</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">5</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">&raquo;</a>
+        <li th:if="${roomList.hasNext()}" th:class="${roomList.last ? 'disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/rooms(page=${roomList.number + 1}, size=${roomList.size})}">Next</a>
         </li>
     </ul>
 </div>

@@ -16,7 +16,7 @@
                 <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room Number Error</span>
             </div>
             <div class="w-50">
-                <label for="roomName" class="form-label mt-4 col-sm-2">Room No</label>
+                <label for="roomName" class="form-label mt-4 col-sm-2">Room Name</label>
                 <input type="text" class="form-control" th:field="*{roomName}" id="roomName"
                        placeholder="Enter room name"/>
                 <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger">Room Name Error</span>
@@ -24,7 +24,7 @@
             <div class="w-50">
                 <label for="roomType" class="form-label mt-4 col-sm-2">Room Type</label>
                 <input type="text" class="form-control" id="roomType" placeholder="Enter room type">
-                <span th:if="${#fields.hasErrors('roomType')}" th:errors="*{getRoomTypeId}" class="text-danger">Room Type Error</span>
+                <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
             </div>
             <div class="w-50">
                 <label for="remark" class="form-label mt-4">remark</label>

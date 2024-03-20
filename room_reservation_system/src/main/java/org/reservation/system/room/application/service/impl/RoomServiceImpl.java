@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
+import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
@@ -63,6 +64,31 @@ public class RoomServiceImpl implements RoomService {
 
             roomResponseList.add(responseDTO);
         }
+
+        RoomResponseDTO responseDTO = RoomResponseDTO.builder()
+                .roomNo(1001)
+                .roomName("test1")
+                .roomType("A")
+                .remark("test1")
+                .build();
+
+        RoomResponseDTO responseDTO2 = RoomResponseDTO.builder()
+                .roomNo(1002)
+                .roomName("test2")
+                .roomType("A")
+                .remark("test2")
+                .build();
+
+        RoomResponseDTO responseDTO3 = RoomResponseDTO.builder()
+                .roomNo(1003)
+                .roomName("test3")
+                .roomType("A")
+                .remark("test3")
+                .build();
+
+        roomResponseList.add(responseDTO);
+        roomResponseList.add(responseDTO2);
+        roomResponseList.add(responseDTO3);
 
         return new PageImpl<>(roomResponseList, pageable, roomList.getTotalElements());
     }

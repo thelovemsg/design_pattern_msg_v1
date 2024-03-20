@@ -3,7 +3,11 @@ package org.reservation.system.room.interfaces;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
-import org.reservation.system.room.application.service.impl.RoomServiceImpl;
+import org.reservation.system.room.application.dto.RoomResponseDTO;
+import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
+import org.reservation.system.room.application.service.RoomService;
+import org.reservation.system.room.application.service.RoomTypeService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -14,11 +18,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class RoomController {
 
-    private RoomServiceImpl roomServiceImpl;
+    private final RoomService roomService;
+    private final RoomTypeService roomTypeService;
 
     @GetMapping("/testPage")
     public String showTestPage(Model model) {
@@ -29,6 +36,16 @@ public class RoomController {
     @GetMapping("/rooms")
     public String showRoomList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("roomCreationDto", new RoomCreationDTO());
+        Page<RoomResponseDTO> roomList = roomService.selectRoomList(pageable);
+        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
+
+        roomTypeList.add(new RoomTypeResponseDTO("A"));
+        roomTypeList.add(new RoomTypeResponseDTO("B"));
+        roomTypeList.add(new RoomTypeResponseDTO("C"));
+
+        model.addAttribute("roomList", roomList);
+        model.addAttribute("roomTypeList", roomTypeList);
+
         return "rooms/roomList.html";
     }
 
@@ -43,7 +60,7 @@ public class RoomController {
         if (bindingResult.hasErrors()) {
             return "rooms/createRoom";
         }
-        roomServiceImpl.createRoom(roomCreationDto);
+        roomService.createRoom(roomCreationDto);
         return "redirect:/rooms";
     }
 }
