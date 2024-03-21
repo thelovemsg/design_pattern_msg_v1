@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.reservation.system.room.application.dto.RoomCreationDTO;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.impl.RoomServiceImpl;
@@ -46,7 +46,7 @@ class RoomServiceImplTest {
         lenient().doReturn(new Room()).when(roomRepository).save(any(Room.class));
 
 //        // save 메소드 호출 시 Room 객체를 반환하도록 설정합니다. 이 객체에는 RoomResponse 객체 생성에 필요한 모든 정보가 포함되어 있어야 합니다.
-        RoomCreationDTO mockRoom = RoomCreationDTO.builder()
+        RoomDTO mockRoom = RoomDTO.builder()
                 .roomNo(1001)
                 .roomName("객실1")
                 .roomTypeCd("A")
@@ -98,8 +98,8 @@ class RoomServiceImplTest {
         when(roomRepository.findByRoomNo(1001)).thenReturn(existingRoom);
         when(roomTypeRepository.findByRoomTypeCd("A")).thenReturn(existingRoomType);
 
-        // RoomCreationDTO 준비
-        RoomCreationDTO newRoomDTO = RoomCreationDTO.builder()
+        // RoomDTO 준비
+        RoomDTO newRoomDTO = RoomDTO.builder()
                 .roomNo(1001) // 이미 존재하는 번호
                 .roomName("New Room")
                 .roomTypeCd("A")

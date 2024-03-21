@@ -8,7 +8,8 @@
 <body>
 <div class="m-lg-2">
     <h1>Room List</h1>
-    <a th:href="@{/rooms/new}">Create New Room</a>
+    <a th:href="@{/rooms/type/new}">Create New Room Type</a>
+    <a class="m-lg-2" th:href="@{/rooms/new}">Create New Room</a>
 </div>
 <div class="m-3">
     <div class="w-75">
@@ -26,7 +27,7 @@
                         <option th:each="type : ${roomTypeList}"
                                 th:value="${type.roomTypeCd}"
                                 th:text="${type.roomTypeCd}"
-                                th:selected="${type.roomTypeCd == roomSearchDTO.roomType}">
+                                th:selected="${type.roomTypeCd == roomSearchDTO.roomTypeCd}">
                         </option>
                     </select>
                 </div>
@@ -59,7 +60,7 @@
         <tbody>
         <tr class="table-dark" th:each="room, iterStat: ${roomList}">
             <td th:text="${iterStat.count + (roomList.number * roomList.size)}">1</td>
-            <td th:text="${room.roomNo}">Room Number</td>
+            <td><a th:href="@{/rooms/update/{id}(id=${room.id})}" th:text="${room.roomNo}"></a></td>
             <td th:text="${room.roomName}">Room Name</td>
             <td th:text="${room.roomType}">Room Type</td>
             <td th:text="${room.remark}">Remark</td>

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.reservation.system.room.application.dto.RoomCreationDTO;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.interfaces.RoomController;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -50,9 +50,9 @@ class RoomControllerTest {
                         .param("roomName","")
                 )
                 .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrors("roomCreationDto", "roomNo")) // 모델에 특정 필드에 대한 오류가 있는지 확인
-                .andExpect(model().attributeHasFieldErrors("roomCreationDto", "roomName")) // 모델에 특정 필드에 대한 오류가 있는지 확인
-                .andExpect(model().attributeHasFieldErrors("roomCreationDto", "roomType")) // 모델에 특정 필드에 대한 오류가 있는지 확인
-                .andExpect(model().attributeErrorCount("roomCreationDto", 3)); // 오류 개수가 예상과 일치하는지 확인
+                .andExpect(model().attributeHasFieldErrors("RoomDTO", "roomNo")) // 모델에 특정 필드에 대한 오류가 있는지 확인
+                .andExpect(model().attributeHasFieldErrors("RoomDTO", "roomName")) // 모델에 특정 필드에 대한 오류가 있는지 확인
+                .andExpect(model().attributeHasFieldErrors("RoomDTO", "roomType")) // 모델에 특정 필드에 대한 오류가 있는지 확인
+                .andExpect(model().attributeErrorCount("RoomDTO", 3)); // 오류 개수가 예상과 일치하는지 확인
     }
 }

@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoomCreationDTO {
-
+public class RoomDTO {
+    private Long id;
     @NotNull(message = "{room.no.notBlank}")
     private Integer roomNo;
     @NotBlank(message = "{room.name.notBlank}")

@@ -3,7 +3,7 @@ package org.reservation.system.room.application.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.reservation.system.room.application.dto.RoomCreationDTO;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.RoomService;
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public RoomResponseDTO createRoom(RoomCreationDTO dto) {
+    public RoomResponseDTO createRoom(RoomDTO dto) {
         RoomType roomType = roomTypeRepository.findByRoomTypeCd(dto.getRoomTypeCd());
         if(roomType == null)
             throw new EntityNotFoundException("RoomType not found");
@@ -58,6 +57,7 @@ public class RoomServiceImpl implements RoomService {
         List<Room> roomList = queryRoomRepository.findWithComplexConditions(pageable, roomSearchDTO);
         List<RoomResponseDTO> roomResponseDTOs = roomList.stream()
                 .map(room -> RoomResponseDTO.builder()
+                        .id(room.getId())
                         .roomNo(room.getRoomNo())
                         .roomName(room.getRoomName())
                         .roomType(room.getRoomType().getRoomTypeCd())
@@ -69,5 +69,18 @@ public class RoomServiceImpl implements RoomService {
 
 
         return new PageImpl<>(roomResponseDTOs, pageable, total);
+    }
+
+    @Override
+    public RoomDTO selectRoomById(Long id) {
+        Room room = roomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
+
+        return RoomDTO.builder()
+                .id(room.getId())
+                .roomTypeCd(room.getRoomType().getRoomTypeCd())
+                .roomNo(room.getRoomNo())
+                .roomName(room.getRoomName())
+                .remark(room.getRemark())
+                .build();
     }
 }

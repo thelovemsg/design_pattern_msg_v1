@@ -26,7 +26,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     public List<Room> findWithComplexConditions(Pageable pageable, RoomSearchDTO roomSearchDTO) {
         return queryFactory.selectFrom(room)
                 .where(eqRoomNo(roomSearchDTO.getRoomNo())
-                        , eqRoomType(roomSearchDTO.getRoomType())
+                        , eqRoomType(roomSearchDTO.getRoomTypeCd())
                         , containRoomName(roomSearchDTO.getRoomName())
                         , containRemark(roomSearchDTO.getRemark()))
                 .offset(pageable.getOffset())
@@ -38,7 +38,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     public long countWithComplexConditions(RoomSearchDTO roomSearchDTO) {
         return queryFactory.selectFrom(room)
                 .where(eqRoomNo(roomSearchDTO.getRoomNo())
-                        , eqRoomType(roomSearchDTO.getRoomType())
+                        , eqRoomType(roomSearchDTO.getRoomTypeCd())
                         , containRoomName(roomSearchDTO.getRoomName())
                         , containRemark(roomSearchDTO.getRemark()))
                 .fetch().stream().count();
