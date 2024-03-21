@@ -10,27 +10,67 @@
     <h1>Room List</h1>
     <a th:href="@{/rooms/new}">Create New Room</a>
 </div>
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>Sequence</th>
-        <th>Room Name</th>
-        <th>Room Type</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="table-dark" th:each="room, iterStat: ${roomList}">
-        <td th:text="${iterStat.count + (roomList.number * roomList.size)}">1</td>
-        <td th:text="${room.roomName}">Room Name</td>
-        <td th:text="${room.roomType}">Room Type</td>
-    </tr>
-    </tbody>
-</table>
-
-<div>
-    <ul class="pagination">
+<div class="m-3">
+    <div class="w-75">
+        <form th:action="@{/rooms}" method="get">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="roomNo" class="col-form-label">Room No</label>
+                    <input type="text" id="roomNo" name="roomNo" th:value="${roomSearchDTO.roomNo}"
+                           class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <label for="roomType" class="col-form-label">Room Type</label>
+                    <select class="form-select" id="roomType" name="roomType">
+                        <option value="">All</option>
+                        <option th:each="type : ${roomTypeList}"
+                                th:value="${type.roomTypeCd}"
+                                th:text="${type.roomTypeCd}"
+                                th:selected="${type.roomTypeCd == roomSearchDTO.roomType}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="roomName" class="col-form-label">Room Name</label>
+                    <input type="text" id="roomName" name="roomName" th:value="${roomSearchDTO.roomName}"
+                           class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <label for="remark" class="col-form-label">Remark</label>
+                    <input type="text" name="remark" id="remark" th:value="${roomSearchDTO.remark}"
+                           class="form-control"/>
+                </div>
+                <div class="col-1 mt-lg-5">
+                    <button type="submit" class="btn btn-primary mb-3">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class="col-1">Sequence</th>
+            <th>Room Number</th>
+            <th>Room Name</th>
+            <th>Room Type</th>
+            <th class="col-4">Remark</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-dark" th:each="room, iterStat: ${roomList}">
+            <td th:text="${iterStat.count + (roomList.number * roomList.size)}">1</td>
+            <td th:text="${room.roomNo}">Room Number</td>
+            <td th:text="${room.roomName}">Room Name</td>
+            <td th:text="${room.roomType}">Room Type</td>
+            <td th:text="${room.remark}">Remark</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="fixed-bottom">
+    <ul class="pagination justify-content-center">
         <li th:if="${roomList.hasPrevious()}" th:class="${roomList.first ? 'disabled' : 'page-item'}">
-            <a class="page-link" th:href="@{/rooms(page=${roomList.number - 1}, size=${roomList.size})}">Previous</a>
+            <a class="page-link" th:href="@{/rooms(page=${roomList.number - 1}, size=${roomList.size}, roomNo=${roomSearchDTO.roomNo}, roomType=${roomSearchDTO.roomType}, roomName=${roomSearchDTO.roomName}, remark=${roomSearchDTO.remark})}">Previous</a>
         </li>
         <li th:each="pageNum : ${#numbers.sequence(roomList.number > 5 ? roomList.number - 5 : 0, roomList.totalPages > roomList.number + 5 ? roomList.number + 5 : roomList.totalPages - 1)}"
             th:class="${pageNum == roomList.number ? 'active page-item' : 'page-item'}">

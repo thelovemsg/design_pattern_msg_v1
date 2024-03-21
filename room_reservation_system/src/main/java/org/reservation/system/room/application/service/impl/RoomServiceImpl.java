@@ -5,9 +5,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
+import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
+import org.reservation.system.room.infrastructure.repository.QueryRoomRepository;
 import org.reservation.system.room.infrastructure.repository.RoomRepository;
 import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
 import org.springframework.data.domain.Page;
@@ -15,8 +17,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomTypeRepository roomTypeRepository;
+    private final QueryRoomRepository queryRoomRepository;
 
     @Override
     @Transactional
@@ -50,46 +53,21 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Page<RoomResponseDTO> selectRoomList(Pageable pageable) {
-        Page<Room> roomList = roomRepository.findAll(pageable);
-        List<RoomResponseDTO> roomResponseList = new ArrayList<>();
+    public Page<RoomResponseDTO> selectRoomList(Pageable pageable, RoomSearchDTO roomSearchDTO) {
 
-        for (Room room : roomList) {
-            RoomResponseDTO responseDTO = RoomResponseDTO.builder()
-                    .roomNo(room.getRoomNo())
-                    .roomName(room.getRoomName())
-                    .roomType(room.getRoomType().getRoomTypeCd())
-                    .remark(room.getRemark())
-                    .build();
+        List<Room> roomList = queryRoomRepository.findWithComplexConditions(pageable, roomSearchDTO);
+        List<RoomResponseDTO> roomResponseDTOs = roomList.stream()
+                .map(room -> RoomResponseDTO.builder()
+                        .roomNo(room.getRoomNo())
+                        .roomName(room.getRoomName())
+                        .roomType(room.getRoomType().getRoomTypeCd())
+                        .remark(room.getRemark())
+                        .build())
+                .toList();
 
-            roomResponseList.add(responseDTO);
-        }
+        long total = queryRoomRepository.countWithComplexConditions(roomSearchDTO);
 
-        RoomResponseDTO responseDTO = RoomResponseDTO.builder()
-                .roomNo(1001)
-                .roomName("test1")
-                .roomType("A")
-                .remark("test1")
-                .build();
 
-        RoomResponseDTO responseDTO2 = RoomResponseDTO.builder()
-                .roomNo(1002)
-                .roomName("test2")
-                .roomType("A")
-                .remark("test2")
-                .build();
-
-        RoomResponseDTO responseDTO3 = RoomResponseDTO.builder()
-                .roomNo(1003)
-                .roomName("test3")
-                .roomType("A")
-                .remark("test3")
-                .build();
-
-        roomResponseList.add(responseDTO);
-        roomResponseList.add(responseDTO2);
-        roomResponseList.add(responseDTO3);
-
-        return new PageImpl<>(roomResponseList, pageable, roomList.getTotalElements());
+        return new PageImpl<>(roomResponseDTOs, pageable, total);
     }
 }

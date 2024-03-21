@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
-import org.reservation.system.room.application.service.RoomService;
+import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.impl.RoomServiceImpl;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
@@ -126,7 +126,7 @@ class RoomServiceImplTest {
         Room build2 = Room.builder().roomNo(1001).roomName("test1").roomType(roomType).build();
         when(roomRepository.findAll(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(build1, build2)));
 
-        Page<RoomResponseDTO> roomResponseDTOS = roomService.selectRoomList(pageRequest);
+        Page<RoomResponseDTO> roomResponseDTOS = roomService.selectRoomList(pageRequest, new RoomSearchDTO());
 
         assertThat(roomResponseDTOS).isNotNull();
         assertThat(roomResponseDTOS.getSize()).isEqualTo(3); // 페이지 당 크기 검증

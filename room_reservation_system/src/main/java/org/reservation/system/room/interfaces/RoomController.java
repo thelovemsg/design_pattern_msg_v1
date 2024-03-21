@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomCreationDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
+import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.application.service.RoomTypeService;
@@ -34,14 +35,10 @@ public class RoomController {
     }
 
     @GetMapping("/rooms")
-    public String showRoomList(Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String showRoomList(@ModelAttribute("roomSearchDTO") RoomSearchDTO roomSearchDTO, Model model, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         model.addAttribute("roomCreationDto", new RoomCreationDTO());
-        Page<RoomResponseDTO> roomList = roomService.selectRoomList(pageable);
+        Page<RoomResponseDTO> roomList = roomService.selectRoomList(pageable, roomSearchDTO);
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
-
-        roomTypeList.add(new RoomTypeResponseDTO("A"));
-        roomTypeList.add(new RoomTypeResponseDTO("B"));
-        roomTypeList.add(new RoomTypeResponseDTO("C"));
 
         model.addAttribute("roomList", roomList);
         model.addAttribute("roomTypeList", roomTypeList);
