@@ -96,7 +96,7 @@ class RoomServiceImplTest {
 
         // findByRoomNo 호출 시 이미 존재하는 Room 객체 반환
         when(roomRepository.findByRoomNo(1001)).thenReturn(existingRoom);
-        when(roomTypeRepository.findByRoomTypeCd("A")).thenReturn(existingRoomType);
+        when(roomTypeRepository.findByRoomTypeCd("A").get()).thenReturn(existingRoomType);
 
         // RoomDTO 준비
         RoomDTO newRoomDTO = RoomDTO.builder()

@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Page<RoomResponseDTO> selectRoomList(Pageable pageable, RoomSearchDTO roomSearchDTO) {
 
-        List<Room> roomList = queryRoomRepository.findWithComplexConditions(pageable, roomSearchDTO);
+        List<Room> roomList = queryRoomRepository.findRoomWithComplexConditions(pageable, roomSearchDTO);
         List<RoomResponseDTO> roomResponseDTOs = roomList.stream()
                 .map(room -> RoomResponseDTO.builder()
                         .id(room.getId())
@@ -65,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
                         .build())
                 .toList();
 
-        long total = queryRoomRepository.countWithComplexConditions(roomSearchDTO);
+        long total = queryRoomRepository.countRoomWithComplexConditions(roomSearchDTO);
 
 
         return new PageImpl<>(roomResponseDTOs, pageable, total);

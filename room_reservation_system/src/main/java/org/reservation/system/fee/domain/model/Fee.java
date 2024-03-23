@@ -1,7 +1,10 @@
 package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.room.domain.model.RoomType;
 
@@ -14,6 +17,7 @@ import java.util.List;
 })
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "fee_id"))
+@NoArgsConstructor
 public class Fee extends BaseEntity {
     private String feeName;
     private Boolean isUsed;
@@ -26,4 +30,13 @@ public class Fee extends BaseEntity {
 
     @OneToMany(mappedBy = "fee")
     private List<DailyRoomFee> dailyRoomFeeList;
+
+    @Builder
+    public Fee(String feeName, Boolean isUsed, String remark, BigDecimal feeAmount, RoomType roomType) {
+        this.feeName = feeName;
+        this.isUsed = isUsed;
+        this.remark = remark;
+        this.feeAmount = feeAmount;
+        this.roomType = roomType;
+    }
 }

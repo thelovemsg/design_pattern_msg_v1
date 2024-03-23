@@ -12,7 +12,9 @@ import org.reservation.system.stay.domain.Stay;
 import java.util.List;
 
 @Entity
-@Table(name = "T_RSV")
+@Table(name = "T_RSV", indexes = {
+        @Index(name = "idx_rsvr_id", columnList = "rsvr_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "rsvr_id"))
 public class Reservation extends BaseEntity {

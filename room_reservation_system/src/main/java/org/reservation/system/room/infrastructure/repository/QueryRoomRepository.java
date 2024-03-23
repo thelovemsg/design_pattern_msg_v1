@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface QueryRoomRepository {
-    List<Room> findWithComplexConditions(Pageable pageable, RoomSearchDTO roomSearchDTO);
-    long countWithComplexConditions(RoomSearchDTO roomSearchDTO);
+    List<Room> findRoomWithComplexConditions(Pageable pageable, RoomSearchDTO roomSearchDTO);
+    long countRoomWithComplexConditions(RoomSearchDTO roomSearchDTO);
 }
