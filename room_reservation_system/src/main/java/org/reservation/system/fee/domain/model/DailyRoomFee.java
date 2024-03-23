@@ -10,7 +10,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "T_DLY_ROOM_FEE")
+@Table(name = "T_DLY_ROOM_FEE", indexes = {
+        @Index(name = "idx_dly_fee_id", columnList = "dly_fee_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "dly_fee_id"))
 public class DailyRoomFee extends BaseEntity {

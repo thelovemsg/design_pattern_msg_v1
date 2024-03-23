@@ -1,9 +1,6 @@
 package org.reservation.system.calander.domain;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 
@@ -11,7 +8,9 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Table(name = "T_CLND")
+@Table(name = "T_CLND", indexes = {
+        @Index(name = "idx_clnd_id", columnList = "clnd_id")
+})
 @AttributeOverride(name = "id", column = @Column(name = "clnd_id"))
 public class Calender extends BaseEntity {
     private String dayDivCd;

@@ -10,4 +10,5 @@ public interface RoomService {
     RoomResponseDTO createRoom(RoomDTO dto);
     Page<RoomResponseDTO> selectRoomList(Pageable pageable, RoomSearchDTO roomSearchDTO);
     RoomDTO selectRoomById(Long id);
+    RoomResponseDTO updateRoom(RoomDTO roomDTO);
 }

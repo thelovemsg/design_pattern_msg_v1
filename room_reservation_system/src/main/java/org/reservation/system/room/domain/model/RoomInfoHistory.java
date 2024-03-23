@@ -7,7 +7,9 @@ import org.reservation.system.common.entity.BaseEntity;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
-@Table(name = "T_ROOM_INFO_HIS")
+@Table(name = "T_ROOM_INFO_HIS", indexes = {
+        @Index(name = "idx_room_his_id", columnList = "room_his_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "room_his_id"))
 public class RoomInfoHistory extends BaseEntity {

@@ -11,7 +11,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "T_STAY")
+@Table(name = "T_STAY", indexes = {
+        @Index(name = "idx_stay_id", columnList = "stay_id")
+})
 @AttributeOverride(name = "id", column = @Column(name = "stay_id"))
 public class Stay extends BaseEntity {
 

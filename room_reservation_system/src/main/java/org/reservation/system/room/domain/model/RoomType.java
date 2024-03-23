@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "T_ROOM_TYPE")
+@Table(name = "T_ROOM_TYPE", indexes = {
+        @Index(name = "idx_room_type_id", columnList = "room_type_id")
+})
 @AttributeOverride(name = "id", column = @Column(name = "room_type_id"))
 @NoArgsConstructor
 @Builder

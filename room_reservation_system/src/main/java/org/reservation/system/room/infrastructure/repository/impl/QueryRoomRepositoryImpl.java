@@ -2,6 +2,7 @@ package org.reservation.system.room.infrastructure.repository.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.domain.model.Room;
@@ -56,7 +57,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
         if (roomTypeCd == null || roomTypeCd.equals("")) {
             return null;
         }
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomTypeCd);
+        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
 
         if (roomType == null) {
             return null;

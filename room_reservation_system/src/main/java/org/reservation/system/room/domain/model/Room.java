@@ -7,12 +7,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.reservation.domain.other.RoomReservation;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.stay.domain.other.RoomStay;
 
 import java.util.List;
 
 @Entity
-@Table(name = "T_ROOM")
+@Table(name = "T_ROOM", indexes = {
+        @Index(name = "idx_room_id", columnList = "room_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "room_id"))
 @Builder
@@ -44,4 +47,12 @@ public class Room extends BaseEntity {
     @OneToMany(mappedBy = "room")
     private List<RoomStay> roomStayList;
 
+    public void changeRoomInfo(RoomDTO roomDTO, RoomType findRoomType) {
+        roomName = roomDTO.getRoomName();
+        roomNo = roomDTO.getRoomNo();
+        remark = roomDTO.getRemark();
+        if(!getRoomType().equals(findRoomType)) {
+            roomType = findRoomType;
+        }
+    }
 }

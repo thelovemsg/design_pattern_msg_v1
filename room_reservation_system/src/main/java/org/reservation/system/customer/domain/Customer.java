@@ -10,7 +10,9 @@ import org.reservation.system.customer.value.Address;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "T_CUST")
+@Table(name = "T_CUST", indexes = {
+        @Index(name = "idx_cust_id", columnList = "cust_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "cust_id"))
 public class Customer extends BaseEntity {

@@ -7,7 +7,9 @@ import org.reservation.system.common.entity.BaseEntity;
 
 @Getter
 @Entity
-@Table(name = "T_STAY_HST")
+@Table(name = "T_STAY_HST", indexes = {
+        @Index(name = "idx_stay_hst_id", columnList = "stay_hst_id")
+})
 @AttributeOverride(name = "id", column = @Column(name = "stay_hst_id"))
 public class StayHistory extends BaseEntity {
 

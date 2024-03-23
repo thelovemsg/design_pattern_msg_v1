@@ -11,7 +11,7 @@ public class RoomResponseDTO {
 
     private final Long id;
     private final Integer roomNo;
-    private final String roomType;
+    private final String roomTypeCd;
     private final String roomName;
     private final String remark;
 }

@@ -2,12 +2,10 @@ package org.reservation.system.room.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,7 @@ public class RoomDTO {
     private Integer roomNo;
     @NotBlank(message = "{room.name.notBlank}")
     private String roomName;
-    @NotBlank(message = "{room.name.notBlank}")
+    @NotBlank(message = "{room.type.notBlank}")
     private String roomTypeCd;
     private String remark;
 

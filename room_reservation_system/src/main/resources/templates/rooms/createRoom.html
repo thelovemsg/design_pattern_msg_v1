@@ -8,11 +8,11 @@
 <body>
 <div class="m-lg-2">
     <h1>Create Room</h1>
-    <form th:action="@{/rooms}" th:object="${roomDTO}" method="post">
+    <form th:action="@{/rooms/new}" th:object="${roomDTO}" method="post">
         <fieldset>
             <div class="w-50">
                 <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
-                <input type="text" class="form-control" id="roomNo" placeholder="Enter room number">
+                <input type="text" class="form-control" th:field="*{roomNo}" id="roomNo" placeholder="Enter room number">
                 <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room Number Error</span>
             </div>
             <div class="w-50">
@@ -22,8 +22,9 @@
                 <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger">Room Name Error</span>
             </div>
             <div class="w-50">
-                <label for="roomType" class="form-label mt-4 col-sm-2">Room Type</label>
-                <select class="form-select" id="roomType" name="roomType">
+                <label for="roomTypeCd" class="form-label mt-4 col-sm-2">Room Type</label>
+                <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
+
                     <option value="">All</option>
                     <option th:each="type : ${roomTypeList}"
                             th:value="${type.roomTypeCd}"

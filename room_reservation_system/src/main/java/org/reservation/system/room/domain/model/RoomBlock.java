@@ -8,7 +8,9 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "T_ROOM_BLOCK")
+@Table(name = "T_ROOM_BLOCK", indexes = {
+        @Index(name = "idx_room_blck_id", columnList = "room_blck_id")
+})
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "room_blck_id"))
 public class RoomBlock extends BaseEntity {

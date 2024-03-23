@@ -54,7 +54,7 @@ class RoomServiceImplTest {
                 .build();
 
         RoomResponseDTO response = RoomResponseDTO.builder().roomNo(1001)
-                .roomType("D22")
+                .roomTypeCd("D22")
                 .roomName("객실1")
                 .remark("객실생성1").build();
 
@@ -73,7 +73,7 @@ class RoomServiceImplTest {
 //        // then: 반환된 RoomResponse 객체의 내용을 검증합니다.
         assertThat(result).isNotNull();
         assertThat(result.getRoomNo()).isEqualTo(1001);
-        assertThat(result.getRoomType()).isEqualTo("A");
+        assertThat(result.getRoomTypeCd()).isEqualTo("A");
         assertThat(result.getRoomName()).isEqualTo("객실1");
         assertThat(result.getRemark()).isEqualTo("객실생성1");
 //

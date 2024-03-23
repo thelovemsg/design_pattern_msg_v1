@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/update/{id}")
-    public String updateRoomForm(@PathVariable("id") Long id, Model model) {
+    public String getRoomUpdateForm(@PathVariable("id") Long id, Model model) {
         RoomDTO roomDTO = roomService.selectRoomById(id);
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
 
@@ -68,12 +69,32 @@ public class RoomController {
         return "rooms/updateRoom";
     }
 
-    @PostMapping("/rooms/new")
-    public String createRoom(@ModelAttribute("RoomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model) {
+    @PostMapping("/rooms/update/")
+    public String updateRoomInfo(@ModelAttribute("roomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
+        model.addAttribute("roomTypeList", roomTypeList);
+
         if (bindingResult.hasErrors()) {
+            return "rooms/updateRoom";
+        }
+        roomService.updateRoom(roomDTO);
+        model.addAttribute("roomDTO", roomDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
+
+        return "redirect:/rooms/update/" + roomDTO.getId();
+    }
+
+    @PostMapping("/rooms/new")
+    public String createRoom(@ModelAttribute("roomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
+        model.addAttribute("roomTypeList", roomTypeList);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roomDTO", roomDTO);
             return "rooms/createRoom";
         }
         roomService.createRoom(roomDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
         return "redirect:/rooms";
     }
 }

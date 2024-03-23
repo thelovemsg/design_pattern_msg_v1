@@ -3,6 +3,8 @@ package org.reservation.system.room.infrastructure.repository;
 import org.reservation.system.room.domain.model.RoomType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface RoomTypeRepository extends JpaRepository<RoomType, Long> {
-    RoomType findByRoomTypeCd(String roomTypeCd);
+    Optional<RoomType> findByRoomTypeCd(String roomTypeCd);
 }

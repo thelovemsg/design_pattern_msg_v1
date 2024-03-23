@@ -29,22 +29,22 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public RoomResponseDTO createRoom(RoomDTO dto) {
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(dto.getRoomTypeCd());
+    public RoomResponseDTO createRoom(RoomDTO roomDTO) {
+        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
         if(roomType == null)
             throw new EntityNotFoundException("RoomType not found");
 
-        final Room byRoomNo = roomRepository.findByRoomNo(dto.getRoomNo());
+        final Room byRoomNo = roomRepository.findByRoomNo(roomDTO.getRoomNo());
         if(byRoomNo != null) {
             throw new IllegalArgumentException("ROOM_ALREADY_EXIST!!!");
         }
 
-        Room newRoom = Room.builder().roomNo(dto.getRoomNo()).roomName(dto.getRoomName()).roomType(roomType).remark(dto.getRemark()).build();
+        Room newRoom = Room.builder().roomNo(roomDTO.getRoomNo()).roomName(roomDTO.getRoomName()).roomType(roomType).remark(roomDTO.getRemark()).build();
         Room savedRoom = roomRepository.save(newRoom);
 
         return RoomResponseDTO.builder()
                 .id(savedRoom.getId())
-                .roomType(savedRoom.getRoomType().getRoomTypeCd())
+                .roomTypeCd(savedRoom.getRoomType().getRoomTypeCd())
                 .roomName(savedRoom.getRoomName())
                 .roomNo(savedRoom.getRoomNo())
                 .remark(savedRoom.getRemark())
@@ -60,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
                         .id(room.getId())
                         .roomNo(room.getRoomNo())
                         .roomName(room.getRoomName())
-                        .roomType(room.getRoomType().getRoomTypeCd())
+                        .roomTypeCd(room.getRoomType().getRoomTypeCd())
                         .remark(room.getRemark())
                         .build())
                 .toList();
@@ -83,4 +83,22 @@ public class RoomServiceImpl implements RoomService {
                 .remark(room.getRemark())
                 .build();
     }
+
+    @Override
+    public RoomResponseDTO updateRoom(RoomDTO roomDTO) {
+        Room room = roomRepository.findById(roomDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + roomDTO.getId()));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
+        room.changeRoomInfo(roomDTO, roomType);
+
+        Room savedRoom = roomRepository.save(room);
+
+        return RoomResponseDTO.builder()
+                .id(room.getId())
+                .roomTypeCd(savedRoom.getRoomType().getRoomTypeCd())
+                .roomNo(room.getRoomNo())
+                .roomName(room.getRoomName())
+                .remark(room.getRemark())
+                .build();
+    }
+
 }
