@@ -11,6 +11,7 @@ import org.reservation.system.room.infrastructure.repository.QueryRoomRepository
 import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
@@ -54,9 +55,10 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     }
 
     private BooleanExpression eqRoomType(String roomTypeCd) {
-        if (roomTypeCd == null || roomTypeCd.equals("")) {
+        if (StringUtils.isEmpty(roomTypeCd)) {
             return null;
         }
+
         RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
 
         if (roomType == null) {
@@ -67,15 +69,15 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     }
 
     private BooleanExpression containRoomName(String roomName) {
-        if (roomName == null || roomName.equals("")) {
+        if (StringUtils.isEmpty(roomName)) {
             return null;
         }
 
-        return room.roomNo.stringValue().containsIgnoreCase(roomName);
+        return room.roomName.stringValue().containsIgnoreCase(roomName);
     }
 
     private BooleanExpression containRemark(String remark) {
-        if (remark == null || remark.equals("")) {
+        if (StringUtils.isEmpty(remark)) {
             return null;
         }
 

@@ -20,7 +20,7 @@ import static java.lang.Boolean.*;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ActiveProfiles("dev")
-public class FeeRepositoryTest {
+class FeeRepositoryTest {
 
     @Autowired
     private FeeRepository feeRepository;
@@ -28,8 +28,6 @@ public class FeeRepositoryTest {
     @Autowired
     private RoomTypeRepository roomTypeRepository;
 
-    @Autowired
-    private RoomRepository roomRepository;
 
     @Test
     void feeRepositoryInjectionIsNotNull() {

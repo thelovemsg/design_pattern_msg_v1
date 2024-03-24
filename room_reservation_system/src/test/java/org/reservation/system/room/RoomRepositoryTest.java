@@ -1,5 +1,6 @@
 package org.reservation.system.room;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.reservation.system.room.domain.model.Room;
@@ -101,7 +102,7 @@ class RoomRepositoryTest {
         // when
         final Room result = roomRepository.save(room1);
 
-        Room byRoomNo = roomRepository.findByRoomNo(1001);
+        Room byRoomNo = roomRepository.findByRoomNo(1001).orElseThrow( () -> new EntityNotFoundException("tes!"));
         Assertions.assertThat(result.getRoomNo()).isEqualTo(byRoomNo.getRoomNo());
         Assertions.assertThat(result.getRoomType()).isEqualTo(byRoomNo.getRoomType());
         Assertions.assertThat(result.getRoomName()).isEqualTo(byRoomNo.getRoomName());

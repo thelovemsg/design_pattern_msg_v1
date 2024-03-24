@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <title>Fee List</title>
+</head>
+<body>
+<div class="m-lg-2">
+    <h1>Fee List</h1>
+    <a th:href="@{/}">To Home</a>
+    <!--    <a th:href="@{/rooms/type/new}">Create New Room Type</a>-->
+    <!--    <a class="m-lg-2" th:href="@{/rooms/new}">Create New Room</a>-->
+</div>
+<div th:if="${successMessage}" class="alert alert-success w-25">
+    <p th:text="${successMessage}"></p>
+</div>
+<div class="m-3">
+    <div class="w-75">
+        <form th:action="@{/fees}" method="get">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="feeName" class="col-form-label">Fee Name</label>
+                    <input type="text" id="feeName" name="feeName" th:value="${feeSearchDTO.feeName}"
+                           class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <label for="minFeeAmount" class="form-label">Fee Min Amount</label>
+                    <input type="text" id="minFeeAmount" name="minFeeAmount" th:value="${feeSearchDTO.minFeeAmount}" class="form-control"/>
+                </div>
+                <div class="col-auto">
+                    <span class="form-label">~</span>
+                </div>
+                <div class="col-auto">
+                    <label for="maxFeeAmount" class="form-label">Fee Max Amount</label>
+                    <input type="text" id="maxFeeAmount" name="maxFeeAmount" th:value="${feeSearchDTO.maxFeeAmount}" class="form-control"/>
+                </div>
+            </div>
+        </form>
+        <div>
+            <!--            <div>-->
+            <!--                &lt;!&ndash; 시작 번호 &ndash;&gt;-->
+            <!--                <span th:text="${feeList.number * feeList.size + 1}"></span>-->
+            <!--                <span> ~ </span>-->
+            <!--                &lt;!&ndash; 끝 번호: 마지막 페이지 확인 &ndash;&gt;-->
+            <!--                <span th:with="endNumber=${(feeList.number + 1) * feeList.size}, finalEndNumber=${feeList.totalElements < endNumber ? roomList.totalElements : endNumber}"-->
+            <!--                      th:text="${finalEndNumber}"></span>-->
+            <!--                <span> / </span>-->
+            <!--                &lt;!&ndash; 전체 항목 수 &ndash;&gt;-->
+            <!--                <span th:text="${feeList.totalElements}"></span>-->
+            <!--            </div>-->
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class="col-1">Sequence</th>
+            <th>Fee Name</th>
+            <th>Room Type</th>
+            <th>Fee Amount</th>
+            <th class="col-4">Remark</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-dark" th:each="fee, iterStat: ${feeList}">
+            <td th:text="${iterStat.count + (feeList.number * feeList.size)}">1</td>
+            <!--            <td><a th:href="@{/rooms/update/{id}(id=${fee.id})}" th:text="${fee.feeName}"></a></td>-->
+            <td th:text="${feeList.feeName}">Room Name</td>
+            <td th:text="${feeList.roomTypeCd}">Room Type</td>
+            <td th:text="${feeList.remark}">Remark</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="fixed-bottom">
+    <ul class="pagination justify-content-center">
+        <li th:if="${feeList.hasPrevious()}" th:class="${feeList.first ? 'disabled' : 'page-item'}">
+            <!--            <a class="page-link" th:href="@{/fee(page=${feeList.number - 1}, size=${feeList.size}, feeName=${feeList.feeName}, roomType=${feeList.roomTypeCd}, roomName=${roomSearchDTO.roomName}, remark=${roomSearchDTO.remark})}">Previous</a>-->
+        </li>
+        <li th:each="pageNum : ${#numbers.sequence(feeList.number > 5 ? feeList.number - 5 : 0, feeList.totalPages > feeList.number + 5 ? feeList.number + 5 : feeList.totalPages - 1)}"
+            th:class="${pageNum == feeList.number ? 'active page-item' : 'page-item'}">
+            <a class="page-link" th:href="@{/fees(page=${pageNum}, size=${feeList.size})}"
+               th:text="${pageNum + 1}">1</a>
+        </li>
+        <li th:if="${feeList.hasNext()}" th:class="${feeList.last ? 'disabled' : 'page-item'}">
+            <a class="page-link" th:href="@{/rooms(page=${feeList.number + 1}, size=${feeList.size})}">Next</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

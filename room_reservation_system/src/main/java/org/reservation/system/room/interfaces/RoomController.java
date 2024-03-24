@@ -38,7 +38,6 @@ public class RoomController {
 
     @GetMapping("/rooms")
     public String showRoomList(@ModelAttribute("roomSearchDTO") RoomSearchDTO roomSearchDTO, Model model, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        model.addAttribute("RoomDTO", new RoomDTO());
         Page<RoomResponseDTO> roomList = roomService.selectRoomList(pageable, roomSearchDTO);
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
 

@@ -31,13 +31,11 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public RoomResponseDTO createRoom(RoomDTO roomDTO) {
         RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
-        if(roomType == null)
-            throw new EntityNotFoundException("RoomType not found");
 
-        final Room byRoomNo = roomRepository.findByRoomNo(roomDTO.getRoomNo());
-        if(byRoomNo != null) {
-            throw new IllegalArgumentException("ROOM_ALREADY_EXIST!!!");
-        }
+        roomRepository.findByRoomNo(roomDTO.getRoomNo())
+                .ifPresent(room -> {
+                    throw new IllegalArgumentException("Room number " + roomDTO.getRoomNo() + " already exists!");
+                });
 
         Room newRoom = Room.builder().roomNo(roomDTO.getRoomNo()).roomName(roomDTO.getRoomName()).roomType(roomType).remark(roomDTO.getRemark()).build();
         Room savedRoom = roomRepository.save(newRoom);
@@ -52,6 +50,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public Page<RoomResponseDTO> selectRoomList(Pageable pageable, RoomSearchDTO roomSearchDTO) {
 
         List<Room> roomList = queryRoomRepository.findRoomWithComplexConditions(pageable, roomSearchDTO);
@@ -67,11 +66,11 @@ public class RoomServiceImpl implements RoomService {
 
         long total = queryRoomRepository.countRoomWithComplexConditions(roomSearchDTO);
 
-
         return new PageImpl<>(roomResponseDTOs, pageable, total);
     }
 
     @Override
+    @Transactional
     public RoomDTO selectRoomById(Long id) {
         Room room = roomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
 
@@ -85,6 +84,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public RoomResponseDTO updateRoom(RoomDTO roomDTO) {
         Room room = roomRepository.findById(roomDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + roomDTO.getId()));
         RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
