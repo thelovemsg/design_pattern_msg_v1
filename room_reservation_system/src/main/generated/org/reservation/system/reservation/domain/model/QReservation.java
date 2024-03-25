@@ -52,7 +52,7 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final StringPath reservationMethod = createString("reservationMethod");
 
-    public final ListPath<org.reservation.system.reservation.domain.other.RoomReservation, org.reservation.system.reservation.domain.other.QRoomReservation> roomReservationList = this.<org.reservation.system.reservation.domain.other.RoomReservation, org.reservation.system.reservation.domain.other.QRoomReservation>createList("roomReservationList", org.reservation.system.reservation.domain.other.RoomReservation.class, org.reservation.system.reservation.domain.other.QRoomReservation.class, PathInits.DIRECT2);
+    public final ListPath<org.reservation.system.reservation.domain.model.other.RoomReservation, org.reservation.system.reservation.domain.model.other.QRoomReservation> roomReservationList = this.<org.reservation.system.reservation.domain.model.other.RoomReservation, org.reservation.system.reservation.domain.model.other.QRoomReservation>createList("roomReservationList", org.reservation.system.reservation.domain.model.other.RoomReservation.class, org.reservation.system.reservation.domain.model.other.QRoomReservation.class, PathInits.DIRECT2);
 
     public final org.reservation.system.stay.domain.QStay stay;
 

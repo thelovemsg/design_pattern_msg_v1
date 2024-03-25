@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.domain.model.DailyRoomFee;
 import org.reservation.system.message.domain.Message;
-import org.reservation.system.reservation.domain.other.RoomReservation;
+import org.reservation.system.reservation.domain.model.other.RoomReservation;
 import org.reservation.system.reservation.value.ReservationInfo;
 import org.reservation.system.stay.domain.Stay;
 

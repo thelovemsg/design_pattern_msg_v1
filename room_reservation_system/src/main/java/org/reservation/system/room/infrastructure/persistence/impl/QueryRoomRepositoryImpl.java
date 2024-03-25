@@ -1,4 +1,4 @@
-package org.reservation.system.room.infrastructure.repository.impl;
+package org.reservation.system.room.infrastructure.persistence.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
-import org.reservation.system.room.infrastructure.repository.QueryRoomRepository;
-import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
+import org.reservation.system.room.domain.repository.RoomTypeRepository;
+import org.reservation.system.room.infrastructure.persistence.QueryRoomRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;

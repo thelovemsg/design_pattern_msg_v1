@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.impl.RoomTypeServiceImpl;
 import org.reservation.system.room.domain.model.RoomType;
-import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
+import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;

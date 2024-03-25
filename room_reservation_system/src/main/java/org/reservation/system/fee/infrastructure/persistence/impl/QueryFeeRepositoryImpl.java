@@ -1,4 +1,4 @@
-package org.reservation.system.fee.infrastructure.repository.impl;
+package org.reservation.system.fee.infrastructure.persistence.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -6,9 +6,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.domain.model.Fee;
-import org.reservation.system.fee.infrastructure.repository.QueryFeeRepository;
+import org.reservation.system.fee.infrastructure.persistence.QueryFeeRepository;
 import org.reservation.system.room.domain.model.RoomType;
-import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
+import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;

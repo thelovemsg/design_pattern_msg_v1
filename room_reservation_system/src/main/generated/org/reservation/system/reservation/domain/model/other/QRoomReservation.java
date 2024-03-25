@@ -1,4 +1,4 @@
-package org.reservation.system.reservation.domain.other;
+package org.reservation.system.reservation.domain.model.other;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -8,7 +8,6 @@ import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
-import org.reservation.system.reservation.domain.model.other.RoomReservation;
 
 
 /**
@@ -17,7 +16,7 @@ import org.reservation.system.reservation.domain.model.other.RoomReservation;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QRoomReservation extends EntityPathBase<RoomReservation> {
 
-    private static final long serialVersionUID = -891715362L;
+    private static final long serialVersionUID = -2029554791L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

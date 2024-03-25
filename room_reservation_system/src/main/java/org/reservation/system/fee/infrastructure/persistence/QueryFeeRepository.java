@@ -1,4 +1,4 @@
-package org.reservation.system.fee.infrastructure.repository;
+package org.reservation.system.fee.infrastructure.persistence;
 
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.domain.model.Fee;

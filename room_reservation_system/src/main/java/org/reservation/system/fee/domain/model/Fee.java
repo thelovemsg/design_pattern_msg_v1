@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
+import org.reservation.system.fee.application.dto.FeeDTO;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.domain.model.RoomType;
 
 import java.math.BigDecimal;
@@ -38,5 +40,14 @@ public class Fee extends BaseEntity {
         this.remark = remark;
         this.feeAmount = feeAmount;
         this.roomType = roomType;
+    }
+
+    public void changeFeeInfo(FeeDTO feeDTO, RoomType findRoomType) {
+        feeName = feeDTO.getFeeName();
+        feeAmount = feeDTO.getFeeAmount();
+        remark = feeDTO.getRemark();
+        if(!getRoomType().equals(findRoomType)) {
+            roomType = findRoomType;
+        }
     }
 }

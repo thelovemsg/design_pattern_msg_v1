@@ -52,7 +52,7 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final NumberPath<Integer> roomNo = createNumber("roomNo", Integer.class);
 
-    public final ListPath<org.reservation.system.reservation.domain.other.RoomReservation, org.reservation.system.reservation.domain.other.QRoomReservation> roomReservationList = this.<org.reservation.system.reservation.domain.other.RoomReservation, org.reservation.system.reservation.domain.other.QRoomReservation>createList("roomReservationList", org.reservation.system.reservation.domain.other.RoomReservation.class, org.reservation.system.reservation.domain.other.QRoomReservation.class, PathInits.DIRECT2);
+    public final ListPath<org.reservation.system.reservation.domain.model.other.RoomReservation, org.reservation.system.reservation.domain.model.other.QRoomReservation> roomReservationList = this.<org.reservation.system.reservation.domain.model.other.RoomReservation, org.reservation.system.reservation.domain.model.other.QRoomReservation>createList("roomReservationList", org.reservation.system.reservation.domain.model.other.RoomReservation.class, org.reservation.system.reservation.domain.model.other.QRoomReservation.class, PathInits.DIRECT2);
 
     public final ListPath<org.reservation.system.stay.domain.other.RoomStay, org.reservation.system.stay.domain.other.QRoomStay> roomStayList = this.<org.reservation.system.stay.domain.other.RoomStay, org.reservation.system.stay.domain.other.QRoomStay>createList("roomStayList", org.reservation.system.stay.domain.other.RoomStay.class, org.reservation.system.stay.domain.other.QRoomStay.class, PathInits.DIRECT2);
 

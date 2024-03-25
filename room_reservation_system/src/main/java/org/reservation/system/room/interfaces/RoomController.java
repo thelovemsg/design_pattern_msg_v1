@@ -68,6 +68,20 @@ public class RoomController {
         return "rooms/updateRoom";
     }
 
+    @PostMapping("/rooms/new")
+    public String createRoom(@ModelAttribute("roomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
+        model.addAttribute("roomTypeList", roomTypeList);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("roomDTO", roomDTO);
+            return "rooms/createRoom";
+        }
+        roomService.createRoom(roomDTO);
+        redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
+        return "redirect:/rooms";
+    }
+
     @PostMapping("/rooms/update/")
     public String updateRoomInfo(@ModelAttribute("roomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
@@ -81,19 +95,5 @@ public class RoomController {
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
         return "redirect:/rooms/update/" + roomDTO.getId();
-    }
-
-    @PostMapping("/rooms/new")
-    public String createRoom(@ModelAttribute("roomDTO") @Valid RoomDTO roomDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
-        model.addAttribute("roomTypeList", roomTypeList);
-
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("roomDTO", roomDTO);
-            return "rooms/createRoom";
-        }
-        roomService.createRoom(roomDTO);
-        redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
-        return "redirect:/rooms";
     }
 }

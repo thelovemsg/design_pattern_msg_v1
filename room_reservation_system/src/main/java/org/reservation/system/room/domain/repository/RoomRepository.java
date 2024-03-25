@@ -1,4 +1,4 @@
-package org.reservation.system.room.infrastructure.repository;
+package org.reservation.system.room.domain.repository;
 
 import org.reservation.system.room.domain.model.Room;
 import org.springframework.data.domain.Page;

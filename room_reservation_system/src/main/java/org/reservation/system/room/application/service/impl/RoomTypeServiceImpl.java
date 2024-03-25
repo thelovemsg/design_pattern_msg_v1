@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.RoomTypeService;
 import org.reservation.system.room.domain.model.RoomType;
-import org.reservation.system.room.infrastructure.repository.RoomTypeRepository;
+import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
