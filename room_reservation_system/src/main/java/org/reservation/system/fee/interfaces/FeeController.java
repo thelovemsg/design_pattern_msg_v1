@@ -6,7 +6,7 @@ import org.reservation.system.fee.application.dto.FeeDTO;
 import org.reservation.system.fee.application.dto.FeeResponseDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.service.FeeService;
-import org.reservation.system.room.application.dto.RoomDTO;
+import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.RoomTypeService;
 import org.springframework.data.domain.Page;
@@ -30,6 +30,7 @@ public class FeeController {
 
     private final FeeService feeService;
     private final RoomTypeService roomTypeService;
+    private final FeeRepository feeRepository;
 
     @GetMapping("/fees")
     public String showFeeList(@ModelAttribute("feeSearchDTO") FeeSearchDTO feeSearchDTO, Model model, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -37,6 +38,7 @@ public class FeeController {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
 
         model.addAttribute("feeList", feeResponseList);
+        model.addAttribute("feeSearchDTO", feeSearchDTO);
         model.addAttribute("roomTypeList", roomTypeList);
 
         return "/fees/feeList.html";
@@ -56,6 +58,12 @@ public class FeeController {
     public String createFee(@ModelAttribute("feeDTO") @Valid FeeDTO feeDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
+
+        feeRepository.findByFeeName(feeDTO.getFeeName()).ifPresent(fee -> {
+            if(!fee.getId().equals(feeDTO.getId()))
+                bindingResult.rejectValue("feeName", "error.feeDTO", "Fee name already exists!");
+        });
+
         if (bindingResult.hasErrors()) {
             return "fees/createFee";
         }
@@ -78,10 +86,15 @@ public class FeeController {
         return "/fees/updateFee";
     }
 
-    @PostMapping("/fees/update/")
+    @PostMapping("/fees/update")
     public String updateFee(@ModelAttribute("feeDTO") @Valid FeeDTO feeDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
+
+        feeRepository.findByFeeName(feeDTO.getFeeName()).ifPresent(fee -> {
+            if(!fee.getId().equals(feeDTO.getId()))
+                bindingResult.rejectValue("feeName", "error.feeDTO", "Fee name already exists!");
+        });
 
         if (bindingResult.hasErrors()) {
             return "fees/updateFee";
@@ -91,6 +104,6 @@ public class FeeController {
         model.addAttribute("feeDTO", feeDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "/fees/updateFee";
+        return "redirect:/fees/update/" + feeDTO.getId();
     }
 }

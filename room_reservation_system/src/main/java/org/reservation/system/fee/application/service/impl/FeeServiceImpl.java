@@ -16,9 +16,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 
@@ -29,6 +28,7 @@ public class FeeServiceImpl implements FeeService {
     private final FeeRepository feeRepository;
     private final RoomTypeRepository roomTypeRepository;
     private final QueryFeeRepository queryFeeRepository;
+    private static final DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
     @Override
     public Page<FeeResponseDTO> selectFeeList(Pageable pageable, FeeSearchDTO feeSearchDTO) {
@@ -36,10 +36,10 @@ public class FeeServiceImpl implements FeeService {
         List<FeeResponseDTO> feeResponseDTOList = feeWithComplexConditions.stream().map(fee -> FeeResponseDTO.builder()
                 .id(fee.getId())
                 .feeName(fee.getFeeName())
-                .feeAmount(fee.getFeeAmount())
+                .feeAmount(decimalFormat.format(fee.getFeeAmount()))
                 .roomTypeCd(fee.getRoomType().getRoomTypeCd())
                 .remark(fee.getRemark())
-                .build()).collect(Collectors.toList());
+                .build()).toList();
 
         long total = queryFeeRepository.feeCountWithComplexConditions(feeSearchDTO);
 
@@ -94,8 +94,9 @@ public class FeeServiceImpl implements FeeService {
         Fee fee = feeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Fee is not found by " + id));
 
         return FeeResponseDTO.builder()
+                .id(id)
                 .feeName(fee.getFeeName())
-                .feeAmount(fee.getFeeAmount())
+                .feeAmount(decimalFormat.format(fee.getFeeAmount()))
                 .remark(fee.getRemark())
                 .roomTypeCd(fee.getRoomType().getRoomTypeCd())
                 .build();

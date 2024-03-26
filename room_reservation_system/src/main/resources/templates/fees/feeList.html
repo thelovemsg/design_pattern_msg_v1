@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>Fee List</title>
 </head>
 <body>
@@ -26,7 +27,7 @@
                 <div class="col-auto">
                     <label for="minFeeAmount" class="form-label">Fee Min Amount</label>
                     <input type="text" id="minFeeAmount" name="minFeeAmount" th:value="${feeSearchDTO.minFeeAmount}"
-                           class="form-control"/>
+                           class="form-control number-format"/>
                 </div>
                 <div class="col-auto">
                     <span class="form-label">~</span>
@@ -34,10 +35,42 @@
                 <div class="col-auto">
                     <label for="maxFeeAmount" class="form-label">Fee Max Amount</label>
                     <input type="text" id="maxFeeAmount" name="maxFeeAmount" th:value="${feeSearchDTO.maxFeeAmount}"
-                           class="form-control"/>
+                           class="form-control number-format"/>
+                </div>
+                <div class="col-auto">
+                    <label for="roomTypeCd" class="col-form-label">Room Type</label>
+                    <select class="form-select" th:value="${feeSearchDTO.roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
+                        <option value="">All</option>
+                        <option th:each="type : ${roomTypeList}"
+                                th:value="${type.roomTypeCd}"
+                                th:text="${type.roomTypeCd}"
+                                th:selected="${type.roomTypeCd == feeSearchDTO.roomTypeCd}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <label for="remark" class="form-label">Remark</label>
+                    <input type="text" id="remark" name="remark" th:value="${feeSearchDTO.Remark}"
+                           class="form-control number-format"/>
+                </div>
+                <div class="col-1 mt-lg-5">
+                    <button type="submit" class="btn btn-primary mb-3">Search</button>
                 </div>
             </div>
         </form>
+        <div>
+            <div>
+                <!-- 시작 번호 -->
+                <span th:text="${feeList.number * feeList.size + 1}"></span>
+                <span> ~ </span>
+                <!-- 끝 번호: 마지막 페이지 확인 -->
+                <span th:with="endNumber=${(feeList.number + 1) * feeList.size}, finalEndNumber=${feeList.totalElements < endNumber ? feeList.totalElements : endNumber}"
+                      th:text="${finalEndNumber}"></span>
+                <span> / </span>
+                <!-- 전체 항목 수 -->
+                <span th:text="${feeList.totalElements}"></span>
+            </div>
+        </div>
     </div>
     <table class="table table-hover">
         <thead>
@@ -53,8 +86,8 @@
         <tr class="table-dark" th:each="fee, iterStat: ${feeList}">
             <td th:text="${iterStat.count + (feeList.number * feeList.size)}">1</td>
             <td><a th:href="@{/fees/update/{id}(id=${fee.id})}" th:text="${fee.feeName}"></a></td>
-            <td th:text="${fee.roomTypeCd}">Room Type</td>
-            <td th:text="${#numbers.formatDecimal(fee.feeAmount, 1, 0)}">Fee Amount</td>
+            <td th:text="${fee.roomTypeCd}" class="w-25">Room Type</td>
+            <td th:text="${fee.feeAmount}" class="text-end">Fee Amount</td>
             <td th:text="${fee.remark}">Remark</td>
         </tr>
         </tbody>
@@ -77,4 +110,6 @@
     </ul>
 </div>
 </body>
+<script>
+</script>
 </html>

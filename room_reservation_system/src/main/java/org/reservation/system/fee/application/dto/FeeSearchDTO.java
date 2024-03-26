@@ -12,5 +12,6 @@ public class FeeSearchDTO {
     private BigDecimal minFeeAmount;
     private BigDecimal maxFeeAmount;
     private String roomTypeCd;
+    private String remark;
 
 }

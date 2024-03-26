@@ -30,10 +30,19 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
         return jpaQueryFactory.selectFrom(fee)
                 .where(containFeeName(feeSearchDTO.getFeeName()),
                         eqRoomType(feeSearchDTO.getRoomTypeCd()),
-                        feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount()))
+                        feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount()),
+                        containsFeeRemark(feeSearchDTO.getRemark()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private BooleanExpression containsFeeRemark(String remark) {
+        if (StringUtils.isEmpty(remark)) {
+            return null;
+        }
+
+        return fee.remark.stringValue().containsIgnoreCase(remark);
     }
 
     @Override

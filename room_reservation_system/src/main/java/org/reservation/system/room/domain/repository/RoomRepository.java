@@ -9,5 +9,6 @@ import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByRoomNo(final Integer roomNo);
+    Optional<Room> findByRoomName(final String roomName);
     Page<Room> findAll(Pageable pageable);
 }

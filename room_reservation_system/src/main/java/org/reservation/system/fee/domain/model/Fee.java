@@ -21,6 +21,8 @@ import java.util.List;
 @AttributeOverride(name = "id", column = @Column(name = "fee_id"))
 @NoArgsConstructor
 public class Fee extends BaseEntity {
+
+    @Column(unique = true)
     private String feeName;
     private Boolean isUsed;
     private String remark;
