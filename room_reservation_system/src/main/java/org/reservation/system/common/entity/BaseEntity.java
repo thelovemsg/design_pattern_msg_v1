@@ -46,4 +46,8 @@ public abstract class BaseEntity {
         modifyDate = ZonedDateTime.now();
     }
 
+    public void delete() {
+        this.deleted = true;
+    }
+
 }

@@ -30,7 +30,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public RoomResponseDTO createRoom(RoomDTO roomDTO) {
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
 
         roomRepository.findByRoomNo(roomDTO.getRoomNo())
                 .ifPresent(room -> {
@@ -87,7 +87,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public RoomResponseDTO updateRoom(RoomDTO roomDTO) {
         Room room = roomRepository.findById(roomDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + roomDTO.getId()));
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
         room.changeRoomInfo(roomDTO, roomType);
 
         Room savedRoom = roomRepository.save(room);
@@ -99,6 +99,14 @@ public class RoomServiceImpl implements RoomService {
                 .roomName(room.getRoomName())
                 .remark(room.getRemark())
                 .build();
+    }
+
+    @Override
+    public void deleteRoom(Long id) {
+        Room room = roomRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
+        room.delete();
+        roomRepository.save(room);
     }
 
 }

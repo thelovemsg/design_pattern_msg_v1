@@ -15,6 +15,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
 import static org.reservation.system.room.domain.model.QRoom.room;
 
 @Repository
@@ -30,7 +31,8 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
                 .where(eqRoomNo(roomSearchDTO.getRoomNo())
                         , eqRoomType(roomSearchDTO.getRoomTypeCd())
                         , containRoomName(roomSearchDTO.getRoomName())
-                        , containRemark(roomSearchDTO.getRemark()))
+                        , containRemark(roomSearchDTO.getRemark())
+                        , room.deleted.eq(FALSE))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -42,7 +44,8 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
                 .where(eqRoomNo(roomSearchDTO.getRoomNo())
                         , eqRoomType(roomSearchDTO.getRoomTypeCd())
                         , containRoomName(roomSearchDTO.getRoomName())
-                        , containRemark(roomSearchDTO.getRemark()))
+                        , containRemark(roomSearchDTO.getRemark())
+                        , room.deleted.eq(FALSE))
                 .fetch().stream().count();
     }
 
@@ -59,7 +62,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
             return null;
         }
 
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
 
         if (roomType == null) {
             return null;

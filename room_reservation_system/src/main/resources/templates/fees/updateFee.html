@@ -44,9 +44,20 @@
             <button class="btn btn-primary mt-4" type="submit">Update</button>
         </fieldset>
     </form>
+    <form th:action="@{/fees/{id}(id=${feeDTO.id})}" method="post">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="submit" class="btn btn-danger mt-4" value="Delete" />
+    </form>
 </div>
 <a th:href="@{/fees}">Return To Fee List</a>
 </body>
 <script>
+    $(document).ready(function () {
+        $('#feeAmount').on('input', function () {
+            let value = $(this).val();
+            let numberWithCommas = value.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            $(this).val(numberWithCommas);
+        });
+    });
 </script>
 </html>

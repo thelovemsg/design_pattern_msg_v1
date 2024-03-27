@@ -12,6 +12,8 @@ import org.reservation.system.stay.domain.other.RoomStay;
 
 import java.util.List;
 
+import static java.lang.Boolean.TRUE;
+
 @Entity
 @Table(name = "T_ROOM", indexes = {
         @Index(name = "idx_room_id", columnList = "room_id")
@@ -55,4 +57,5 @@ public class Room extends BaseEntity {
             roomType = findRoomType;
         }
     }
+
 }

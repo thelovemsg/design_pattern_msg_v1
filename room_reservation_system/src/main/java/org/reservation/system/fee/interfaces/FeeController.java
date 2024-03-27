@@ -16,10 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -33,7 +30,7 @@ public class FeeController {
     private final FeeRepository feeRepository;
 
     @GetMapping("/fees")
-    public String showFeeList(@ModelAttribute("feeSearchDTO") FeeSearchDTO feeSearchDTO, Model model, @PageableDefault(size = 15, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String showFeeList(@ModelAttribute("feeSearchDTO") FeeSearchDTO feeSearchDTO, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<FeeResponseDTO> feeResponseList = feeService.selectFeeList(pageable, feeSearchDTO);
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
 
@@ -105,5 +102,12 @@ public class FeeController {
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
         return "redirect:/fees/update/" + feeDTO.getId();
+    }
+
+    @DeleteMapping("/fees/{id}")
+    public String deleteFee(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
+        feeService.deleteFee(id);
+        redirectAttributes.addFlashAttribute("successMessage", "삭제 성공!");
+        return "redirect:/fees";
     }
 }

@@ -48,7 +48,7 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public FeeResponseDTO createFee(FeeDTO feeDTO) {
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(feeDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + feeDTO.getRoomTypeCd()));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(feeDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + feeDTO.getRoomTypeCd()));
 
         feeRepository.findByFeeName(feeDTO.getFeeName()).
             ifPresent(fee -> {
@@ -75,7 +75,7 @@ public class FeeServiceImpl implements FeeService {
     @Override
     public FeeResponseDTO updateFee(FeeDTO feeDTO) {
         Fee fee = feeRepository.findById(feeDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Fee not found with id " + feeDTO.getId()));
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(feeDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + feeDTO.getRoomTypeCd()));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(feeDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + feeDTO.getRoomTypeCd()));
 
         fee.changeFeeInfo(feeDTO, roomType);
 
@@ -100,6 +100,14 @@ public class FeeServiceImpl implements FeeService {
                 .remark(fee.getRemark())
                 .roomTypeCd(fee.getRoomType().getRoomTypeCd())
                 .build();
+    }
+
+    @Override
+    public void deleteFee(Long id) {
+        Fee fee = feeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Fee not found with id " + id));
+        fee.delete();
+        feeRepository.save(fee);
     }
 
 }

@@ -111,5 +111,12 @@
 </div>
 </body>
 <script>
+    $(document).ready(function () {
+        $('#minFeeAmount, #maxFeeAmount').on('input', function () {
+            let value = $(this).val();
+            let numberWithCommas = value.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            $(this).val(numberWithCommas);
+        });
+    });
 </script>
 </html>

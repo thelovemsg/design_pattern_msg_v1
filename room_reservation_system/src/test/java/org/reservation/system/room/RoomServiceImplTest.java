@@ -79,7 +79,7 @@ class RoomServiceImplTest {
                 .build();
 //
         when(roomRepository.save(any(Room.class))).thenReturn(room);
-        when(roomTypeRepository.findByRoomTypeCd("A")).thenReturn(Optional.of(new RoomType("A")));
+        when(roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse("A")).thenReturn(Optional.of(new RoomType("A")));
 //
 //        // when: 서비스 메소드를 호출합니다.
         RoomResponseDTO result = roomService.createRoom(mockRoom);
@@ -103,7 +103,7 @@ class RoomServiceImplTest {
 
         // 목 객체 설정
         lenient().when(roomTypeRepository.save(any(RoomType.class))).thenReturn(newRoomType);
-        when(roomTypeRepository.findByRoomTypeCd("A")).thenReturn(Optional.of(newRoomType));
+        when(roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse("A")).thenReturn(Optional.of(newRoomType));
 
         Room existingRoom = Room.builder()
                 .roomNo(1001)
@@ -130,7 +130,7 @@ class RoomServiceImplTest {
 
         // findByRoomNo와 findByRoomTypeCd가 호출되었는지 확인
         verify(roomRepository).findByRoomNo(1001);
-        verify(roomTypeRepository).findByRoomTypeCd("A");
+        verify(roomTypeRepository).findByRoomTypeCdAndDeletedIsFalse("A");
     }
 
     @Test

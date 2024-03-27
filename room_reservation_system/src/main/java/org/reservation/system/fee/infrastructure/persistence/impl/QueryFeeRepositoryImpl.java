@@ -16,6 +16,7 @@ import org.thymeleaf.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.lang.Boolean.FALSE;
 import static org.reservation.system.fee.domain.model.QFee.fee;
 
 @Repository
@@ -31,7 +32,8 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
                 .where(containFeeName(feeSearchDTO.getFeeName()),
                         eqRoomType(feeSearchDTO.getRoomTypeCd()),
                         feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount()),
-                        containsFeeRemark(feeSearchDTO.getRemark()))
+                        containsFeeRemark(feeSearchDTO.getRemark()),
+                        fee.deleted.eq(FALSE))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -48,9 +50,10 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
     @Override
     public long feeCountWithComplexConditions(FeeSearchDTO feeSearchDTO) {
         return jpaQueryFactory.selectFrom(fee)
-                .where(containFeeName(feeSearchDTO.getFeeName()),
-                        eqRoomType(feeSearchDTO.getRoomTypeCd()),
-                        feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount()))
+                .where(containFeeName(feeSearchDTO.getFeeName())
+                     , eqRoomType(feeSearchDTO.getRoomTypeCd())
+                     , feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount())
+                     , fee.deleted.eq(FALSE))
                 .fetch().stream().count();
     }
 
@@ -67,7 +70,7 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
             return null;
         }
 
-        RoomType roomType = roomTypeRepository.findByRoomTypeCd(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
+        RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomTypeCd).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomTypeCd));
 
         if (roomType == null) {
             return null;

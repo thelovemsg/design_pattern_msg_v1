@@ -44,6 +44,10 @@
             <button class="btn btn-primary mt-4" type="submit">Update</button>
         </fieldset>
     </form>
+    <form th:action="@{/rooms/{id}(id=${roomDTO.id})}" method="post">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="submit" class="btn btn-danger mt-4" value="Delete" />
+    </form>
 </div>
 <a th:href="@{/rooms}">Return To Room List</a>
 </body>

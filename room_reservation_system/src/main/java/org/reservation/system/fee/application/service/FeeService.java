@@ -11,4 +11,5 @@ public interface FeeService {
     FeeResponseDTO createFee(FeeDTO feeDTO);
     FeeResponseDTO updateFee(FeeDTO feeDTO);
     FeeResponseDTO selectFeeById(Long id);
+    void deleteFee(Long id);
 }
