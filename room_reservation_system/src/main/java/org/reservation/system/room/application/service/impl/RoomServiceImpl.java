@@ -32,7 +32,7 @@ public class RoomServiceImpl implements RoomService {
     public RoomResponseDTO createRoom(RoomDTO roomDTO) {
         RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
 
-        roomRepository.findByRoomNo(roomDTO.getRoomNo())
+        roomRepository.findByRoomNoAndDeletedIsFalse(roomDTO.getRoomNo())
                 .ifPresent(room -> {
                     throw new IllegalArgumentException("Room number " + roomDTO.getRoomNo() + " already exists!");
                 });
@@ -72,7 +72,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public RoomDTO selectRoomById(Long id) {
-        Room room = roomRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
+        Room room = roomRepository.findByIdAndDeletedIsFalse(id).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
 
         return RoomDTO.builder()
                 .id(room.getId())
@@ -86,7 +86,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public RoomResponseDTO updateRoom(RoomDTO roomDTO) {
-        Room room = roomRepository.findById(roomDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + roomDTO.getId()));
+        Room room = roomRepository.findByIdAndDeletedIsFalse(roomDTO.getId()).orElseThrow(() -> new EntityNotFoundException("Room not found with id " + roomDTO.getId()));
         RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(roomDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + roomDTO.getRoomTypeCd()));
         room.changeRoomInfo(roomDTO, roomType);
 

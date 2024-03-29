@@ -20,5 +20,4 @@ public class RoomReservation extends BaseEntity {
     @JoinColumn(name = "rsvr_id")
     private Reservation reservation;
 
-
 }

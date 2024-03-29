@@ -72,11 +72,11 @@ public class RoomController {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
 
-        roomRepository.findByRoomNo(roomDTO.getRoomNo()).ifPresent(room -> {
+        roomRepository.findByRoomNoAndDeletedIsFalse(roomDTO.getRoomNo()).ifPresent(room -> {
             bindingResult.rejectValue("roomNo", "error.roomDTO", "Room no already exists!");
         });
 
-        roomRepository.findByRoomName(roomDTO.getRoomName()).ifPresent(room -> {
+        roomRepository.findByRoomNameAndDeletedIsFalse(roomDTO.getRoomName()).ifPresent(room -> {
             bindingResult.rejectValue("roomName", "error.roomDTO", "Room name already exists!");
         });
 
@@ -94,12 +94,12 @@ public class RoomController {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
 
-        roomRepository.findByRoomNo(roomDTO.getRoomNo()).ifPresent(room -> {
+        roomRepository.findByRoomNoAndDeletedIsFalse(roomDTO.getRoomNo()).ifPresent(room -> {
             if (!room.getId().equals(roomDTO.getId()))
                 bindingResult.rejectValue("roomNo", "error.roomDTO", "Room no already exists!");
         });
 
-        roomRepository.findByRoomName(roomDTO.getRoomName()).ifPresent(room -> {
+        roomRepository.findByRoomNameAndDeletedIsFalse(roomDTO.getRoomName()).ifPresent(room -> {
             if (!room.getId().equals(roomDTO.getId()))
                 bindingResult.rejectValue("roomName", "error.roomDTO", "Room name already exists!");
         });

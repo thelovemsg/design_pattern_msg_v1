@@ -101,7 +101,7 @@ class RoomRepositoryTest {
         // when
         final Room result = roomRepository.save(room1);
 
-        Room byRoomNo = roomRepository.findByRoomNo(1001).orElseThrow( () -> new EntityNotFoundException("tes!"));
+        Room byRoomNo = roomRepository.findByRoomNoAndDeletedIsFalse(1001).orElseThrow( () -> new EntityNotFoundException("tes!"));
         Assertions.assertThat(result.getRoomNo()).isEqualTo(byRoomNo.getRoomNo());
         Assertions.assertThat(result.getRoomType()).isEqualTo(byRoomNo.getRoomType());
         Assertions.assertThat(result.getRoomName()).isEqualTo(byRoomNo.getRoomName());
@@ -157,7 +157,7 @@ class RoomRepositoryTest {
 
         Pageable pageable = PageRequest.of(0, 2);
 
-        Page<Room> all = roomRepository.findAll(pageable);
+        Page<Room> all = roomRepository.findByDeletedIsFalse(pageable);
 
         Assertions.assertThat(all.getNumber()).isZero();
         Assertions.assertThat(all.getSize()).isEqualTo(2);

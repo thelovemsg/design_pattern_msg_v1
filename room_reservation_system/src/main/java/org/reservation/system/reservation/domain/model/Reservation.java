@@ -1,12 +1,15 @@
 package org.reservation.system.reservation.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.domain.model.DailyRoomFee;
 import org.reservation.system.message.domain.Message;
 import org.reservation.system.reservation.domain.model.other.RoomReservation;
-import org.reservation.system.reservation.value.ReservationInfo;
+import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.stay.domain.Stay;
 
 import java.util.List;
@@ -17,6 +20,9 @@ import java.util.List;
 })
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "rsvr_id"))
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation extends BaseEntity {
 
     @Embedded

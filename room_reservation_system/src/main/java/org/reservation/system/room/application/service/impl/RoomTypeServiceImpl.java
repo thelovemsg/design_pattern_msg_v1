@@ -18,7 +18,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     public List<RoomTypeResponseDTO> selectAllRoomType() {
-        List<RoomType> roomTypeList = roomTypeRepository.findAll();
+        List<RoomType> roomTypeList = roomTypeRepository.findByDeletedIsFalse();
         List<RoomTypeResponseDTO> roomTypeResponseDTOList = new ArrayList<>();
 
         for (RoomType roomType : roomTypeList) {

@@ -54,7 +54,7 @@ class RoomServiceImplTest {
 
     @Test
     void 객실저장() {
-        lenient().doReturn(null).when(roomRepository).findByRoomNo(1001);
+        lenient().doReturn(null).when(roomRepository).findByRoomNoAndDeletedIsFalse(1001);
         lenient().doReturn(new Room()).when(roomRepository).save(any(Room.class));
 
 
@@ -92,7 +92,7 @@ class RoomServiceImplTest {
         assertThat(result.getRemark()).isEqualTo("객실생성1");
 //
 //        // verify: roomRepository의 findByRoomNo와 save 메소드가 적절히 호출되었는지 확인합니다.
-        verify(roomRepository, times(1)).findByRoomNo(1001);
+        verify(roomRepository, times(1)).findByRoomNoAndDeletedIsFalse(1001);
         verify(roomRepository, times(1)).save(any(Room.class));
     }
 
@@ -113,7 +113,7 @@ class RoomServiceImplTest {
                 .build();
 
         // findByRoomNo 호출 시 이미 존재하는 Room 객체 반환
-        when(roomRepository.findByRoomNo(1001)).thenReturn(Optional.of(existingRoom)); // 수정: findByRoomNo는 Optional<Room>을 반환해야 합니다.
+        when(roomRepository.findByRoomNoAndDeletedIsFalse(1001)).thenReturn(Optional.of(existingRoom)); // 수정: findByRoomNo는 Optional<Room>을 반환해야 합니다.
 
         // RoomDTO 준비
         RoomDTO newRoomDTO = RoomDTO.builder()
@@ -129,7 +129,7 @@ class RoomServiceImplTest {
                 .hasMessageContaining("already exists!");
 
         // findByRoomNo와 findByRoomTypeCd가 호출되었는지 확인
-        verify(roomRepository).findByRoomNo(1001);
+        verify(roomRepository).findByRoomNoAndDeletedIsFalse(1001);
         verify(roomTypeRepository).findByRoomTypeCdAndDeletedIsFalse("A");
     }
 

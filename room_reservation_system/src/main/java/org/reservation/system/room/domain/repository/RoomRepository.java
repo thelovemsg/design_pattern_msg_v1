@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    Optional<Room> findByRoomNo(final Integer roomNo);
-    Optional<Room> findByRoomName(final String roomName);
-    Page<Room> findAll(Pageable pageable);
+    Optional<Room> findByRoomNoAndDeletedIsFalse(final Integer roomNo);
+    Optional<Room> findByRoomNameAndDeletedIsFalse(final String roomName);
+    Optional<Room> findByIdAndDeletedIsFalse(final Long id);
+    Page<Room> findByDeletedIsFalse(Pageable pageable);
+
 }
