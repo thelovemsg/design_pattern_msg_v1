@@ -46,7 +46,7 @@ public class QStay extends EntityPathBase<Stay> {
 
     public final org.reservation.system.reservation.domain.model.QReservation reservation;
 
-    public final org.reservation.system.reservation.value.QReservationInfo reservationInfo;
+    public final org.reservation.system.reservation.domain.model.value.QReservationInfo reservationInfo;
 
     public final ListPath<org.reservation.system.stay.domain.other.RoomStay, org.reservation.system.stay.domain.other.QRoomStay> roomStayList = this.<org.reservation.system.stay.domain.other.RoomStay, org.reservation.system.stay.domain.other.QRoomStay>createList("roomStayList", org.reservation.system.stay.domain.other.RoomStay.class, org.reservation.system.stay.domain.other.QRoomStay.class, PathInits.DIRECT2);
 
@@ -71,7 +71,7 @@ public class QStay extends EntityPathBase<Stay> {
     public QStay(Class<? extends Stay> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.reservation = inits.isInitialized("reservation") ? new org.reservation.system.reservation.domain.model.QReservation(forProperty("reservation"), inits.get("reservation")) : null;
-        this.reservationInfo = inits.isInitialized("reservationInfo") ? new org.reservation.system.reservation.value.QReservationInfo(forProperty("reservationInfo")) : null;
+        this.reservationInfo = inits.isInitialized("reservationInfo") ? new org.reservation.system.reservation.domain.model.value.QReservationInfo(forProperty("reservationInfo")) : null;
     }
 
 }

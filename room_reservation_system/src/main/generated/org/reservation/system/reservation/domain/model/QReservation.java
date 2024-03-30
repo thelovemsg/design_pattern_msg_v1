@@ -48,7 +48,7 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public final ListPath<ReservationHistory, QReservationHistory> reservationHistoryList = this.<ReservationHistory, QReservationHistory>createList("reservationHistoryList", ReservationHistory.class, QReservationHistory.class, PathInits.DIRECT2);
 
-    public final org.reservation.system.reservation.value.QReservationInfo reservationInfo;
+    public final org.reservation.system.reservation.domain.model.value.QReservationInfo reservationInfo;
 
     public final StringPath reservationMethod = createString("reservationMethod");
 
@@ -74,7 +74,7 @@ public class QReservation extends EntityPathBase<Reservation> {
 
     public QReservation(Class<? extends Reservation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.reservationInfo = inits.isInitialized("reservationInfo") ? new org.reservation.system.reservation.value.QReservationInfo(forProperty("reservationInfo")) : null;
+        this.reservationInfo = inits.isInitialized("reservationInfo") ? new org.reservation.system.reservation.domain.model.value.QReservationInfo(forProperty("reservationInfo")) : null;
         this.stay = inits.isInitialized("stay") ? new org.reservation.system.stay.domain.QStay(forProperty("stay"), inits.get("stay")) : null;
     }
 

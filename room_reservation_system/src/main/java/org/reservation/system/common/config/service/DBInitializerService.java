@@ -1,36 +1,31 @@
-package org.reservation.system.common.config.jpa;
+package org.reservation.system.common.config.service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.fee.domain.model.Fee;
-import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomRepository;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class InitDB {
+public class DBInitializerService {
+
 
     private final EntityManager em;
     private final RoomTypeRepository roomTypeRepository;
     private final RoomRepository roomRepository;
-
-    @PostConstruct
-    public void init() {
-        createRoomInfo();
-    }
 
     @Transactional
     public void createRoomInfo() {
