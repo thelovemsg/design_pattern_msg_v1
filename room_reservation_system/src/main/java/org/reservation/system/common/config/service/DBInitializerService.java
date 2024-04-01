@@ -1,8 +1,6 @@
 package org.reservation.system.common.config.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,24 +57,31 @@ public class DBInitializerService {
 
         }
 
-        for (int i = 0; i < 31; i++) {
-            RoomType targetRoomType = null;
-            if (i < 15) {
-                targetRoomType = roomTypeA;
-            } else if (i >= 15 && i <= 28) {
-                targetRoomType = roomTypeB;
-            } else {
-                targetRoomType = roomTypeC;
-            }
 
-            BigDecimal multiply = new BigDecimal(100000).multiply(new BigDecimal(i + 1)).setScale(0, RoundingMode.DOWN);
-            Fee newFee = Fee.builder()
-                    .feeAmount(multiply)
-                    .feeName(targetRoomType.getRoomTypeCd() + "_Fee_" + (i + 1))
-                    .roomType(targetRoomType)
-                    .remark("remark_" + (i + 1)).build();
-            em.persist(newFee);
-        }
+        BigDecimal feeAmountA = new BigDecimal(100000);
+        Fee newFeeA = Fee.builder()
+                .feeAmount(feeAmountA)
+                .feeName(roomTypeA.getRoomTypeCd() + "_Fee_A")
+                .roomType(roomTypeA)
+                .remark("remark_" + roomTypeA.getRoomTypeCd()).build();
+        em.persist(newFeeA);
+
+        BigDecimal feeAmountB = new BigDecimal(150000);
+        Fee newFeeB = Fee.builder()
+                .feeAmount(feeAmountB)
+                .feeName(roomTypeB.getRoomTypeCd() + "_Fee_B")
+                .roomType(roomTypeB)
+                .remark("remark_" + roomTypeB.getRoomTypeCd()).build();
+        em.persist(newFeeB);
+
+        BigDecimal feeAmountC = new BigDecimal(200000);
+        Fee newFeeC = Fee.builder()
+                .feeAmount(feeAmountC)
+                .feeName(roomTypeC.getRoomTypeCd() + "_Fee")
+                .roomType(roomTypeC)
+                .remark("remark_" + roomTypeC.getRoomTypeCd()).build();
+        em.persist(newFeeC);
+
     }
 
     public void createReservationInfo() {
@@ -87,13 +91,13 @@ public class DBInitializerService {
         RoomType roomType = null;
         Room room = null;
 
-        for(int i = 1; i <= 18; i++) {
+        for (int i = 1; i <= 18; i++) {
 
             LocalDate enterRoomDate = LocalDate.now();
             LocalDate leaveRoomDate = LocalDate.now().plusDays(i);
 
             ReservationInfo.builder()
-                    .reserverName("예약자_"+(i))
+                    .reserverName("예약자_" + (i))
                     .reserverTelno("010-1234-5678")
                     .enterRoomDate(enterRoomDate)
                     .leaveRoomDate(leaveRoomDate)
