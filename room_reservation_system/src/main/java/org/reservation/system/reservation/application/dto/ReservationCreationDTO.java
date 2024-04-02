@@ -17,6 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ReservationCreationDTO {
+    private Long roomId;
     private String guestName;
     private String guestTelno;
     private String stayStatus;

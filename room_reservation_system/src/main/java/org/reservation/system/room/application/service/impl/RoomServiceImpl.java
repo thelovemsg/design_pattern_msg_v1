@@ -8,6 +8,7 @@ import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.RoomService;
+import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
@@ -114,9 +115,17 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public boolean findIsRoomReserved(RoomReservationQuery roomReservationQuery) {
-        List<RoomVO> anyReservedRoom = roomDomainService.findAnyReservedRoom(roomReservationQuery);
-        return anyReservedRoom.isEmpty();
+    public void findIsRoomReservationPossible(RoomReservationQuery roomReservationQuery) {
+        List<RoomVO> reservedInfoRoomList = roomDomainService.findRoomIsReserved(roomReservationQuery);
+        if (!reservedInfoRoomList.isEmpty()) {
+            throw new IllegalArgumentException("이미 예약됌");
+        }
+
+        RoomBlockVO roomIsBlocked = roomDomainService.findRoomIsBlocked(roomReservationQuery);
+        if(roomIsBlocked != null) {
+            throw new IllegalArgumentException("객실이 블록처리됌");
+        }
+
     }
 
 }

@@ -7,9 +7,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
+import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
-import org.reservation.system.room.domain.model.Room;
-import org.reservation.system.room.domain.model.RoomType;
+import org.reservation.system.room.domain.model.*;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.reservation.system.room.infrastructure.persistence.QueryRoomRepository;
 import org.springframework.data.domain.Pageable;
@@ -17,12 +17,15 @@ import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static org.reservation.system.reservation.domain.model.QReservation.reservation;
 import static org.reservation.system.reservation.domain.other.QRoomReservation.roomReservation;
 import static org.reservation.system.room.domain.model.QRoom.room;
+import static org.reservation.system.room.domain.model.QRoomAndRoomBlock.*;
+import static org.reservation.system.room.domain.model.QRoomBlock.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -56,7 +59,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     }
 
     @Override
-    public List<RoomVO> findAnyReservedRoom(RoomReservationQuery roomReservationQuery) {
+    public List<RoomVO> findAnyReservedRoomByReservationInfo(RoomReservationQuery roomReservationQuery) {
         LocalDate enterRoomDate = roomReservationQuery.enterRoomDate();
         LocalDate leaveRoomDate = enterRoomDate.plusDays(roomReservationQuery.stayDayCnt() + 1);
         return queryFactory.select(Projections.constructor(RoomVO.class, room.roomNo, room.roomName, room.roomType, room.remark))
@@ -65,8 +68,27 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
                 .where(reservation.reservationInfo.enterRoomDate.before(leaveRoomDate)
                         .and(reservation.reservationInfo.leaveRoomDate.after(enterRoomDate))
                         .and(reservation.deleted.eq(FALSE))
-                        .and(room.roomNo.eq(roomReservationQuery.roomNo()))
+                        .and(room.id.eq(roomReservationQuery.roomId()))
                 ).fetch();
+    }
+
+    @Override
+    public RoomBlockVO findBlockRoomInfoByReservationInfo(RoomReservationQuery roomReservationQuery) {
+        LocalDate enterRoomDate = roomReservationQuery.enterRoomDate();
+        LocalDate exitRoomDate = roomReservationQuery.enterRoomDate().plusDays(roomReservationQuery.stayDayCnt());
+
+        return queryFactory.select(Projections.constructor(RoomBlockVO.class,
+                        roomAndRoomBlock.room.roomNo
+                        , roomAndRoomBlock.roomBlock.roomBlockType
+                        , roomAndRoomBlock.roomBlock.blockStartDate
+                        , roomAndRoomBlock.roomBlock.blockEndPlanDate
+                        , roomAndRoomBlock.roomBlock.blockEndDate))
+                .from(roomAndRoomBlock)
+                .join(roomAndRoomBlock.room, room)
+                .where(room.id.eq(roomReservationQuery.roomId())
+                        .and(roomAndRoomBlock.roomBlock.blockStartDate.loe(exitRoomDate.atStartOfDay(ZoneId.systemDefault())))
+                        .and(roomAndRoomBlock.roomBlock.blockEndDate.goe(enterRoomDate.atStartOfDay(ZoneId.systemDefault()))))
+                .fetchOne();
     }
 
     private BooleanExpression eqRoomNo(Integer roomNo) {

@@ -2,6 +2,7 @@ package org.reservation.system.room.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
+import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
 import org.reservation.system.room.domain.repository.RoomRepository;
 import org.reservation.system.room.domain.service.RoomDomainService;
@@ -18,7 +19,12 @@ public class RoomDomainServiceImpl implements RoomDomainService {
     private final QueryRoomRepository queryRoomRepository;
 
     @Override
-    public List<RoomVO> findAnyReservedRoom(RoomReservationQuery roomReservationQuery) {
-        return queryRoomRepository.findAnyReservedRoom(roomReservationQuery);
+    public List<RoomVO> findRoomIsReserved(RoomReservationQuery roomReservationQuery) {
+        return queryRoomRepository.findAnyReservedRoomByReservationInfo(roomReservationQuery);
+    }
+
+    @Override
+    public RoomBlockVO findRoomIsBlocked(RoomReservationQuery roomReservationQuery) {
+        return queryRoomRepository.findBlockRoomInfoByReservationInfo(roomReservationQuery);
     }
 }

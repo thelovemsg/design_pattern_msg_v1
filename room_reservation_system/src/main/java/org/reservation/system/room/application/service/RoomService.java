@@ -13,6 +13,5 @@ public interface RoomService {
     RoomDTO selectRoomById(Long id);
     void deleteRoom(Long id);
     RoomResponseDTO updateRoom(RoomDTO roomDTO);
-
-    boolean findIsRoomReserved(RoomReservationQuery roomReservationQuery);
+    void findIsRoomReservationPossible(RoomReservationQuery roomReservationQuery);
 }

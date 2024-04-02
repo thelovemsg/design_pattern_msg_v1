@@ -6,5 +6,5 @@ import org.reservation.system.fee.application.vo.FeeCreateVO;
 import java.util.List;
 
 public interface FeeDomainService {
-    List<DailyFeeDTO> createFeeDailyFee(FeeCreateVO feeCreateVO);
+    List<DailyFeeDTO> createDailyFee(FeeCreateVO feeCreateVO);
 }

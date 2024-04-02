@@ -117,10 +117,7 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public List<DailyFeeDTO> makeReservationFeeInfoList(FeeCreateVO feeCreateVO) {
-        // 먼저 해당 객실이 누가 사용 중인지 혹은 사용할 수 가 없는 상태인지 확인해서  사용이 안되면 반환을 해야한다.
-
-
-        return feeDomainService.createFeeDailyFee(feeCreateVO);
+        return feeDomainService.createDailyFee(feeCreateVO);
     }
 
 }

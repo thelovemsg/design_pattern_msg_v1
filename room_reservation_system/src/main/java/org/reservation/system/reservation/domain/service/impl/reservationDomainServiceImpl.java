@@ -13,6 +13,11 @@ public class reservationDomainServiceImpl implements ReservationDomainService {
     private final ReservationRepository reservationRepository;
 
     @Override
+    public void checkIfReservationPossible(ReservationCreationDTO creationDTO) {
+
+    }
+
+    @Override
     public ReservationCreationDTO makeReservationInfo(ReservationCreationDTO reservationCreationDTO) {
         //예약 정보 실제 저장
         return null;
