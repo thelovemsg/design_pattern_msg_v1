@@ -1,10 +1,13 @@
 package org.reservation.system.room.infrastructure.persistence.impl;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
+import org.reservation.system.room.application.vo.RoomVO;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
@@ -13,9 +16,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
+import static org.reservation.system.reservation.domain.model.QReservation.reservation;
+import static org.reservation.system.reservation.domain.other.QRoomReservation.roomReservation;
 import static org.reservation.system.room.domain.model.QRoom.room;
 
 @Repository
@@ -47,6 +53,20 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
                         , containRemark(roomSearchDTO.getRemark())
                         , room.deleted.eq(FALSE))
                 .fetch().stream().count();
+    }
+
+    @Override
+    public List<RoomVO> findAnyReservedRoom(RoomReservationQuery roomReservationQuery) {
+        LocalDate enterRoomDate = roomReservationQuery.enterRoomDate();
+        LocalDate leaveRoomDate = enterRoomDate.plusDays(roomReservationQuery.stayDayCnt() + 1);
+        return queryFactory.select(Projections.constructor(RoomVO.class, room.roomNo, room.roomName, room.roomType, room.remark))
+                .from(roomReservation)
+                .join(roomReservation.reservation, reservation)
+                .where(reservation.reservationInfo.enterRoomDate.before(leaveRoomDate)
+                        .and(reservation.reservationInfo.leaveRoomDate.after(enterRoomDate))
+                        .and(reservation.deleted.eq(FALSE))
+                        .and(room.roomNo.eq(roomReservationQuery.roomNo()))
+                ).fetch();
     }
 
     private BooleanExpression eqRoomNo(Integer roomNo) {

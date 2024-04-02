@@ -1,4 +1,4 @@
-package org.reservation.system.common.controller;
+package org.reservation.system.common.controller.error;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;

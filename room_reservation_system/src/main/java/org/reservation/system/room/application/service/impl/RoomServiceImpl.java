@@ -3,12 +3,15 @@ package org.reservation.system.room.application.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.service.RoomService;
+import org.reservation.system.room.application.vo.RoomVO;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
+import org.reservation.system.room.domain.service.RoomDomainService;
 import org.reservation.system.room.infrastructure.persistence.QueryRoomRepository;
 import org.reservation.system.room.domain.repository.RoomRepository;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
@@ -26,6 +29,7 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final RoomTypeRepository roomTypeRepository;
     private final QueryRoomRepository queryRoomRepository;
+    private final RoomDomainService roomDomainService;
 
     @Override
     @Transactional
@@ -107,6 +111,12 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new EntityNotFoundException("Room not found with id " + id));
         room.delete();
         roomRepository.save(room);
+    }
+
+    @Override
+    public boolean findIsRoomReserved(RoomReservationQuery roomReservationQuery) {
+        List<RoomVO> anyReservedRoom = roomDomainService.findAnyReservedRoom(roomReservationQuery);
+        return anyReservedRoom.isEmpty();
     }
 
 }

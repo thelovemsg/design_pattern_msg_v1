@@ -28,6 +28,7 @@ public class ReservationServiceImpl implements ReservationService {
 
         // TODO : 현재 객실이 예약이 가능한 상태인지 확인
         // 가능하지 않으면 안된다는 메시지와 함께 반환.
+        reservationDomainService.checkIfReservationPossible(creationDTO);
 
         //1. 예약 정보를 바탕으로 요금 정보를 생성한다.
         List<DailyFeeDTO> dailyFeeDTOS = feeService.makeReservationFeeInfoList(

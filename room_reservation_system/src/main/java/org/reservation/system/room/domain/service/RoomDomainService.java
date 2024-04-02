@@ -1,15 +1,10 @@
 package org.reservation.system.room.domain.service;
 
-import org.reservation.system.room.domain.model.Room;
+import org.reservation.system.reservation.application.vo.RoomReservationQuery;
+import org.reservation.system.room.application.vo.RoomVO;
 
-public class RoomDomainService {
+import java.util.List;
 
-    public void makeRoomAvailable(Room room) {
-
-    }
-
-    public void makeRoomUnavailable(Room room) {
-
-    }
-
+public interface RoomDomainService {
+    List<RoomVO> findAnyReservedRoom(RoomReservationQuery roomReservationQuery);
 }

@@ -1,5 +1,6 @@
 package org.reservation.system.room.application.service;
 
+import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
@@ -12,4 +13,6 @@ public interface RoomService {
     RoomDTO selectRoomById(Long id);
     void deleteRoom(Long id);
     RoomResponseDTO updateRoom(RoomDTO roomDTO);
+
+    boolean findIsRoomReserved(RoomReservationQuery roomReservationQuery);
 }
