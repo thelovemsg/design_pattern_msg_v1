@@ -1,15 +1,16 @@
 package org.reservation.system.common.api;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class ApiResponse<T> {
+public class ApiRequest<T> {
     private String status;
     private String message;
     private T data;
-
 }
