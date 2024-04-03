@@ -43,7 +43,7 @@ public class RoomController {
         model.addAttribute("roomList", roomList);
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "rooms/roomList.html";
+        return "pages/rooms/roomList.html";
     }
 
     @GetMapping("/rooms/new")

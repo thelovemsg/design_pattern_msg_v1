@@ -9,10 +9,10 @@
 <body>
 <div class="m-lg-2">
     <h1>Make Reservation</h1>
-    <form th:action="@{/reservation/new}" th:object="${reservationDTO}" method="post">
+    <form th:action="@{/templates/pages/reservation/new}" th:object="${reservationDTO}" method="post">
         여기 입력폼 생성 예정
     </form>
 </div>
-<a th:href="@{/fees}">Return to list</a>
+<a th:href="@{/templates/pages/fees}">Return to list</a>
 </body>
 </html>

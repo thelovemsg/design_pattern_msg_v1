@@ -5,7 +5,6 @@ import org.reservation.system.fee.application.dto.FeeDTO;
 import org.reservation.system.fee.application.dto.FeeResponseDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.vo.FeeCreateVO;
-import org.reservation.system.room.domain.model.RoomType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,4 +18,6 @@ public interface FeeService {
     void deleteFee(Long id);
 
     List<DailyFeeDTO> makeReservationFeeInfoList(FeeCreateVO feeCreateVO);
+
+    List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO);
 }

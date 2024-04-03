@@ -15,5 +15,6 @@ public class InitDBListener implements ApplicationListener<ApplicationReadyEvent
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         dbInitializerService.createRoomInfo();
+        dbInitializerService.createCalenderInfo();
     }
 }

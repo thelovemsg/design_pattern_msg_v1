@@ -32,6 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
         roomService.findIsRoomReservationPossible(new RoomReservationQuery(creationDTO.getRoomId(), creationDTO.getEnterRoomDate(), creationDTO.getStayDayCnt()));
 
         // 2. 예약 정보를 바탕으로 요금 정보를 생성한다.
+        // => 임시 요금이 있으니 그것을 통해서 그대로 생성한다.
         List<DailyFeeDTO> dailyFeeDTOS = feeService.makeReservationFeeInfoList(
                 FeeCreateVO.builder()
                         .roomNo(creationDTO.getRoomNo())

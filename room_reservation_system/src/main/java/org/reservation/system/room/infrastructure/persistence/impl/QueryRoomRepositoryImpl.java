@@ -9,7 +9,8 @@ import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
-import org.reservation.system.room.domain.model.*;
+import org.reservation.system.room.domain.model.Room;
+import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.reservation.system.room.infrastructure.persistence.QueryRoomRepository;
 import org.springframework.data.domain.Pageable;
@@ -24,8 +25,7 @@ import static java.lang.Boolean.FALSE;
 import static org.reservation.system.reservation.domain.model.QReservation.reservation;
 import static org.reservation.system.reservation.domain.other.QRoomReservation.roomReservation;
 import static org.reservation.system.room.domain.model.QRoom.room;
-import static org.reservation.system.room.domain.model.QRoomAndRoomBlock.*;
-import static org.reservation.system.room.domain.model.QRoomBlock.*;
+import static org.reservation.system.room.domain.model.QRoomAndRoomBlock.roomAndRoomBlock;
 
 @Repository
 @RequiredArgsConstructor

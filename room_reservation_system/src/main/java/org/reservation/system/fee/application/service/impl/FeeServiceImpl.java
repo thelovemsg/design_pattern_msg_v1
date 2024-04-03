@@ -120,4 +120,9 @@ public class FeeServiceImpl implements FeeService {
         return feeDomainService.createDailyFee(feeCreateVO);
     }
 
+    @Override
+    public List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO) {
+        return feeDomainService.createTempDailyFee(feeSearchDTO);
+    }
+
 }

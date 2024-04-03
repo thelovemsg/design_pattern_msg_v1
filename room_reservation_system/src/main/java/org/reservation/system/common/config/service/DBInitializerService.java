@@ -2,6 +2,7 @@ package org.reservation.system.common.config.service;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.calander.domain.Calender;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.room.domain.model.Room;
@@ -13,12 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DBInitializerService {
-
 
     private final EntityManager em;
     private final RoomTypeRepository roomTypeRepository;
@@ -82,6 +86,54 @@ public class DBInitializerService {
                 .remark("remark_" + roomTypeC.getRoomTypeCd()).build();
         em.persist(newFeeC);
 
+    }
+
+    @Transactional
+    public void createCalenderInfo() {
+        LocalDate startDate = LocalDate.of(2024, 01, 01);
+        LocalDate endDate = LocalDate.of(2025, 01, 01);
+
+        // 공휴일 설정
+        Map<LocalDate, String> holidays = new HashMap<>();
+        holidays.put(LocalDate.of(2024, 1, 1), "새해");
+        holidays.put(LocalDate.of(2024, 2, 9), "설날");
+        holidays.put(LocalDate.of(2024, 2, 10), "설날");
+        holidays.put(LocalDate.of(2024, 2, 11), "설날");
+        holidays.put(LocalDate.of(2024, 2, 12), "설날 휴일");
+        holidays.put(LocalDate.of(2024, 3, 1), "3·1 운동/삼일절");
+        holidays.put(LocalDate.of(2024, 5, 5), "어린이날");
+        holidays.put(LocalDate.of(2024, 5, 6), "어린이날 휴일");
+        holidays.put(LocalDate.of(2024, 5, 15), "부처님 오신 날");
+        holidays.put(LocalDate.of(2024, 6, 6), "현충일");
+        holidays.put(LocalDate.of(2024, 8, 15), "광복절");
+        holidays.put(LocalDate.of(2024, 9, 16), "추석");
+        holidays.put(LocalDate.of(2024, 9, 17), "추석");
+        holidays.put(LocalDate.of(2024, 9, 18), "추석");
+        holidays.put(LocalDate.of(2024, 10, 3), "개천절");
+        holidays.put(LocalDate.of(2024, 10, 9), "한글날");
+        holidays.put(LocalDate.of(2024, 12, 25), "크리스마스");
+
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            String holidayDivCd = holidays.containsKey(currentDate) ? "YES" : "NO";
+            String seasonDivCd = (currentDate.getMonthValue() >= 7 && currentDate.getMonthValue() <= 9) ? "YES" : "NO";
+            if (currentDate.isAfter(LocalDate.of(2024, 9, 15))) {
+                seasonDivCd = "NO"; // 9월 15일 이후는 NO
+            }
+
+            String dayDivCd = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase();
+
+
+            em.persist(Calender.builder()
+                    .dayDivCd(dayDivCd)
+                    .holidayDivCd(holidayDivCd)
+                    .name(holidayDivCd.equals("NO") ? currentDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US).toUpperCase() : holidays.get(currentDate))
+                    .seasonDivCd(seasonDivCd)
+                    .solarDate(currentDate)
+                    .build());
+
+            currentDate = currentDate.plusDays(1);
+        }
     }
 
     public void createReservationInfo() {

@@ -17,10 +17,10 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
-    @GetMapping("/reservations")
-    public String showReservations(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    @GetMapping("/reservation/new")
+    public String showReservationForm(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        return "/reservation/reservationList";
+        return "/reservation/reservationForm";
     }
 
 }

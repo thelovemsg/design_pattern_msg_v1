@@ -8,9 +8,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class reservationDomainServiceImpl implements ReservationDomainService {
+public class ReservationDomainServiceImpl implements ReservationDomainService {
 
     private final ReservationRepository reservationRepository;
+
+    @Override
+    public void checkIfReservationPossible(ReservationCreationDTO creationDTO) {
+
+    }
 
     @Override
     public ReservationCreationDTO makeReservationInfo(ReservationCreationDTO reservationCreationDTO) {

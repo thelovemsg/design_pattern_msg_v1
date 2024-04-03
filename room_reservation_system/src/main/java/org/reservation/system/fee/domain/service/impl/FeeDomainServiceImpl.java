@@ -1,14 +1,18 @@
 package org.reservation.system.fee.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.calander.application.service.CalenderService;
 import org.reservation.system.fee.application.dto.DailyFeeDTO;
 import org.reservation.system.fee.application.dto.FeeDTO;
+import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.vo.FeeCreateVO;
+import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.infrastructure.persistence.QueryFeeRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,6 +21,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
 
     private final FeeRepository feeRepository;
     private final QueryFeeRepository queryFeeRepository;
+    private final CalenderService calenderService;
 
     @Override
     public List<DailyFeeDTO> createDailyFee(FeeCreateVO feeCreateVO) {
@@ -24,6 +29,21 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         // 1. 예약하려는 객실의 요금을 찾는다.
         // 2. 예약하는 기간에 맞는 요금을 만들어 낸다.
         // 3. 해당 예약 일이
+
+        return null;
+    }
+
+    @Override
+    public List<DailyFeeDTO> createTempDailyFee(FeeSearchDTO feeSearchDTO) {
+        // 1. 예약하려는 객실의 요금을 찾는다.
+        // 2. 예약하는 기간에 맞는 요금을 만들어 낸다.
+        // 3. 해당 예약 일이
+
+        Fee fee = feeRepository.findByFeeName(feeSearchDTO.getFeeName()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 요금입니다."));
+
+        LocalDate enterRoomDate = feeSearchDTO.getEnterRoomDate();
+        LocalDate leaveRoomDate = enterRoomDate.plusDays(feeSearchDTO.getStayDayCnt()).minusDays(1);
+        calenderService.selectCalenderInfoBySolarDateBetween(enterRoomDate, leaveRoomDate);
 
         return null;
     }
