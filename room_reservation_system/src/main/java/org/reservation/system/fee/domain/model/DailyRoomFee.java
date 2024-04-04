@@ -6,8 +6,10 @@ import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.value.Money;
 import org.reservation.system.reservation.domain.model.Reservation;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Table(name = "T_DLY_ROOM_FEE", indexes = {
@@ -29,6 +31,8 @@ public class DailyRoomFee extends BaseEntity {
     private String currentCode;
     private LocalTime closeTime;
 
+    @OneToMany(mappedBy = "dailyRoomFee")
+    private List<PricingHistory> PricingHistoryList;
 
     @Embedded
     private Money money;

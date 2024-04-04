@@ -21,8 +21,6 @@ public class QMoney extends BeanPath<Money> {
 
     public final NumberPath<java.math.BigDecimal> discountAmount = createNumber("discountAmount", java.math.BigDecimal.class);
 
-    public final StringPath discountReason = createString("discountReason");
-
     public final NumberPath<java.math.BigDecimal> productAmount = createNumber("productAmount", java.math.BigDecimal.class);
 
     public final NumberPath<java.math.BigDecimal> salesAmount = createNumber("salesAmount", java.math.BigDecimal.class);

@@ -2,6 +2,7 @@ package org.reservation.system.common.config.service;
 
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.calander.application.service.enums.DayDivEnum;
 import org.reservation.system.calander.domain.Calender;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.HashMap;
@@ -91,7 +93,7 @@ public class DBInitializerService {
     @Transactional
     public void createCalenderInfo() {
         LocalDate startDate = LocalDate.of(2024, 01, 01);
-        LocalDate endDate = LocalDate.of(2025, 01, 01);
+        LocalDate endDate = LocalDate.of(2024, 12, 31);
 
         // 공휴일 설정
         Map<LocalDate, String> holidays = new HashMap<>();
@@ -115,19 +117,21 @@ public class DBInitializerService {
 
         LocalDate currentDate = startDate;
         while (!currentDate.isAfter(endDate)) {
-            String holidayDivCd = holidays.containsKey(currentDate) ? "YES" : "NO";
-            String seasonDivCd = (currentDate.getMonthValue() >= 7 && currentDate.getMonthValue() <= 9) ? "YES" : "NO";
+            String holidayDivCd = holidays.containsKey(currentDate) ? "Y" : "N";
+            String seasonDivCd = (currentDate.getMonthValue() >= 7 && currentDate.getMonthValue() <= 9) ? "Y" : "N";
             if (currentDate.isAfter(LocalDate.of(2024, 9, 15))) {
-                seasonDivCd = "NO"; // 9월 15일 이후는 NO
+                seasonDivCd = "N"; // 9월 15일 이후는 NO
             }
 
-            String dayDivCd = currentDate.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.US).toUpperCase();
-
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            String dayDivCd = DayDivEnum.values()[dayOfWeek.getValue() % 7].getDayCode();
 
             em.persist(Calender.builder()
                     .dayDivCd(dayDivCd)
                     .holidayDivCd(holidayDivCd)
-                    .name(holidayDivCd.equals("NO") ? currentDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US).toUpperCase() : holidays.get(currentDate))
+                    .name(holidayDivCd.equals("N")
+                            ? currentDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US).toUpperCase()
+                            : holidays.get(currentDate))
                     .seasonDivCd(seasonDivCd)
                     .solarDate(currentDate)
                     .build());

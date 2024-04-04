@@ -1,4 +1,4 @@
-package org.reservation.system.fee.domain.service.discount;
+package org.reservation.system.fee.domain.service.pricing;
 
 import java.math.BigDecimal;
 

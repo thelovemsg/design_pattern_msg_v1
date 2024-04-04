@@ -57,6 +57,23 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
                 .fetch().stream().count();
     }
 
+    @Override
+    public Fee findOneFeeWithConditions(FeeSearchDTO feeSearchDTO) {
+        return jpaQueryFactory.selectFrom(fee)
+                .where(eqFeeName(feeSearchDTO.getFeeName())
+                        , eqRoomType(feeSearchDTO.getRoomTypeCd())
+                        , fee.deleted.eq(FALSE))
+                .fetchOne();
+    }
+
+    private BooleanExpression eqFeeName(String feeName) {
+        if (StringUtils.isEmpty(feeName)) {
+            return null;
+        }
+
+        return fee.feeName.stringValue().eq(feeName);
+    }
+
     private BooleanExpression containFeeName(String feeName) {
         if (StringUtils.isEmpty(feeName)) {
             return null;

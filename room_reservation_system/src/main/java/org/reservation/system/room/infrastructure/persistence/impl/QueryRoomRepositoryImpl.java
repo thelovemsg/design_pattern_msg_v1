@@ -23,7 +23,7 @@ import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static org.reservation.system.reservation.domain.model.QReservation.reservation;
-import static org.reservation.system.reservation.domain.other.QRoomReservation.roomReservation;
+import static org.reservation.system.reservation.domain.model.other.QRoomReservation.roomReservation;
 import static org.reservation.system.room.domain.model.QRoom.room;
 import static org.reservation.system.room.domain.model.QRoomAndRoomBlock.roomAndRoomBlock;
 

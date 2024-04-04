@@ -11,20 +11,18 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QDailyRoomFee is a Querydsl query type for DailyRoomFee
+ * QTempDailyFee is a Querydsl query type for TempDailyFee
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QDailyRoomFee extends EntityPathBase<DailyRoomFee> {
+public class QTempDailyFee extends EntityPathBase<TempDailyFee> {
 
-    private static final long serialVersionUID = -1125993658L;
+    private static final long serialVersionUID = 994352533L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QDailyRoomFee dailyRoomFee = new QDailyRoomFee("dailyRoomFee");
+    public static final QTempDailyFee tempDailyFee = new QTempDailyFee("tempDailyFee");
 
     public final org.reservation.system.common.entity.QBaseEntity _super = new org.reservation.system.common.entity.QBaseEntity(this);
-
-    public final TimePath<java.time.LocalTime> closeTime = createTime("closeTime", java.time.LocalTime.class);
 
     //inherited
     public final DateTimePath<java.time.ZonedDateTime> createDate = _super.createDate;
@@ -32,14 +30,12 @@ public class QDailyRoomFee extends EntityPathBase<DailyRoomFee> {
     //inherited
     public final StringPath createdBy = _super.createdBy;
 
-    public final StringPath currentCode = createString("currentCode");
-
     //inherited
     public final BooleanPath deleted = _super.deleted;
 
     public final ListPath<Discount, QDiscount> discountList = this.<Discount, QDiscount>createList("discountList", Discount.class, QDiscount.class, PathInits.DIRECT2);
 
-    public final QFee fee;
+    public final StringPath feeName = createString("feeName");
 
     //inherited
     public final NumberPath<Long> id = _super.id;
@@ -54,29 +50,29 @@ public class QDailyRoomFee extends EntityPathBase<DailyRoomFee> {
 
     public final DatePath<java.time.LocalDate> occurDate = createDate("occurDate", java.time.LocalDate.class);
 
-    public final org.reservation.system.reservation.domain.model.QReservation reservation;
+    public final TimePath<java.time.LocalTime> occurTime = createTime("occurTime", java.time.LocalTime.class);
 
-    public QDailyRoomFee(String variable) {
-        this(DailyRoomFee.class, forVariable(variable), INITS);
+    public final StringPath roomTypeCd = createString("roomTypeCd");
+
+    public QTempDailyFee(String variable) {
+        this(TempDailyFee.class, forVariable(variable), INITS);
     }
 
-    public QDailyRoomFee(Path<? extends DailyRoomFee> path) {
+    public QTempDailyFee(Path<? extends TempDailyFee> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QDailyRoomFee(PathMetadata metadata) {
+    public QTempDailyFee(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QDailyRoomFee(PathMetadata metadata, PathInits inits) {
-        this(DailyRoomFee.class, metadata, inits);
+    public QTempDailyFee(PathMetadata metadata, PathInits inits) {
+        this(TempDailyFee.class, metadata, inits);
     }
 
-    public QDailyRoomFee(Class<? extends DailyRoomFee> type, PathMetadata metadata, PathInits inits) {
+    public QTempDailyFee(Class<? extends TempDailyFee> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.fee = inits.isInitialized("fee") ? new QFee(forProperty("fee"), inits.get("fee")) : null;
         this.money = inits.isInitialized("money") ? new org.reservation.system.fee.value.QMoney(forProperty("money")) : null;
-        this.reservation = inits.isInitialized("reservation") ? new org.reservation.system.reservation.domain.model.QReservation(forProperty("reservation"), inits.get("reservation")) : null;
     }
 
 }

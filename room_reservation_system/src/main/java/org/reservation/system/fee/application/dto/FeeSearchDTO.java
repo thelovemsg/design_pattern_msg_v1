@@ -11,12 +11,12 @@ import java.time.LocalDate;
 public class FeeSearchDTO {
     private String feeName;
     private String custNo;
-    private Integer roomNo;
-    private Integer stayDayCnt;
-    private LocalDate enterRoomDate;
-
     private BigDecimal minFeeAmount;
     private BigDecimal maxFeeAmount;
+
+    private Integer stayDayCnt;
+    private LocalDate enterRoomDate;
+    private Integer roomNo;
     private String roomTypeCd;
     private String remark;
 
