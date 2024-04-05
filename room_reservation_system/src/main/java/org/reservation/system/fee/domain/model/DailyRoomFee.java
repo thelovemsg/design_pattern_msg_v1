@@ -1,12 +1,14 @@
 package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.value.Money;
+import org.reservation.system.fee.value.MoneyInfo;
 import org.reservation.system.reservation.domain.model.Reservation;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -17,6 +19,9 @@ import java.util.List;
 })
 @Getter
 @AttributeOverride(name = "id", column = @Column(name = "dly_fee_id"))
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DailyRoomFee extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,9 +37,9 @@ public class DailyRoomFee extends BaseEntity {
     private LocalTime closeTime;
 
     @OneToMany(mappedBy = "dailyRoomFee")
-    private List<PricingHistory> PricingHistoryList;
+    private List<PricingHistory> pricingHistoryList;
 
     @Embedded
-    private Money money;
+    private MoneyInfo moneyInfo;
 
 }

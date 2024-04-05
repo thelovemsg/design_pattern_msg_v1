@@ -1,10 +1,9 @@
 package org.reservation.system.fee.domain.service.pricing;
 
 import org.reservation.system.fee.application.vo.PriceVO;
-
-import java.math.BigDecimal;
+import org.reservation.system.fee.value.MoneyInfo;
 
 public interface SurchargingStrategy {
-    PriceVO surchargeFee(BigDecimal originalPrice);
+    PriceVO surchargeFee(MoneyInfo moneyInfo);
 
 }

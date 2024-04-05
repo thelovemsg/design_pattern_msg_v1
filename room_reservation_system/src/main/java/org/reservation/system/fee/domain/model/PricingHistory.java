@@ -6,8 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
+import org.reservation.system.fee.application.dto.PricingHistoryDTO;
+import org.reservation.system.fee.application.enums.ChargeEnum;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "T_DSC_FEE", indexes = {
@@ -29,7 +32,8 @@ public class PricingHistory extends BaseEntity {
     private DailyRoomFee dailyRoomFee;
 
     private String applyReason; // 예: "기간 할인", "비수기 할인", "쿠폰 할인"
-    private String pricingType;
+    private ChargeEnum pricingType;
 
     private BigDecimal appliedPrice;
+
 }

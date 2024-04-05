@@ -6,27 +6,25 @@ import org.reservation.system.calander.application.service.enums.DayDivEnum;
 import org.reservation.system.calander.domain.Calender;
 import org.reservation.system.fee.application.dto.DailyFeeDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
+import org.reservation.system.fee.application.dto.PricingHistoryDTO;
+import org.reservation.system.fee.application.enums.ChargeEnum;
 import org.reservation.system.fee.application.vo.PriceVO;
 import org.reservation.system.fee.domain.TempDailyFeeFactory;
-import org.reservation.system.fee.domain.model.DailyRoomFee;
-import org.reservation.system.fee.domain.model.Fee;
-import org.reservation.system.fee.domain.model.PricingHistory;
-import org.reservation.system.fee.domain.model.TempDailyFee;
+import org.reservation.system.fee.domain.model.*;
 import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;
-import org.reservation.system.fee.domain.service.pricing.impl.SeasonSurchargeByFixedAmountImpl;
-import org.reservation.system.fee.domain.service.pricing.impl.SeasonSurchargeByRateImpl;
-import org.reservation.system.fee.infrastructure.persistence.DailyRoomFeeRepository;
-import org.reservation.system.fee.infrastructure.persistence.PricingHistoryRepository;
-import org.reservation.system.fee.infrastructure.persistence.QueryFeeRepository;
-import org.reservation.system.fee.infrastructure.persistence.TempDailyFeeRepository;
-import org.reservation.system.fee.value.Money;
+import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByFixedAmountImpl;
+import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByRateImpl;
+import org.reservation.system.fee.domain.service.pricing.impl.season.SeasonSurchargeByFixedAmountImpl;
+import org.reservation.system.fee.domain.service.pricing.impl.season.SeasonSurchargeByRateImpl;
+import org.reservation.system.fee.infrastructure.persistence.*;
+import org.reservation.system.fee.value.MoneyInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,9 +36,10 @@ public class FeeDomainServiceImpl implements FeeDomainService {
     private final DailyRoomFeeRepository dailyRoomFeeRepository;
     private final QueryFeeRepository queryFeeRepository;
     private final CalenderService calenderService;
-    private final PricingHistoryRepository PricingHistoryRepository;
+    private final PricingHistoryRepository pricingHistoryRepository;
     private final TempDailyFeeRepository tempDailyFeeRepository;
     private final TempDailyFeeFactory tempDailyFeeFactory;
+    private final EventRepository eventRepository;
 
     @Override
     public DailyFeeDTO createDailyFee(Fee fee, Calender calender) {
@@ -50,44 +49,64 @@ public class FeeDomainServiceImpl implements FeeDomainService {
     }
 
     @Override
+    @Transactional
     public List<DailyFeeDTO> createTempDailyFee(FeeSearchDTO feeSearchDTO) {
 
         List<DailyFeeDTO> result = new ArrayList<>();
-
-        // 1. 예약하려는 객실의 요금을 찾는다.
         Fee fee = queryFeeRepository.findOneFeeWithConditions(feeSearchDTO);
+
         if (fee == null)
             throw new IllegalArgumentException("fee is not exist");
         LocalDate enterRoomDate = feeSearchDTO.getEnterRoomDate();
-        LocalDate leaveRoomDate = enterRoomDate.plusDays(feeSearchDTO.getStayDayCnt()).minusDays(1);
+        LocalDate leaveRoomDate = enterRoomDate.plusDays(feeSearchDTO.getStayDayCnt());
 
-        // 2. 예약하려는 기간의 날짜 정보를 조회한다.
         List<Calender> calenders = calenderService.selectCalenderInfoBySolarDateBetween(enterRoomDate, leaveRoomDate);
+        List<PricingHistory> pricingHistoryList = new ArrayList<>();
+        List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 
-        // 3. 예약하려는 날짜 정보에 맞춰서 fee에 요금을 적용해서 일별 요금을 생성한다.
         for (Calender calender : calenders) {
 
             TempDailyFee tempDailyFee = tempDailyFeeFactory.create(fee, calender);
-            applySeasonalPricing(calender, tempDailyFee);
-            if (DayDivEnum.isPeakOfWeek(calender.getDayDivCd())) {
-                // 해당 주의 금요일 혹은 토요일인 경우 추가 요금 적용
+            pricingHistoryList.add(applySeasonalPricing(calender, tempDailyFee));
+            pricingHistoryList.add(applyPeakPricing(calender, tempDailyFee));
+            pricingHistoryList.add(applyEventPricing(calender, tempDailyFee));
+
+            DailyRoomFee newDailyRoomFee = DailyRoomFee.builder()
+                    .occurDate(calender.getSolarDate())
+                    .fee(fee)
+                    .pricingHistoryList(pricingHistoryList)
+                    .moneyInfo(tempDailyFee.getMoneyInfo())
+                    .currentCode(feeSearchDTO.getCurrentCode())
+                    .build();
+
+            dailyRoomFeeRepository.save(newDailyRoomFee);
+
+            for (PricingHistory pricingHistory : pricingHistoryList) {
+                pricingHistoryDTOList.add(PricingHistoryDTO.builder()
+                    .appliedPrice(pricingHistory.getAppliedPrice())
+                    .pricingType(pricingHistory.getPricingType())
+                    .applyReason(pricingHistory.getApplyReason())
+                    .build());
             }
 
-            // 이벤트성 할인 적용
+            DailyFeeDTO dailyFeeDTO = DailyFeeDTO.builder()
+                    .feeName(fee.getFeeName())
+                    .salesAmount(newDailyRoomFee.getMoneyInfo().getSalesAmount())
+                    .addedAmount(newDailyRoomFee.getMoneyInfo().getAddedAmount())
+                    .discountAmount(newDailyRoomFee.getMoneyInfo().getDiscountAmount())
+                    .occurDate(calender.getSolarDate())
+                    .currentCode(newDailyRoomFee.getCurrentCode())
+                    .productAmount(fee.getFeeAmount())
+                    .pricingHistoryDTOList(pricingHistoryDTOList)
+                    .build();
 
-            DailyRoomFee dailyRoomFee = new DailyRoomFee();
-
-            //적용한 요금을
-
-            dailyRoomFeeRepository.save(dailyRoomFee);
-
-//            result.add(createDailyFee(fee, calender));
+            result.add(dailyFeeDTO);
         }
 
         return result;
     }
 
-    private void applySeasonalPricing(Calender calender, TempDailyFee tempDailyFee) {
+    private PricingHistory applySeasonalPricing(Calender calender, TempDailyFee tempDailyFee) {
         if (calender.getSeasonDivCd().equals("Y")) {
             SurchargingStrategy surchargingStrategy = null;
             if (shouldUseFixedAmountStrategy()) {
@@ -96,17 +115,70 @@ public class FeeDomainServiceImpl implements FeeDomainService {
                 surchargingStrategy = new SeasonSurchargeByRateImpl();
             }
 
-            PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoney().getSalesAmount());
+            PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
 
             PricingHistory pricingHistory = PricingHistory.builder()
-                    .tempDailyFee(tempDailyFee) // 앞서 생성된 TempDailyFee의 참조 설정
+                    .tempDailyFee(tempDailyFee)
                     .applyReason("Seasonal Surcharge")
                     .pricingType("SURCHARGE")
                     .appliedPrice(surchargedPrice.getSurchargedPrice())
                     .build();
-            PricingHistoryRepository.save(pricingHistory);
+
+            return pricingHistoryRepository.save(pricingHistory);
         }
+
+        return null;
     }
+
+    private PricingHistory applyPeakPricing(Calender calender, TempDailyFee tempDailyFee) {
+        if (DayDivEnum.isPeakOfWeek(calender.getDayDivCd())) {
+            SurchargingStrategy surchargingStrategy = null;
+            if (shouldUseFixedAmountStrategy()) {
+                surchargingStrategy = new PeakSurchargeByFixedAmountImpl();
+            } else {
+                surchargingStrategy = new PeakSurchargeByRateImpl();
+            }
+
+            PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
+
+            PricingHistory pricingHistory = PricingHistory.builder()
+                    .tempDailyFee(tempDailyFee)
+                    .applyReason("Peak Surcharge")
+                    .pricingType("SURCHARGE")
+                    .appliedPrice(surchargedPrice.getSurchargedPrice())
+                    .build();
+            return pricingHistoryRepository.save(pricingHistory);
+        }
+
+        return null;
+    }
+
+    private PricingHistory applyEventPricing(Calender calender, TempDailyFee tempDailyFee) {
+        List<Event> eventList = eventRepository.findByDateBetween(calender.getSolarDate());
+        for (Event event : eventList) {
+            ChargeEnum chargeEnum = null;
+            BigDecimal chargeAmount = event.getChargeAmount();
+            MoneyInfo moneyInfo = tempDailyFee.getMoneyInfo();
+            if (ChargeEnum.isAddingPrice(event.getChargeDivCd())) {
+                chargeEnum = ChargeEnum.CHARGE;
+                moneyInfo.addAmount(event.getChargeAmount());
+            } else {
+                chargeEnum = ChargeEnum.DISCOUNT;
+                moneyInfo.subtractAmount(event.getChargeAmount());
+            }
+
+            PricingHistory pricingHistory = PricingHistory.builder()
+                    .tempDailyFee(tempDailyFee) // 앞서 생성된 TempDailyFee의 참조 설정
+                    .applyReason("Event Pricing")
+                    .pricingType(chargeEnum)
+                    .appliedPrice(chargeAmount)
+                    .build();
+            return pricingHistoryRepository.save(pricingHistory);
+        }
+
+        return null;
+    }
+
 
     private boolean shouldUseFixedAmountStrategy() {
         // TODO : 현재 선택한 정책에 따라서 고르도록 함.

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
-import org.reservation.system.fee.value.Money;
+import org.reservation.system.fee.value.MoneyInfo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -33,6 +33,6 @@ public class TempDailyFee extends BaseEntity {
     private List<PricingHistory> pricingHistoryList;
 
     @Embedded
-    private Money money;
+    private MoneyInfo moneyInfo;
 
 }

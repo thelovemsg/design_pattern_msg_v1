@@ -5,7 +5,7 @@ import org.reservation.system.calander.domain.Calender;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.fee.domain.model.TempDailyFee;
 import org.reservation.system.fee.infrastructure.persistence.TempDailyFeeRepository;
-import org.reservation.system.fee.value.Money;
+import org.reservation.system.fee.value.MoneyInfo;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class TempDailyFeeFactory {
                 .feeName(fee.getFeeName())
                 .roomTypeCd(fee.getRoomType().getRoomTypeCd())
                 .occurDate(calender.getSolarDate())
-                .money(Money.builder()
+                .moneyInfo(MoneyInfo.builder()
                         .productAmount(fee.getFeeAmount())
                         .taxAmount(fee.getFeeAmount().multiply(new BigDecimal("0.1")))
                         .salesAmount(fee.getFeeAmount())

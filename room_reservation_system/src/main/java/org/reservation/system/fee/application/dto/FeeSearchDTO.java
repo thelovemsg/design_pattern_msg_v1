@@ -13,6 +13,7 @@ public class FeeSearchDTO {
     private String custNo;
     private BigDecimal minFeeAmount;
     private BigDecimal maxFeeAmount;
+    private String currentCode;
 
     private Integer stayDayCnt;
     private LocalDate enterRoomDate;
