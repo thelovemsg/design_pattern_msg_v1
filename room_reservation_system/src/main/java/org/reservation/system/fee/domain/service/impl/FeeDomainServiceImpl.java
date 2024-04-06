@@ -16,17 +16,17 @@ import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;
 import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByFixedAmountImpl;
 import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByRateImpl;
-import org.reservation.system.fee.domain.service.pricing.impl.season.SeasonSurchargeByFixedAmountImpl;
-import org.reservation.system.fee.domain.service.pricing.impl.season.SeasonSurchargeByRateImpl;
 import org.reservation.system.fee.infrastructure.persistence.*;
 import org.reservation.system.fee.value.MoneyInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +40,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
     private final TempDailyFeeRepository tempDailyFeeRepository;
     private final TempDailyFeeFactory tempDailyFeeFactory;
     private final EventRepository eventRepository;
+    private final SurgingStrategyFactory surgingStrategyFactory;
 
     @Override
     public DailyFeeDTO createDailyFee(Fee fee, Calender calender) {
@@ -67,9 +68,9 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         for (Calender calender : calenders) {
 
             TempDailyFee tempDailyFee = tempDailyFeeFactory.create(fee, calender);
-            pricingHistoryList.add(applySeasonalPricing(calender, tempDailyFee));
-            pricingHistoryList.add(applyPeakPricing(calender, tempDailyFee));
-            pricingHistoryList.add(applyEventPricing(calender, tempDailyFee));
+            applySeasonalPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
+            applyPeakPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
+            applyEventPricing(calender, tempDailyFee).ifPresent(pricingHistories -> pricingHistoryList.addAll(pricingHistories));
 
             DailyRoomFee newDailyRoomFee = DailyRoomFee.builder()
                     .occurDate(calender.getSolarDate())
@@ -83,10 +84,10 @@ public class FeeDomainServiceImpl implements FeeDomainService {
 
             for (PricingHistory pricingHistory : pricingHistoryList) {
                 pricingHistoryDTOList.add(PricingHistoryDTO.builder()
-                    .appliedPrice(pricingHistory.getAppliedPrice())
-                    .pricingType(pricingHistory.getPricingType())
-                    .applyReason(pricingHistory.getApplyReason())
-                    .build());
+                        .appliedPrice(pricingHistory.getAppliedPrice())
+                        .pricingType(pricingHistory.getPricingType().toString())
+                        .applyReason(pricingHistory.getApplyReason())
+                        .build());
             }
 
             DailyFeeDTO dailyFeeDTO = DailyFeeDTO.builder()
@@ -106,83 +107,72 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         return result;
     }
 
-    private PricingHistory applySeasonalPricing(Calender calender, TempDailyFee tempDailyFee) {
+    private Optional<PricingHistory> applySeasonalPricing(Calender calender, TempDailyFee tempDailyFee) {
         if (calender.getSeasonDivCd().equals("Y")) {
-            SurchargingStrategy surchargingStrategy = null;
-            if (shouldUseFixedAmountStrategy()) {
-                surchargingStrategy = new SeasonSurchargeByFixedAmountImpl();
-            } else {
-                surchargingStrategy = new SeasonSurchargeByRateImpl();
-            }
-
+            SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getSeasonalStrategy();
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
-
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
                     .applyReason("Seasonal Surcharge")
-                    .pricingType("SURCHARGE")
+                    .pricingType(ChargeEnum.CHARGE)
                     .appliedPrice(surchargedPrice.getSurchargedPrice())
                     .build();
-
-            return pricingHistoryRepository.save(pricingHistory);
+            return Optional.of(pricingHistoryRepository.save(pricingHistory));
         }
 
-        return null;
+        return Optional.empty();
     }
 
-    private PricingHistory applyPeakPricing(Calender calender, TempDailyFee tempDailyFee) {
+    private Optional<PricingHistory> applyPeakPricing(Calender calender, TempDailyFee tempDailyFee) {
         if (DayDivEnum.isPeakOfWeek(calender.getDayDivCd())) {
-            SurchargingStrategy surchargingStrategy = null;
-            if (shouldUseFixedAmountStrategy()) {
-                surchargingStrategy = new PeakSurchargeByFixedAmountImpl();
-            } else {
-                surchargingStrategy = new PeakSurchargeByRateImpl();
-            }
+            SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getPeakStrategy();
 
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
 
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
                     .applyReason("Peak Surcharge")
-                    .pricingType("SURCHARGE")
+                    .pricingType(ChargeEnum.CHARGE)
                     .appliedPrice(surchargedPrice.getSurchargedPrice())
                     .build();
-            return pricingHistoryRepository.save(pricingHistory);
+            return Optional.of(pricingHistoryRepository.save(pricingHistory));
         }
 
-        return null;
+        return Optional.empty();
     }
 
-    private PricingHistory applyEventPricing(Calender calender, TempDailyFee tempDailyFee) {
+    private Optional<List<PricingHistory>> applyEventPricing(Calender calender, TempDailyFee tempDailyFee) {
+        List<PricingHistory> result = new ArrayList<>();
         List<Event> eventList = eventRepository.findByDateBetween(calender.getSolarDate());
+        MoneyInfo moneyInfo = tempDailyFee.getMoneyInfo();
         for (Event event : eventList) {
-            ChargeEnum chargeEnum = null;
+
+            MoneyInfo updatedMoneyInfo = updateMoneyInfo(moneyInfo, event.getChargeAmount(), event.getChargeDivCd());
+
             BigDecimal chargeAmount = event.getChargeAmount();
-            MoneyInfo moneyInfo = tempDailyFee.getMoneyInfo();
             if (ChargeEnum.isAddingPrice(event.getChargeDivCd())) {
-                chargeEnum = ChargeEnum.CHARGE;
                 moneyInfo.addAmount(event.getChargeAmount());
             } else {
-                chargeEnum = ChargeEnum.DISCOUNT;
                 moneyInfo.subtractAmount(event.getChargeAmount());
             }
 
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee) // 앞서 생성된 TempDailyFee의 참조 설정
                     .applyReason("Event Pricing")
-                    .pricingType(chargeEnum)
+                    .pricingType(event.getChargeDivCd())
                     .appliedPrice(chargeAmount)
                     .build();
-            return pricingHistoryRepository.save(pricingHistory);
+
+            moneyInfo = updatedMoneyInfo;
+
+            result.add(pricingHistoryRepository.save(pricingHistory));
         }
 
-        return null;
+        return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
 
-
-    private boolean shouldUseFixedAmountStrategy() {
-        // TODO : 현재 선택한 정책에 따라서 고르도록 함.
-        return true;
+    private MoneyInfo updateMoneyInfo(MoneyInfo moneyInfo, BigDecimal chargeAmount, ChargeEnum chargeEnum) {
+        return chargeEnum == ChargeEnum.CHARGE ? moneyInfo.addAmount(chargeAmount) : moneyInfo.subtractAmount(chargeAmount);
     }
 
     @Override

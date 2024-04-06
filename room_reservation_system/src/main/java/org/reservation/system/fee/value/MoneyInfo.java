@@ -1,6 +1,7 @@
 package org.reservation.system.fee.value;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.math.RoundingMode;
 
 @Embeddable
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoneyInfo {
@@ -25,40 +26,58 @@ public class MoneyInfo {
     private BigDecimal salesAmount = new BigDecimal("0");
     @Builder.Default
     private BigDecimal taxAmount = new BigDecimal("0");
+    @Transient
+    private BigDecimal differentAmount = new BigDecimal("0");
 
-    // 더하기
-    public BigDecimal addAmount(BigDecimal addingAmount) {
-        productAmount = productAmount.add(addingAmount);
-        addedAmount = addedAmount.add(addingAmount);
-        BigDecimal tempSalesAmount = productAmount.subtract(discountAmount);
-        salesAmount = tempSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : tempSalesAmount;
-        taxAmount = salesAmount.add(addingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
-        return addingAmount;
+
+    public MoneyInfo addAmount(BigDecimal addingAmount) {
+        BigDecimal newProductAmount = this.productAmount.add(addingAmount);
+        BigDecimal newAddedAmount = this.addedAmount.add(addingAmount);
+        BigDecimal newSalesAmount = newProductAmount.subtract(this.discountAmount);
+        newSalesAmount = newSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : newSalesAmount;
+        BigDecimal newTaxAmount = newSalesAmount.add(addingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
+
+        return this.toBuilder()
+                .productAmount(newProductAmount)
+                .addedAmount(newAddedAmount)
+                .differentAmount(addingAmount)
+                .salesAmount(newSalesAmount)
+                .taxAmount(newTaxAmount)
+                .build();
     }
 
-    // 빼기
-    public BigDecimal subtractAmount(BigDecimal discountingAmount) {
-        productAmount = productAmount.subtract(discountingAmount);
-        discountAmount = discountAmount.add(discountingAmount);
-        BigDecimal tempSalesAmount = productAmount.subtract(this.discountAmount);
-        salesAmount = tempSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : tempSalesAmount;
-        taxAmount = salesAmount.subtract(discountingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
-        return discountingAmount;
+    public MoneyInfo subtractAmount(BigDecimal subtractingAmount) {
+        BigDecimal newProductAmount = this.productAmount.subtract(subtractingAmount);
+        BigDecimal newDiscountAmount = this.discountAmount.add(subtractingAmount);
+        BigDecimal newSalesAmount = newProductAmount.subtract(newDiscountAmount);
+        newSalesAmount = newSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : newSalesAmount;
+        BigDecimal newTaxAmount = newSalesAmount.subtract(subtractingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
+
+        return this.toBuilder()
+                .productAmount(newProductAmount)
+                .discountAmount(newDiscountAmount)
+                .salesAmount(newSalesAmount)
+                .differentAmount(subtractingAmount)
+                .taxAmount(newTaxAmount)
+                .build();
     }
 
-    public BigDecimal calculateAmountByPercent(String addingRate) {
+    public MoneyInfo calculateAmountByPercent(String addingRate) {
         BigDecimal rate = new BigDecimal(addingRate);
-        BigDecimal originalProductAmount = productAmount;
-        productAmount = originalProductAmount.multiply(rate).setScale(0, RoundingMode.DOWN);
+        differentAmount = productAmount.subtract(productAmount.multiply(rate)).setScale(0, RoundingMode.DOWN);
 
-        BigDecimal newAddedAmount = productAmount.subtract(originalProductAmount);
-        addedAmount = addedAmount.add(newAddedAmount);
+        BigDecimal newProductAmount = this.productAmount.multiply(rate).setScale(0, RoundingMode.DOWN);
+        BigDecimal newAddedAmount = differentAmount;
+        BigDecimal newSalesAmount = newProductAmount.subtract(this.discountAmount);
+        newSalesAmount = newSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : newSalesAmount;
+        BigDecimal newTaxAmount = newSalesAmount.multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
 
-        BigDecimal tempSalesAmount = productAmount.subtract(discountAmount);
-        salesAmount = tempSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : tempSalesAmount;
-
-        taxAmount = salesAmount.multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
-
-        return newAddedAmount;
+        return this.toBuilder()
+                .productAmount(newProductAmount)
+                .addedAmount(this.addedAmount.add(newAddedAmount))
+                .differentAmount(differentAmount)
+                .salesAmount(newSalesAmount)
+                .taxAmount(newTaxAmount)
+                .build();
     }
 }

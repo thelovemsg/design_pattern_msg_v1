@@ -5,5 +5,4 @@ import org.reservation.system.fee.value.MoneyInfo;
 
 public interface SurchargingStrategy {
     PriceVO surchargeFee(MoneyInfo moneyInfo);
-
 }

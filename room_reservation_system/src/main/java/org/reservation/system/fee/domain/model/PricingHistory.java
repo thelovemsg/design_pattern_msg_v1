@@ -32,6 +32,7 @@ public class PricingHistory extends BaseEntity {
     private DailyRoomFee dailyRoomFee;
 
     private String applyReason; // 예: "기간 할인", "비수기 할인", "쿠폰 할인"
+    @Enumerated(EnumType.STRING)
     private ChargeEnum pricingType;
 
     private BigDecimal appliedPrice;
