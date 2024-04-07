@@ -1,4 +1,4 @@
-package org.reservation.system.fee.domain.service.pricing.impl.peak;
+package org.reservation.system.fee.domain.service.pricing.surcharge.impl.peak;
 
 import org.reservation.system.fee.application.vo.PriceVO;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;

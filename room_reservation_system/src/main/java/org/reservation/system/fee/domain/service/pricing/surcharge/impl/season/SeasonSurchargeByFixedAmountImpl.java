@@ -1,4 +1,4 @@
-package org.reservation.system.fee.domain.service.pricing.impl.season;
+package org.reservation.system.fee.domain.service.pricing.surcharge.impl.season;
 
 import org.reservation.system.fee.application.vo.PriceVO;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 @Component
-public class SeasonSurchargeByRateImpl implements SurchargingStrategy {
+public class SeasonSurchargeByFixedAmountImpl implements SurchargingStrategy {
     @Override
     public PriceVO surchargeFee(MoneyInfo moneyInfo) {
-        moneyInfo = moneyInfo.calculateAmountByPercent("1.2");
+        moneyInfo = moneyInfo.addAmount(new BigDecimal("20000"));
         return PriceVO.builder()
                 .surchargedPrice(moneyInfo.getDifferentAmount())
                 .finalApplyPrice(moneyInfo.getSalesAmount())

@@ -13,15 +13,13 @@ import org.reservation.system.fee.domain.TempDailyFeeFactory;
 import org.reservation.system.fee.domain.model.*;
 import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.fee.domain.service.FeeDomainService;
+import org.reservation.system.fee.domain.service.factory.SurgingStrategyFactory;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;
-import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByFixedAmountImpl;
-import org.reservation.system.fee.domain.service.pricing.impl.peak.PeakSurchargeByRateImpl;
 import org.reservation.system.fee.infrastructure.persistence.*;
 import org.reservation.system.fee.value.MoneyInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -68,9 +66,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         for (Calender calender : calenders) {
 
             TempDailyFee tempDailyFee = tempDailyFeeFactory.create(fee, calender);
-            applySeasonalPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
-            applyPeakPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
-            applyEventPricing(calender, tempDailyFee).ifPresent(pricingHistories -> pricingHistoryList.addAll(pricingHistories));
+            applyPrices(calender, tempDailyFee, pricingHistoryList);
 
             DailyRoomFee newDailyRoomFee = DailyRoomFee.builder()
                     .occurDate(calender.getSolarDate())
@@ -105,6 +101,12 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         }
 
         return result;
+    }
+
+    private void applyPrices(Calender calender, TempDailyFee tempDailyFee, List<PricingHistory> pricingHistoryList) {
+        applySeasonalPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
+        applyPeakPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::add);
+        applyEventPricing(calender, tempDailyFee).ifPresent(pricingHistoryList::addAll);
     }
 
     private Optional<PricingHistory> applySeasonalPricing(Calender calender, TempDailyFee tempDailyFee) {
@@ -149,18 +151,11 @@ public class FeeDomainServiceImpl implements FeeDomainService {
 
             MoneyInfo updatedMoneyInfo = updateMoneyInfo(moneyInfo, event.getChargeAmount(), event.getChargeDivCd());
 
-            BigDecimal chargeAmount = event.getChargeAmount();
-            if (ChargeEnum.isAddingPrice(event.getChargeDivCd())) {
-                moneyInfo.addAmount(event.getChargeAmount());
-            } else {
-                moneyInfo.subtractAmount(event.getChargeAmount());
-            }
-
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee) // 앞서 생성된 TempDailyFee의 참조 설정
                     .applyReason("Event Pricing")
                     .pricingType(event.getChargeDivCd())
-                    .appliedPrice(chargeAmount)
+                    .appliedPrice(updatedMoneyInfo.getDifferentAmount())
                     .build();
 
             moneyInfo = updatedMoneyInfo;
@@ -170,6 +165,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
 
         return result.isEmpty() ? Optional.empty() : Optional.of(result);
     }
+
 
     private MoneyInfo updateMoneyInfo(MoneyInfo moneyInfo, BigDecimal chargeAmount, ChargeEnum chargeEnum) {
         return chargeEnum == ChargeEnum.CHARGE ? moneyInfo.addAmount(chargeAmount) : moneyInfo.subtractAmount(chargeAmount);

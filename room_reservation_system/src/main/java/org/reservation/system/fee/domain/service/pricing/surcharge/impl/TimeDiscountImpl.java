@@ -1,4 +1,4 @@
-package org.reservation.system.fee.domain.service.pricing.impl;
+package org.reservation.system.fee.domain.service.pricing.surcharge.impl;
 
 import org.reservation.system.fee.domain.service.pricing.DiscountStrategy;
 import org.springframework.stereotype.Service;

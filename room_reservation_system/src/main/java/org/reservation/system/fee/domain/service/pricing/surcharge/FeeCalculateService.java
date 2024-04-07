@@ -1,7 +1,6 @@
-package org.reservation.system.fee.domain.service;
+package org.reservation.system.fee.domain.service.pricing.surcharge;
 
 import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
