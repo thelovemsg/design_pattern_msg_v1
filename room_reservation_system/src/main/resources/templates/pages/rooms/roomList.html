@@ -11,7 +11,7 @@
 <div>
     <div class="m-lg-2">
         <h1>Room List</h1>
-        <a th:href="@{/static}">To Home</a>
+        <a th:href="@{/}">To Home</a>
         <a th:href="@{/templates/pages/rooms/type/new}">Create New Room Type</a>
         <a class="m-lg-2" th:href="@{/templates/pages/rooms/new}">Create New Room</a>
     </div>
@@ -89,7 +89,7 @@
             </tbody>
         </table>
     </div>
-    <div class="fixed-bottom">
+    <div class="pagination-fixed-bottom">
         <ul class="pagination justify-content-center">
             <li th:if="${roomList.hasPrevious()}" th:class="${roomList.first ? 'disabled' : 'page-item'}">
                 <a class="page-link"
@@ -101,7 +101,8 @@
                    th:text="${pageNum + 1}">1</a>
             </li>
             <li th:if="${roomList.hasNext()}" th:class="${roomList.last ? 'disabled' : 'page-item'}">
-                <a class="page-link" th:href="@{/templates/pages/rooms(page=${roomList.number + 1}, size=${roomList.size})}">Next</a>
+                <a class="page-link"
+                   th:href="@{/templates/pages/rooms(page=${roomList.number + 1}, size=${roomList.size})}">Next</a>
             </li>
         </ul>
     </div>

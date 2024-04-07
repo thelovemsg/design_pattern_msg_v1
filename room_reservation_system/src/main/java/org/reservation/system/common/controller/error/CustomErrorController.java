@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class CustomErrorController implements ErrorController {
 
-    private static final String VIEW_PATH = "/errors/";
+    private static final String VIEW_PATH = "common/errors/";
 
     @RequestMapping(value = "/error")
     public String handleError(HttpServletRequest request) {
@@ -20,15 +20,15 @@ public class CustomErrorController implements ErrorController {
             int statusCode = Integer.parseInt(status.toString());
 
             if(statusCode == HttpStatus.NOT_FOUND.value()) {
-                return VIEW_PATH + statusCode;
+                return VIEW_PATH + "404";
             }
 
             if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                return VIEW_PATH + statusCode;
+                return VIEW_PATH + "500";
             }
         }
 
-        return "error";
+        return "common/errors/404";
     }
 
 }

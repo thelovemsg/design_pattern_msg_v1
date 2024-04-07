@@ -9,15 +9,15 @@
 <body>
 <div class="m-lg-2">
     <h1>Fee List</h1>
-    <a th:href="@{/static}">To Home</a>
-    <a th:href="@{/templates/pages/fees/new}">Create New Fee</a>
+    <a th:href="@{/}">To Home</a>
+    <a th:href="@{/fees/new}">Create New Fee</a>
 </div>
 <div th:if="${successMessage}" class="alert alert-success w-25">
     <p th:text="${successMessage}"></p>
 </div>
 <div class="m-3">
     <div class="w-75">
-        <form th:action="@{/templates/pages/fees}" method="get">
+        <form th:action="@{/pages/fees}" method="get">
             <div class="row g-3 align-items-center">
                 <div class="col-auto">
                     <label for="feeName" class="col-form-label">Fee Name</label>
@@ -85,7 +85,7 @@
         <tbody>
         <tr class="table-dark" th:each="fee, iterStat: ${feeList}">
             <td th:text="${iterStat.count + (feeList.number * feeList.size)}">1</td>
-            <td><a th:href="@{/templates/pages/fees/update/{id}(id=${fee.id})}" th:text="${fee.feeName}"></a></td>
+            <td><a th:href="@{/fees/update/{id}(id=${fee.id})}" th:text="${fee.feeName}"></a></td>
             <td th:text="${fee.roomTypeCd}" class="w-25">Room Type</td>
             <td th:text="${fee.feeAmount}" class="text-end">Fee Amount</td>
             <td th:text="${fee.remark}">Remark</td>
@@ -97,7 +97,7 @@
     <ul class="pagination justify-content-center">
         <li th:if="${feeList.hasPrevious()}" th:class="${feeList.first ? 'disabled' : 'page-item'}">
             <a class="page-link"
-               th:href="@{/templates/pages/fees(page=${feeList.number - 1}, size=${feeList.size})}">Previous</a>
+               th:href="@{/fees(page=${feeList.number - 1}, size=${feeList.size})}">Previous</a>
         </li>
         <li th:each="pageNum : ${#numbers.sequence(feeList.number > 5 ? feeList.number - 5 : 0, feeList.totalPages > feeList.number + 5 ? feeList.number + 5 : feeList.totalPages - 1)}"
             th:class="${pageNum == feeList.number ? 'active page-item' : 'page-item'}">
@@ -105,7 +105,7 @@
                th:text="${pageNum + 1}">1</a>
         </li>
         <li th:if="${feeList.hasNext()}" th:class="${feeList.last ? 'disabled' : 'page-item'}">
-            <a class="page-link" th:href="@{/templates/pages/rooms(page=${feeList.number + 1}, size=${feeList.size})}">Next</a>
+            <a class="page-link" th:href="@{/rooms(page=${feeList.number + 1}, size=${feeList.size})}">Next</a>
         </li>
     </ul>
 </div>

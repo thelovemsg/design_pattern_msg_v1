@@ -5,11 +5,16 @@ import org.reservation.system.fee.application.dto.DailyFeeDTO;
 import org.reservation.system.fee.application.service.FeeService;
 import org.reservation.system.fee.application.vo.FeeCreateVO;
 import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
+import org.reservation.system.reservation.application.dto.ReservationDTO;
+import org.reservation.system.reservation.application.dto.ReservationSearchDTO;
 import org.reservation.system.reservation.application.service.ReservationService;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
+import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.reservation.system.reservation.infrastructure.persistence.QueryReservationRepository;
 import org.reservation.system.room.application.service.RoomService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,5 +55,21 @@ public class ReservationServiceImpl implements ReservationService {
         //3. 정보 세팅
 
         return reservationCreationDTO;
+    }
+
+    @Override
+    public Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
+        //TODO : reservation 목록 조회
+        return null;
+    }
+
+    @Override
+    public ReservationDTO getReservationById(Long id) {
+        return null;
+    }
+
+    @Override
+    public void updateReservation(Reservation reservation) {
+
     }
 }
