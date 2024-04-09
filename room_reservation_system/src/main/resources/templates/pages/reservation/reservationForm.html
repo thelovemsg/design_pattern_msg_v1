@@ -2,17 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <title>Reservation Form</title>
+    <title>New Resservation Form</title>
 </head>
 <body>
 <div class="m-lg-2">
-    <h1>Make Reservation</h1>
-    <form th:action="@{/templates/pages/reservation/new}" th:object="${reservationDTO}" method="post">
-        여기 입력폼 생성 예정
+    <h1>Update Room</h1>
+    <form th:action="@{/reservation/new}" th:object="${reservationDTO}" method="post">
+        <fieldset>
+        </fieldset>
+        <button class="btn btn-primary mt-4" type="submit">Create</button>
     </form>
 </div>
-<a th:href="@{/templates/pages/fees}">Return to list</a>
+<a th:href="@{/fees}">Return To Fee List</a>
 </body>
+<script>
+</script>
 </html>

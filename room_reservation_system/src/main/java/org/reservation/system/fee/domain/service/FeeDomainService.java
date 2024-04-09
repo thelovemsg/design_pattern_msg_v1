@@ -12,6 +12,5 @@ import java.util.List;
 public interface FeeDomainService {
     DailyFeeDTO createDailyFee(Fee Fee, Calender calender);
     List<DailyFeeDTO> createTempDailyFee(FeeSearchDTO feeSearchDTO);
-
     List<DailyFeeDTO> applyDiscountPolicy(Fee fee);
 }

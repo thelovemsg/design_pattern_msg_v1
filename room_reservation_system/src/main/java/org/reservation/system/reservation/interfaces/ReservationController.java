@@ -34,9 +34,9 @@ public class ReservationController {
 
     @GetMapping("/reservations")
     public String showReservationList(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ReservationDTO> reservationResponseList = reservationService.selectReservationList(pageable, reservationSearchDTO);
-        model.addAttribute("reservationList", reservationResponseList);
-        return "pages/reservation/reservations";
+        List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
+        model.addAttribute("rooTypeList", roomTypeList);
+        return "pages/reservation/reservationList";
     }
 
     @GetMapping("/reservation/new")

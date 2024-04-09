@@ -37,6 +37,8 @@ public class QReservationInfo extends BeanPath<ReservationInfo> {
 
     public final StringPath reserverTelno = createString("reserverTelno");
 
+    public final NumberPath<Integer> roomNo = createNumber("roomNo", Integer.class);
+
     public final NumberPath<java.math.BigDecimal> salesAmount = createNumber("salesAmount", java.math.BigDecimal.class);
 
     public final NumberPath<Integer> stayDayCnt = createNumber("stayDayCnt", Integer.class);

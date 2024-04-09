@@ -1,5 +1,6 @@
 package org.reservation.system.reservation.application.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.fee.application.dto.DailyFeeDTO;
 import org.reservation.system.fee.application.service.FeeService;
@@ -10,10 +11,13 @@ import org.reservation.system.reservation.application.dto.ReservationSearchDTO;
 import org.reservation.system.reservation.application.service.ReservationService;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.reservation.domain.model.Reservation;
+import org.reservation.system.reservation.domain.model.value.ReservationInfo;
+import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.reservation.system.reservation.infrastructure.persistence.QueryReservationRepository;
 import org.reservation.system.room.application.service.RoomService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +32,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final QueryReservationRepository queryReservationRepository;
     private final RoomService roomService;
     private final FeeService feeService;
+    private final ReservationRepository reservationRepository;
 
     @Override
     @Transactional
@@ -59,13 +64,35 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
-        //TODO : reservation 목록 조회
-        return null;
+        List<Reservation> reservationWithComplexConditions = queryReservationRepository.findReservationWithComplexConditions(pageable, reservationSearchDTO);
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        reservationWithComplexConditions.add(new Reservation());
+        List<ReservationDTO> reservationDTOList = reservationWithComplexConditions.stream()
+                                        .map(reservation -> ReservationDTO.ReservationToDTO(reservation)).toList();
+        long total = queryReservationRepository.countReservationWithComplexConditions(reservationSearchDTO);
+        return new PageImpl<>(reservationDTOList, pageable, reservationWithComplexConditions.size());
     }
 
     @Override
+    @Transactional
     public ReservationDTO getReservationById(Long id) {
-        return null;
+        Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("reservation does not exist"));
+        return ReservationDTO.ReservationToDTO(reservation);
     }
 
     @Override
