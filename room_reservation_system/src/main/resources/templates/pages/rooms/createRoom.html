@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
     <title>Create Room</title>
 </head>
 <body>
 <div class="m-lg-2">
     <h1>Create Room</h1>
-    <form th:action="@{/templates/pages/rooms/new}" th:object="${roomDTO}" method="post">
+    <form th:action="@{/pages/rooms/new}" th:object="${roomDTO}" method="post">
         <fieldset>
             <div class="w-50">
                 <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
@@ -42,6 +44,6 @@
         </fieldset>
     </form>
 </div>
-<a th:href="@{/templates/pages/rooms}">Return to list</a>
+<a th:href="@{/pages/rooms}">Return to list</a>
 </body>
 </html>

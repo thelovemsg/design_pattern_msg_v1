@@ -11,7 +11,6 @@ import org.reservation.system.reservation.application.dto.ReservationSearchDTO;
 import org.reservation.system.reservation.application.service.ReservationService;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.reservation.domain.model.Reservation;
-import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.reservation.system.reservation.infrastructure.persistence.QueryReservationRepository;
@@ -65,27 +64,10 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
         List<Reservation> reservationWithComplexConditions = queryReservationRepository.findReservationWithComplexConditions(pageable, reservationSearchDTO);
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
-        reservationWithComplexConditions.add(new Reservation());
         List<ReservationDTO> reservationDTOList = reservationWithComplexConditions.stream()
                                         .map(reservation -> ReservationDTO.ReservationToDTO(reservation)).toList();
         long total = queryReservationRepository.countReservationWithComplexConditions(reservationSearchDTO);
-        return new PageImpl<>(reservationDTOList, pageable, reservationWithComplexConditions.size());
+        return new PageImpl<>(reservationDTOList, pageable, total);
     }
 
     @Override

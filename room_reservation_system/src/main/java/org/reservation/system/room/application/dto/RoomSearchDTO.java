@@ -1,10 +1,12 @@
 package org.reservation.system.room.application.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class RoomSearchDTO {
     private String roomTypeCd;
     private String roomName;

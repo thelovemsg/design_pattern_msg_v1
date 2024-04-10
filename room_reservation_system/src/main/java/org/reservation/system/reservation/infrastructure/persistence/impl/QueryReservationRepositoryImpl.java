@@ -26,8 +26,8 @@ public class QueryReservationRepositoryImpl implements QueryReservationRepositor
     public List<Reservation> findReservationWithComplexConditions(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
         return jpaQueryFactory.selectFrom(reservation)
                 .where(enterAndLeaveDateBetween(reservationSearchDTO.getEnterRoomDate(), reservationSearchDTO.getLeaveRoomDate()),
-                        containsGstNm(reservationSearchDTO.getGstName()),
-                        gstTelNoEq(reservationSearchDTO.getGstTelno()),
+                        containsGstNm(reservationSearchDTO.getGuestName()),
+                        gstTelNoEq(reservationSearchDTO.getGuestTelno()),
                         salsAmountBetween(reservationSearchDTO.getMinSalesAmount(), reservationSearchDTO.getMaxSalesAmount()),
                         vipDivCdEq(reservationSearchDTO.getVipDivCd()),
                         couponCdEq(reservationSearchDTO.getCouponCode()))
@@ -40,8 +40,8 @@ public class QueryReservationRepositoryImpl implements QueryReservationRepositor
     public long countReservationWithComplexConditions(ReservationSearchDTO reservationSearchDTO) {
         return jpaQueryFactory.selectFrom(reservation)
                 .where(enterAndLeaveDateBetween(reservationSearchDTO.getEnterRoomDate(), reservationSearchDTO.getLeaveRoomDate()),
-                        containsGstNm(reservationSearchDTO.getGstName()),
-                        gstTelNoEq(reservationSearchDTO.getGstTelno()),
+                        containsGstNm(reservationSearchDTO.getGuestName()),
+                        gstTelNoEq(reservationSearchDTO.getGuestTelno()),
                         salsAmountBetween(reservationSearchDTO.getMinSalesAmount(), reservationSearchDTO.getMaxSalesAmount()),
                         vipDivCdEq(reservationSearchDTO.getVipDivCd()),
                         couponCdEq(reservationSearchDTO.getCouponCode()))

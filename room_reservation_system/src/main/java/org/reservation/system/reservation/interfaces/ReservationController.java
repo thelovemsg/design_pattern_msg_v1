@@ -8,7 +8,6 @@ import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.RoomTypeService;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -39,19 +38,26 @@ public class ReservationController {
         return "pages/reservation/reservationList";
     }
 
-    @GetMapping("/reservation/new")
-    public String showNewReservationForm(@ModelAttribute("reservationDTO") ReservationDTO reservationDTO, Model model, RedirectAttributes redirectAttributes) {
+    @GetMapping("/reservations/new")
+    public String showNewReservationForm(@ModelAttribute("reservationDTO") ReservationDTO reservationDTO, Model model) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
-        model.addAttribute("rooTypeList", roomTypeList);
+        model.addAttribute("roomTypeList", roomTypeList);
         model.addAttribute("reservationDTO", new ReservationDTO());
-        redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
         return "pages/reservation/reservationForm";
     }
 
-    @PostMapping("/reservation/new")
-    public String saveReservationForm(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model) {
+    @PostMapping("/reservations/new")
+    public String saveReservationForm(@ModelAttribute("reservationSearchDTO") ReservationDTO reservationDTO, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
-        model.addAttribute("rooTypeList", roomTypeList);
+        model.addAttribute("roomTypeList", roomTypeList);
+
+        if (bindingResult.hasErrors()) {
+            return "/pages/reservation/reservationForm";
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
+
 
         return "redirect:/pages/reservation/reservations";
     }
