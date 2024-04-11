@@ -20,19 +20,22 @@
 <div class="m-3">
     <div class="row">
         <div class="col-3">
-            <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex justify-content-between">
                 <div>예약 현황</div>
-                <button id="searchCurrentStatus" class="btn btn-primary mb-3">Search</button>
+                <button id="searchCurrentStatus" class="btn btn-primary">Search</button>
             </div>
             <div class="col-6">
-                <label for="currentStatusDates" class="col-form-label">Reservation Dates</label>
-                <div>
-                    <input type="text" id="currentStatusDates" class="form-control" name="currentStatusDates"/>
-                </div>
+                <form id="roomCurrentStatusSearchForm">
+                    <label for="currentStatusDates" class="col-form-label">Reservation Dates</label>
+                    <div>
+                        <input type="text" id="currentStatusDates" class="form-control text-md-center"
+                               name="currentStatusDates"/>
+                    </div>
+                </form>
             </div>
             <div>
                 <table id="currentStatusByDates" class="table table-hover">
-                    <thead>
+                    <thead class="text-md-center">
                     <tr>
                         <th>Date</th>
                         <th>Room Type</th>
@@ -51,9 +54,9 @@
             </div>
         </div>
         <div class="col-9">
-            <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex justify-content-between">
                 <div>예약 내역</div>
-                <button id="reservationSearchButton" class="btn btn-primary mb-3">Search</button>
+                <button id="reservationSearchButton" class="btn btn-primary">Search</button>
             </div>
             <form id="reservationSearchForm">
                 <div class="row">
@@ -72,7 +75,8 @@
                     <div class="col-3">
                         <label for="reservationDates" class="col-form-label">Dates</label>
                         <div>
-                            <input type="text" id="reservationDates" class="form-control" name="reservationDates"/>
+                            <input type="text" id="reservationDates" class="form-control text-md-center"
+                                   name="reservationDates"/>
                         </div>
                     </div>
                 </div>
@@ -110,6 +114,72 @@
 </body>
 <script>
     $(document).ready(function () {
+
+        function updateRoomTypeHeaders(data) {
+            const thead = $('#currentStatusByDates > thead');
+            const tbody = $('#currentStatusByDates > tbody');
+            thead.empty();
+            tbody.empty();
+
+            let topHeaderRow = $('<tr>').addClass('text-md-center');
+            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th colspan="${data.length}">Room Type</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+
+            let bottomHeaderRow = $('<tr>').addClass('text-md-center');
+
+            data.forEach(function (roomType) {
+                bottomHeaderRow.append(`<th>${roomType.roomTypeCd}</th>`); // 여기에 roomTypeId 대신 보여주고 싶은 값을 사용하세요
+            });
+
+            thead.append(topHeaderRow); // thead에 상단 헤더 행 추가
+            thead.append(bottomHeaderRow); // thead에 하단 헤더 행 추가
+        }
+
+        function fetchRoomTypes() {
+            $.ajax({
+                url: '/api/getRoomTypeList', // 페이지 번호를 URL에 포함
+                type: 'GET',
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.data && Array.isArray(response.data)) {
+                        updateRoomTypeHeaders(response.data);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function updateRoomStatusByDate(data) {
+            console.log(data);
+        }
+
+        function fetchRoomStatusByRoomType(page = 0, searchData = {}) {
+            $.ajax({
+                url: '/api/getRoomStatusByDate', // 페이지 번호를 URL에 포함
+                type: 'GET',
+                contentType: 'application/json',
+                data: searchData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.data && Array.isArray(response.data)) {
+                        updateRoomStatusByDate(response.data);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $('#searchCurrentStatus').click(function (event) {
+            event.preventDefault(); // 폼의 기본 제출 동작 방지
+            let formData = getFormData($('#roomCurrentStatusSearchForm')); // 폼 데이터를 JSON 객체로 가져옴
+            fetchRoomStatusByRoomType(0, formData); // 초기 페이지와 폼 데이터로 검색 실행
+        });
+
         function getFormData($form) {
             let unindexed_array = $form.serializeArray();
             let indexed_array = {};
@@ -121,17 +191,6 @@
             return indexed_array;
         }
 
-        flatpickr("#reservationDates", {
-            mode: "range",
-            conjunction: " ~ "
-        });
-
-        flatpickr("#currentStatusDates", {
-            mode: "range",
-            conjunction: " ~ "
-        });
-
-        // 검색 버튼 클릭 이벤트 핸들러
         $('#reservationSearchButton').click(function (event) {
             event.preventDefault(); // 폼의 기본 제출 동작 방지
             let formData = getFormData($('#reservationSearchForm')); // 폼 데이터를 JSON 객체로 가져옴
@@ -206,7 +265,33 @@
             });
         }
 
-        fetchReservations(); // 페이지 로딩 시 초기 데이터 로드
+        function setDates() {
+            let today = new Date();
+            let tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            today = today.toISOString().split('T')[0];
+            tomorrow = tomorrow.toISOString().split('T')[0];
+
+            flatpickr("#reservationDates", {
+                mode: "range",
+                defaultDate: [today, tomorrow]
+            });
+
+
+            flatpickr("#currentStatusDates", {
+                mode: "range",
+                defaultDate: [new Date(new Date().getFullYear(), new Date().getMonth(), 1), new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)]
+            });
+        }
+
+        function init() {
+            fetchRoomTypes();
+            fetchReservations(); // 페이지 로딩 시 초기 데이터 로드
+            setDates();
+        }
+
+        init();
     });
 </script>
 

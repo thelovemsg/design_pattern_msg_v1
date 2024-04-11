@@ -1,6 +1,7 @@
 package org.reservation.system.room.infrastructure.persistence;
 
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
+import org.reservation.system.room.application.dto.RoomCurrentStatusDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
@@ -14,4 +15,5 @@ public interface QueryRoomRepository {
     long countRoomWithComplexConditions(RoomSearchDTO roomSearchDTO);
     List<RoomVO> findAnyReservedRoomByReservationInfo(RoomReservationQuery roomReservationQuery);
     RoomBlockVO findBlockRoomInfoByReservationInfo(RoomReservationQuery roomReservationQuery);
+    List<RoomCurrentStatusDTO> findRoomCurrentStatusByRoomTypes(RoomSearchDTO roomSearchDTO);
 }

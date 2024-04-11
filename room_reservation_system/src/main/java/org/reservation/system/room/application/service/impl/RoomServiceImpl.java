@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
+import org.reservation.system.room.application.dto.RoomCurrentStatusDTO;
 import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.dto.RoomResponseDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
@@ -140,6 +141,11 @@ public class RoomServiceImpl implements RoomService {
             throw new IllegalArgumentException("객실이 블록처리됌");
         }
 
+    }
+
+    @Override
+    public List<RoomCurrentStatusDTO> selectRoomCurrentStatusByType(RoomSearchDTO roomSearchDTO) {
+        return queryRoomRepository.findRoomCurrentStatusByRoomTypes(roomSearchDTO);
     }
 
 }
