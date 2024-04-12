@@ -3,18 +3,14 @@ package org.reservation.system.room.infrastructure.persistence.impl;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
-import org.reservation.system.reservation.domain.model.QReservation;
-import org.reservation.system.reservation.domain.model.other.QRoomReservation;
 import org.reservation.system.room.application.dto.RoomCurrentStatusDTO;
 import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.vo.RoomBlockVO;
 import org.reservation.system.room.application.vo.RoomVO;
-import org.reservation.system.room.domain.model.QRoom;
 import org.reservation.system.room.domain.model.Room;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
@@ -24,12 +20,14 @@ import org.springframework.stereotype.Repository;
 import org.thymeleaf.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.lang.Boolean.FALSE;
 import static org.reservation.system.reservation.domain.model.QReservation.reservation;
@@ -71,7 +69,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     @Override
     public List<RoomVO> findAnyReservedRoomByReservationInfo(RoomReservationQuery roomReservationQuery) {
         LocalDate enterRoomDate = roomReservationQuery.enterRoomDate();
-        LocalDate leaveRoomDate = enterRoomDate.plusDays(roomReservationQuery.stayDayCnt() + 1);
+        LocalDate leaveRoomDate = enterRoomDate.plusDays(roomReservationQuery.stayDayCnt() + 1L);
         return queryFactory.select(Projections.constructor(RoomVO.class, room.roomNo, room.roomName, room.roomType, room.remark))
                 .from(roomReservation)
                 .join(roomReservation.reservation, reservation)
@@ -106,39 +104,43 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
         LocalDate startDate = roomSearchDTO.getStartDate();
         LocalDate endDate = roomSearchDTO.getEndDate();
 
-        // 날짜 범위 내의 각 날짜에 대한 예약 카운트를 저장할 맵 생성
-        Map<LocalDate, Map<RoomType, Long>> reservationCountsByDateAndType = new LinkedHashMap<>();
+        Map<LocalDate, RoomCurrentStatusDTO> statusByDate = IntStream.rangeClosed(0, Period.between(startDate, endDate).getDays())
+                .mapToObj(startDate::plusDays)
+                .collect(Collectors.toMap(
+                        date -> date,
+                        RoomCurrentStatusDTO::new,
+                        (existing, replacement) -> existing,
+                        LinkedHashMap::new)
+                );
 
-        // 쿼리를 한 번만 실행하여 해당 기간에 활성된 모든 예약을 가져옴
-        List<Tuple> reservations = queryFactory
-                .select(roomReservation.enterDate, roomReservation.leaveDate, room.roomType, roomReservation.count())
+        Long roomCount = queryFactory.select(room.count())
+                .from(room)
+                .where(room.deleted.eq(false)
+                        .and(room.useFlag.eq("1")))
+                .fetchOne();
+
+        List<Tuple> fetch = queryFactory.select(roomReservation.count(), roomReservation.reservation.reservationInfo.enterRoomDate, room.roomType.roomTypeCd, room.roomType.id)
                 .from(roomReservation)
                 .join(roomReservation.room, room)
-                .where(roomReservation.enterDate.loe(endDate)
-                        .and(roomReservation.leaveDate.goe(startDate))
-                        .and(roomReservation.checkOut.isNull()))
-                .groupBy(roomReservation.enterDate, roomReservation.leaveDate, room.roomType)
+                .where(roomReservation.reservation.reservationInfo.enterRoomDate.loe(endDate)
+                        .and(roomReservation.reservation.reservationInfo.leaveRoomDate.goe(startDate))
+                        .and(roomReservation.deleted.eq(false)))
+                .groupBy(roomReservation.reservation.reservationInfo.enterRoomDate, room.roomType.roomTypeCd, room.roomType.id)
                 .fetch();
 
-        // 조회된 데이터로부터 날짜 범위에 포함되는 각 날짜별 예약 카운트를 계산
-        for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
-            final LocalDate currentDate = date;
-            Map<RoomType, Long> countsByType = reservations.stream()
-                    .filter(tuple -> !currentDate.isBefore(tuple.get(roomReservation.enterDate)) && !currentDate.isAfter(tuple.get(roomReservation.leaveDate)))
-                    .collect(Collectors.toMap(
-                            tuple -> tuple.get(room.roomType),
-                            tuple -> tuple.get(roomReservation.count()),
-                            Long::sum));
-            reservationCountsByDateAndType.put(currentDate, countsByType);
-        }
+        fetch.parallelStream().forEach(tuple -> {
+            LocalDate enterRoomDate = tuple.get(roomReservation.reservation.reservationInfo.enterRoomDate);
+            String roomTypeCd = tuple.get(room.roomType.roomTypeCd);
+            Long id = tuple.get(room.roomType.id);
+            Long count = tuple.get(roomReservation.count());
 
-        // 최종 결과를 RoomCurrentStatusDTO 리스트로 변환
-        List<RoomCurrentStatusDTO> statusList = reservationCountsByDateAndType.entrySet().stream()
-                .flatMap(entry -> entry.getValue().entrySet().stream()
-                        .map(typeCount -> new RoomCurrentStatusDTO(entry.getKey(), typeCount.getKey(), typeCount.getValue())))
-                .collect(Collectors.toList());
+            RoomCurrentStatusDTO statusDto = statusByDate.get(enterRoomDate);
+            statusDto.addRoomTotalCount(roomTypeCd, count, id);
+        });
 
-        return statusList;
+        statusByDate.values().forEach(el -> el.calculateRoomReservationRate(roomCount));
+
+        return new ArrayList<>(statusByDate.values());
     }
 
     private BooleanExpression eqRoomNo(Integer roomNo) {

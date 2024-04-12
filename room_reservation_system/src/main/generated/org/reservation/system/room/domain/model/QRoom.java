@@ -58,6 +58,8 @@ public class QRoom extends EntityPathBase<Room> {
 
     public final QRoomType roomType;
 
+    public final StringPath useFlag = createString("useFlag");
+
     public QRoom(String variable) {
         this(Room.class, forVariable(variable), INITS);
     }

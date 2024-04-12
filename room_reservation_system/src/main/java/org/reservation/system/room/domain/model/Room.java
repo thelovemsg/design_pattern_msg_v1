@@ -37,6 +37,9 @@ public class Room extends BaseEntity {
     @Column(length = 300)
     private String remark;
 
+    @Builder.Default
+    private String useFlag = "1";
+
     @OneToMany(mappedBy = "room")
     private List<RoomInfoHistory> roomInfoHistoryList;
 

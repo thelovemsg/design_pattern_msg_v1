@@ -27,8 +27,8 @@ public class MoneyInfo {
     @Builder.Default
     private BigDecimal taxAmount = new BigDecimal("0");
     @Transient
+    @Builder.Default
     private BigDecimal differentAmount = new BigDecimal("0");
-
 
     public MoneyInfo addAmount(BigDecimal addingAmount) {
         BigDecimal newProductAmount = this.productAmount.add(addingAmount);

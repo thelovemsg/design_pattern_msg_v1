@@ -36,10 +36,6 @@
             <div>
                 <table id="currentStatusByDates" class="table table-hover">
                     <thead class="text-md-center">
-                    <tr>
-                        <th>Date</th>
-                        <th>Room Type</th>
-                    </tr>
                     </thead>
                     <tbody>
                     </tbody>
@@ -117,9 +113,7 @@
 
         function updateRoomTypeHeaders(data) {
             const thead = $('#currentStatusByDates > thead');
-            const tbody = $('#currentStatusByDates > tbody');
             thead.empty();
-            tbody.empty();
 
             let topHeaderRow = $('<tr>').addClass('text-md-center');
             topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
@@ -133,6 +127,12 @@
 
             thead.append(topHeaderRow); // thead에 상단 헤더 행 추가
             thead.append(bottomHeaderRow); // thead에 하단 헤더 행 추가
+
+            thead.append(`
+                            <th>Possible Reservation Room</th>
+                            <th>Total Room Count</th>
+                            <th>Reservation Rate</th>
+                        `)
         }
 
         function fetchRoomTypes() {
@@ -153,6 +153,28 @@
         }
 
         function updateRoomStatusByDate(data) {
+            const tbody = $('#currentStatusByDates > tbody');
+            tbody.empty();
+
+            data.forEach(function (currentStatusData) {
+                tbody.append(`<tr>`);
+                tbody.append(`<td>${currentStatusData.baseDate}</td>`);
+                let currentStatus = '';
+                currentStatusData.roomTypeResponseList.forEach(function(roomTypeResponse) {
+                    currentStatus +=    `
+                                            <td>${roomTypeResponse.reservationCount}</td>
+                                        `
+                })
+                tbody.append(currentStatus);
+                tbody.append(`
+                                <td>${currentStatus.possibleRoomCount}</td>
+                                <td>${currentStatus.roomTotalCnt}</td>
+                                <td>${currentStatus.reserationRate}</td>
+                            `)
+
+                tbody.append(`</tr>`);
+            });
+
             console.log(data);
         }
 

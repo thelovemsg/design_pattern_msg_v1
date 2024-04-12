@@ -42,7 +42,7 @@ public class QRoomReservation extends EntityPathBase<RoomReservation> {
     //inherited
     public final DateTimePath<java.time.ZonedDateTime> modifyDate = _super.modifyDate;
 
-    public final org.reservation.system.reservation.domain.model.QReservation  reservation;
+    public final org.reservation.system.reservation.domain.model.QReservation reservation;
 
     public final org.reservation.system.room.domain.model.QRoom room;
 
