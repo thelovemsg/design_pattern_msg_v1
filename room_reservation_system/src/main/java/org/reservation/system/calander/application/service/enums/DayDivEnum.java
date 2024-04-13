@@ -13,7 +13,7 @@ public enum DayDivEnum {
     }
 
     public static boolean isPeakOfWeek(String dayCode) {
-        return dayCode.equals("5") || dayCode.equals("6");
+        return dayCode.equals("6") || dayCode.equals("7");
     }
 
 }

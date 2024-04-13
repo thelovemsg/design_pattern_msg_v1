@@ -18,4 +18,8 @@ public class CalenderServiceImpl implements CalenderService {
     public List<Calender> selectCalenderInfoBySolarDateBetween(LocalDate startDate, LocalDate endDate) {
         return calenderRepository.findBySolarDateBetween(startDate, endDate);
     }
+
+    public List<Calender> selectCalenderInfoBySolarDateExceptEndDate(LocalDate startDate, LocalDate endDate) {
+        return calenderRepository.findBySolarDateGreaterThanEqualAndSolarDateLessThan(startDate, endDate);
+    }
 }

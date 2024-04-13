@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CalenderRepository extends JpaRepository<Calender, Long> {
     List<Calender> findBySolarDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Calender> findBySolarDateGreaterThanEqualAndSolarDateLessThan(LocalDate startDate, LocalDate endDate);
 }

@@ -59,7 +59,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         LocalDate enterRoomDate = feeSearchDTO.getEnterRoomDate();
         LocalDate leaveRoomDate = enterRoomDate.plusDays(feeSearchDTO.getStayDayCnt());
 
-        List<Calender> calenders = calenderService.selectCalenderInfoBySolarDateBetween(enterRoomDate, leaveRoomDate);
+        List<Calender> calenders = calenderService.selectCalenderInfoBySolarDateExceptEndDate(enterRoomDate, leaveRoomDate);
         List<PricingHistory> pricingHistoryList = new ArrayList<>();
         List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 

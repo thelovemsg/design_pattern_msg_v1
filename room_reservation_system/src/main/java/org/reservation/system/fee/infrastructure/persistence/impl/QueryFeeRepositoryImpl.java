@@ -1,6 +1,7 @@
 package org.reservation.system.fee.infrastructure.persistence.impl;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +29,19 @@ public class QueryFeeRepositoryImpl implements QueryFeeRepository {
 
     @Override
     public List<Fee> findFeeWithComplexConditions(Pageable pageable, FeeSearchDTO feeSearchDTO) {
-        return jpaQueryFactory.selectFrom(fee)
+        JPAQuery<Fee> query = jpaQueryFactory.selectFrom(fee)
                 .where(containFeeName(feeSearchDTO.getFeeName()),
                         eqRoomType(feeSearchDTO.getRoomTypeCd()),
                         feeAmountBetween(feeSearchDTO.getMinFeeAmount(), feeSearchDTO.getMaxFeeAmount()),
                         containsFeeRemark(feeSearchDTO.getRemark()),
-                        fee.deleted.eq(FALSE))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+                        fee.deleted.eq(FALSE));
+
+        if (pageable != null) {
+            query.offset(pageable.getOffset())
+                    .limit(pageable.getPageSize());
+        }
+
+        return query.fetch();
     }
 
     private BooleanExpression containsFeeRemark(String remark) {

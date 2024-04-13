@@ -33,7 +33,7 @@
                     </div>
                 </form>
             </div>
-            <div>
+            <div class="scrollable-table-container">
                 <table id="currentStatusByDates" class="table table-hover">
                     <thead class="text-md-center">
                     </thead>
@@ -77,8 +77,8 @@
                     </div>
                 </div>
             </form>
-            <div>
-                <table id="reservationTable" class="table table-hover">
+            <div class="scrollable-table-container">
+                <table id="reservationTable" class="table table-hover table-responsive-14">
                     <thead>
                     <tr>
                         <th class="col-1">Sequence</th>
@@ -116,23 +116,16 @@
             thead.empty();
 
             let topHeaderRow = $('<tr>').addClass('text-md-center');
-            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
-            topHeaderRow.append(`<th colspan="${data.length}">Room Type</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th rowspan="2" class="text-center fs-6" style="vertical-align: middle;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th  class="text-center fs-6"  colspan="${data.length}">Room Type</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
 
             let bottomHeaderRow = $('<tr>').addClass('text-md-center');
-
             data.forEach(function (roomType) {
                 bottomHeaderRow.append(`<th>${roomType.roomTypeCd}</th>`); // 여기에 roomTypeId 대신 보여주고 싶은 값을 사용하세요
             });
 
             thead.append(topHeaderRow); // thead에 상단 헤더 행 추가
             thead.append(bottomHeaderRow); // thead에 하단 헤더 행 추가
-
-            thead.append(`
-                            <th>Possible Reservation Room</th>
-                            <th>Total Room Count</th>
-                            <th>Reservation Rate</th>
-                        `)
         }
 
         function fetchRoomTypes() {
@@ -160,8 +153,8 @@
                 tbody.append(`<tr>`);
                 tbody.append(`<td>${currentStatusData.baseDate}</td>`);
                 let currentStatus = '';
-                currentStatusData.roomTypeResponseList.forEach(function(roomTypeResponse) {
-                    currentStatus +=    `
+                currentStatusData.roomTypeResponseList.forEach(function (roomTypeResponse) {
+                    currentStatus += `
                                             <td>${roomTypeResponse.reservationCount}</td>
                                         `
                 })
@@ -181,7 +174,7 @@
         function fetchRoomStatusByRoomType(page = 0, searchData = {}) {
             $.ajax({
                 url: '/api/getRoomStatusByDate', // 페이지 번호를 URL에 포함
-                type: 'GET',
+                type: 'POST',
                 contentType: 'application/json',
                 data: searchData,
                 dataType: 'json',
@@ -199,6 +192,7 @@
         $('#searchCurrentStatus').click(function (event) {
             event.preventDefault(); // 폼의 기본 제출 동작 방지
             let formData = getFormData($('#roomCurrentStatusSearchForm')); // 폼 데이터를 JSON 객체로 가져옴
+            fetchRoomTypes();
             fetchRoomStatusByRoomType(0, formData); // 초기 페이지와 폼 데이터로 검색 실행
         });
 
@@ -309,6 +303,7 @@
 
         function init() {
             fetchRoomTypes();
+            fetchRoomStatusByRoomType(); // 초기 페이지와 폼 데이터로 검색 실행
             fetchReservations(); // 페이지 로딩 시 초기 데이터 로드
             setDates();
         }
