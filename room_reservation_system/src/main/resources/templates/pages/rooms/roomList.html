@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
+<head>
+    <title>Room List</title>
+</head>
+<body>
+<div>
+    <div class="m-lg-2">
+        <h1>Room List</h1>
+        <a th:href="@{/}">To Home</a>
+        <a th:href="@{/rooms/type/new}">Create New Room Type</a>
+        <a th:href="@{/rooms/new}">Create New Room</a>
+    </div>
+    <div th:if="${successMessage}" class="alert alert-success w-25">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div class="m-3">
+        <div class="w-75">
+            <form th:action="@{/rooms}" method="get">
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <label for="roomNo" class="col-form-label">Room No</label>
+                        <input type="text" id="roomNo" name="roomNo" th:value="${roomSearchDTO.roomNo}"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-auto">
+                        <label for="roomTypeCd" class="col-form-label">Room Type</label>
+                        <select class="form-select" th:value="${roomSearchDTO.roomTypeCd}" id="roomTypeCd"
+                                name="roomTypeCd">
+                            <option value="">All</option>
+                            <option th:each="type : ${roomTypeList}"
+                                    th:value="${type.roomTypeCd}"
+                                    th:text="${type.roomTypeCd}"
+                                    th:selected="${type.roomTypeCd == roomSearchDTO.roomTypeCd}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label for="roomName" class="col-form-label">Room Name</label>
+                        <input type="text" id="roomName" name="roomName" th:value="${roomSearchDTO.roomName}"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-auto">
+                        <label for="remark" class="col-form-label">Remark</label>
+                        <input type="text" name="remark" id="remark" th:value="${roomSearchDTO.remark}"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-1 mt-lg-5">
+                        <button type="submit" class="btn btn-primary mb-3">Search</button>
+                    </div>
+                </div>
+            </form>
+            <div>
+                <div>
+                    <!-- 시작 번호 -->
+                    <span th:text="${roomList.number * roomList.size + 1}"></span>
+                    <span> ~ </span>
+                    <!-- 끝 번호: 마지막 페이지 확인 -->
+                    <span th:with="endNumber=${(roomList.number + 1) * roomList.size}, finalEndNumber=${roomList.totalElements < endNumber ? roomList.totalElements : endNumber}"
+                          th:text="${finalEndNumber}"></span>
+                    <span> / </span>
+                    <!-- 전체 항목 수 -->
+                    <span th:text="${roomList.totalElements}"></span>
+                </div>
+            </div>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th class="col-1">Sequence</th>
+                <th>Room Number</th>
+                <th>Room Name</th>
+                <th>Room Type</th>
+                <th class="col-4">Remark</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-dark" th:each="room, iterStat: ${roomList}">
+                <td th:text="${iterStat.count + (roomList.number * roomList.size)}">1</td>
+                <td><a th:href="@{/rooms/update/{id}(id=${room.id})}" th:text="${room.roomNo}"></a></td>
+                <td th:text="${room.roomName}">Room Name</td>
+                <td th:text="${room.roomTypeCd}">Room Type</td>
+                <td th:text="${room.remark}">Remark</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination-fixed-bottom">
+        <ul class="pagination justify-content-center">
+            <li th:if="${roomList.hasPrevious()}" th:class="${roomList.first ? 'disabled' : 'page-item'}">
+                <a class="page-link"
+                   th:href="@{/pages/rooms(page=${roomList.number - 1}, size=${roomList.size}, roomNo=${roomSearchDTO.roomNo}, roomType=${roomSearchDTO.roomTypeCd}, roomName=${roomSearchDTO.roomName}, remark=${roomSearchDTO.remark})}">Previous</a>
+            </li>
+            <li th:each="pageNum : ${#numbers.sequence(roomList.number > 5 ? roomList.number - 5 : 0, roomList.totalPages > roomList.number + 5 ? roomList.number + 5 : roomList.totalPages - 1)}"
+                th:class="${pageNum == roomList.number ? 'active page-item' : 'page-item'}">
+                <a class="page-link" th:href="@{/templates/pages/rooms(page=${pageNum}, size=${roomList.size})}"
+                   th:text="${pageNum + 1}">1</a>
+            </li>
+            <li th:if="${roomList.hasNext()}" th:class="${roomList.last ? 'disabled' : 'page-item'}">
+                <a class="page-link"
+                   th:href="@{/pages/rooms(page=${roomList.number + 1}, size=${roomList.size})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
+<head>
+    <title>Create Room</title>
+</head>
+<body>
+<div class="m-lg-2">
+    <h1>Create Room</h1>
+    <form th:action="@{/rooms/new}" th:object="${roomDTO}" method="post">
+        <fieldset>
+            <div class="w-50">
+                <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
+                <input type="text" class="form-control" th:field="*{roomNo}" id="roomNo" placeholder="Enter room number">
+                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room Number Error</span>
+            </div>
+            <div class="w-50">
+                <label for="roomName" class="form-label mt-4 col-sm-2">Room Name</label>
+                <input type="text" class="form-control" th:field="*{roomName}" id="roomName"
+                       placeholder="Enter room name"/>
+                <span th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}" class="text-danger">Room Name Error</span>
+            </div>
+            <div class="w-50">
+                <label for="roomTypeCd" class="form-label mt-4 col-sm-2">Room Type</label>
+                <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
+                    <option value="">All</option>
+                    <option th:each="type : ${roomTypeList}"
+                            th:value="${type.roomTypeCd}"
+                            th:text="${type.roomTypeCd}"
+                            th:selected="${type.roomTypeCd == roomDTO.roomTypeCd}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
+            </div>
+            <div class="w-50">
+                <label for="remark" class="form-label mt-4">remark</label>
+                <textarea th:field="*{remark}" class="form-control" id="remark" rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Create</button>
+        </fieldset>
+    </form>
+</div>
+<a th:href="@{/rooms}">Return to list</a>
+</body>
+</html>

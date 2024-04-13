@@ -22,7 +22,10 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         List<RoomTypeResponseDTO> roomTypeResponseDTOList = new ArrayList<>();
 
         for (RoomType roomType : roomTypeList) {
-            roomTypeResponseDTOList.add(new RoomTypeResponseDTO(roomType.getRoomTypeCd()));
+            roomTypeResponseDTOList.add(RoomTypeResponseDTO.builder()
+                    .id(roomType.getId())
+                    .roomTypeCd(roomType.getRoomTypeCd())
+                    .build());
         }
 
         return roomTypeResponseDTOList;

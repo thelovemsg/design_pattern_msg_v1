@@ -2,12 +2,15 @@ package org.reservation.system.fee.application.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.fee.application.dto.DailyFeeDTO;
 import org.reservation.system.fee.application.dto.FeeDTO;
 import org.reservation.system.fee.application.dto.FeeResponseDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.service.FeeService;
+import org.reservation.system.fee.application.vo.FeeCreateVO;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.fee.domain.repository.FeeRepository;
+import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.infrastructure.persistence.QueryFeeRepository;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
@@ -28,6 +31,7 @@ public class FeeServiceImpl implements FeeService {
     private final FeeRepository feeRepository;
     private final RoomTypeRepository roomTypeRepository;
     private final QueryFeeRepository queryFeeRepository;
+    private final FeeDomainService feeDomainService;
     private static final DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
     @Override
@@ -102,12 +106,24 @@ public class FeeServiceImpl implements FeeService {
                 .build();
     }
 
+
     @Override
     public void deleteFee(Long id) {
         Fee fee = feeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Fee not found with id " + id));
         fee.delete();
         feeRepository.save(fee);
+    }
+
+    @Override
+    public List<DailyFeeDTO> makeReservationFeeInfoList(FeeCreateVO feeCreateVO) {
+//        return feeDomainService.createDailyFee(feeCreateVO);
+        return null;
+    }
+
+    @Override
+    public List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO) {
+        return feeDomainService.createTempDailyFee(feeSearchDTO);
     }
 
 }

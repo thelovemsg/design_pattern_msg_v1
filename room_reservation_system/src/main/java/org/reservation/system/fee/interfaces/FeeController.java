@@ -38,7 +38,7 @@ public class FeeController {
         model.addAttribute("feeSearchDTO", feeSearchDTO);
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "/fees/feeList.html";
+        return "pages/fees/feeList";
     }
 
     @GetMapping("/fees/new")
@@ -48,7 +48,7 @@ public class FeeController {
         model.addAttribute("feeDTO", new FeeDTO());
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "fees/createFee";
+        return "pages/fees/createFee";
     }
 
     @PostMapping("/fees/new")
@@ -62,13 +62,13 @@ public class FeeController {
         });
 
         if (bindingResult.hasErrors()) {
-            return "fees/createFee";
+            return "pages/fees/createFee";
         }
         feeService.createFee(feeDTO);
 
         redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
 
-        return "redirect:/fees";
+        return "redirect:/pages/fees";
     }
 
     @GetMapping("/fees/update/{id}")
@@ -80,7 +80,7 @@ public class FeeController {
 
         model.addAttribute("feeDTO", feeResponseDTO);
 
-        return "/fees/updateFee";
+        return "pages/fees/updateFee";
     }
 
     @PostMapping("/fees/update")
@@ -94,20 +94,20 @@ public class FeeController {
         });
 
         if (bindingResult.hasErrors()) {
-            return "fees/updateFee";
+            return "pages/fees/updateFee";
         }
 
         feeService.updateFee(feeDTO);
         model.addAttribute("feeDTO", feeDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "redirect:/fees/update/" + feeDTO.getId();
+        return "redirect:/pages/fees/update/" + feeDTO.getId();
     }
 
     @DeleteMapping("/fees/{id}")
     public String deleteFee(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         feeService.deleteFee(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제 성공!");
-        return "redirect:/fees";
+        return "redirect:/pages/fees";
     }
 }

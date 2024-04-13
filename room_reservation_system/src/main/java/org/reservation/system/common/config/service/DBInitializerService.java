@@ -1,9 +1,9 @@
 package org.reservation.system.common.config.service;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.calander.application.service.enums.DayDivEnum;
+import org.reservation.system.calander.domain.Calender;
 import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.room.domain.model.Room;
@@ -14,14 +14,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DBInitializerService {
-
 
     private final EntityManager em;
     private final RoomTypeRepository roomTypeRepository;
@@ -60,23 +63,80 @@ public class DBInitializerService {
 
         }
 
-        for (int i = 0; i < 31; i++) {
-            RoomType targetRoomType = null;
-            if (i < 15) {
-                targetRoomType = roomTypeA;
-            } else if (i >= 15 && i <= 28) {
-                targetRoomType = roomTypeB;
-            } else {
-                targetRoomType = roomTypeC;
+
+        BigDecimal feeAmountA = new BigDecimal(100000);
+        Fee newFeeA = Fee.builder()
+                .feeAmount(feeAmountA)
+                .feeName(roomTypeA.getRoomTypeCd() + "_Fee_A")
+                .roomType(roomTypeA)
+                .remark("remark_" + roomTypeA.getRoomTypeCd()).build();
+        em.persist(newFeeA);
+
+        BigDecimal feeAmountB = new BigDecimal(150000);
+        Fee newFeeB = Fee.builder()
+                .feeAmount(feeAmountB)
+                .feeName(roomTypeB.getRoomTypeCd() + "_Fee_B")
+                .roomType(roomTypeB)
+                .remark("remark_" + roomTypeB.getRoomTypeCd()).build();
+        em.persist(newFeeB);
+
+        BigDecimal feeAmountC = new BigDecimal(200000);
+        Fee newFeeC = Fee.builder()
+                .feeAmount(feeAmountC)
+                .feeName(roomTypeC.getRoomTypeCd() + "_Fee")
+                .roomType(roomTypeC)
+                .remark("remark_" + roomTypeC.getRoomTypeCd()).build();
+        em.persist(newFeeC);
+
+    }
+
+    @Transactional
+    public void createCalenderInfo() {
+        LocalDate startDate = LocalDate.of(2024, 01, 01);
+        LocalDate endDate = LocalDate.of(2024, 12, 31);
+
+        // 공휴일 설정
+        Map<LocalDate, String> holidays = new HashMap<>();
+        holidays.put(LocalDate.of(2024, 1, 1), "새해");
+        holidays.put(LocalDate.of(2024, 2, 9), "설날");
+        holidays.put(LocalDate.of(2024, 2, 10), "설날");
+        holidays.put(LocalDate.of(2024, 2, 11), "설날");
+        holidays.put(LocalDate.of(2024, 2, 12), "설날 휴일");
+        holidays.put(LocalDate.of(2024, 3, 1), "3·1 운동/삼일절");
+        holidays.put(LocalDate.of(2024, 5, 5), "어린이날");
+        holidays.put(LocalDate.of(2024, 5, 6), "어린이날 휴일");
+        holidays.put(LocalDate.of(2024, 5, 15), "부처님 오신 날");
+        holidays.put(LocalDate.of(2024, 6, 6), "현충일");
+        holidays.put(LocalDate.of(2024, 8, 15), "광복절");
+        holidays.put(LocalDate.of(2024, 9, 16), "추석");
+        holidays.put(LocalDate.of(2024, 9, 17), "추석");
+        holidays.put(LocalDate.of(2024, 9, 18), "추석");
+        holidays.put(LocalDate.of(2024, 10, 3), "개천절");
+        holidays.put(LocalDate.of(2024, 10, 9), "한글날");
+        holidays.put(LocalDate.of(2024, 12, 25), "크리스마스");
+
+        LocalDate currentDate = startDate;
+        while (!currentDate.isAfter(endDate)) {
+            String holidayDivCd = holidays.containsKey(currentDate) ? "Y" : "N";
+            String seasonDivCd = (currentDate.getMonthValue() >= 7 && currentDate.getMonthValue() <= 9) ? "Y" : "N";
+            if (currentDate.isAfter(LocalDate.of(2024, 9, 15))) {
+                seasonDivCd = "N"; // 9월 15일 이후는 NO
             }
 
-            BigDecimal multiply = new BigDecimal(100000).multiply(new BigDecimal(i + 1)).setScale(0, RoundingMode.DOWN);
-            Fee newFee = Fee.builder()
-                    .feeAmount(multiply)
-                    .feeName(targetRoomType.getRoomTypeCd() + "_Fee_" + (i + 1))
-                    .roomType(targetRoomType)
-                    .remark("remark_" + (i + 1)).build();
-            em.persist(newFee);
+            DayOfWeek dayOfWeek = currentDate.getDayOfWeek();
+            String dayDivCd = DayDivEnum.values()[dayOfWeek.getValue() % 7].getDayCode();
+
+            em.persist(Calender.builder()
+                    .dayDivCd(dayDivCd)
+                    .holidayDivCd(holidayDivCd)
+                    .name(holidayDivCd.equals("N")
+                            ? currentDate.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US).toUpperCase()
+                            : holidays.get(currentDate))
+                    .seasonDivCd(seasonDivCd)
+                    .solarDate(currentDate)
+                    .build());
+
+            currentDate = currentDate.plusDays(1);
         }
     }
 
@@ -87,13 +147,13 @@ public class DBInitializerService {
         RoomType roomType = null;
         Room room = null;
 
-        for(int i = 1; i <= 18; i++) {
+        for (int i = 1; i <= 18; i++) {
 
             LocalDate enterRoomDate = LocalDate.now();
             LocalDate leaveRoomDate = LocalDate.now().plusDays(i);
 
             ReservationInfo.builder()
-                    .reserverName("예약자_"+(i))
+                    .reserverName("예약자_" + (i))
                     .reserverTelno("010-1234-5678")
                     .enterRoomDate(enterRoomDate)
                     .leaveRoomDate(leaveRoomDate)

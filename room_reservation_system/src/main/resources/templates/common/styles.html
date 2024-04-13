@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Thymeleaf 선언 / FooterFragment 임을 선언-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      th:fragment="StyleFragment">
+<style>
+        .pagination-fixed-bottom {
+                position: fixed;
+                bottom: 80px; /* Footer의 높이만큼 조정 */
+                left: 0;
+                width: 100%;
+                z-index: 1030; /* Footer보다 높은 z-index */
+        }
+
+        .daterangepicker {
+            z-index: 9999 !important;
+        }
+
+        .available{
+            bold : 1px solid;
+        }
+</style>
+</html>

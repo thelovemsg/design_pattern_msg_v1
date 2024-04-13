@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
+<head>
+    <title>Create Fee</title>
+</head>
+<body>
+<div class="m-lg-2">
+    <h1>Create Fee</h1>
+    <form th:action="@{/fees/new}" th:object="${feeDTO}" method="post">
+        <fieldset>
+            <div class="w-50">
+                <label for="feeName" class="form-label mt-4 col-sm-2">Fee Name</label>
+                <input type="text" class="form-control" th:field="*{feeName}" id="feeName" placeholder="Enter fee name">
+                <span th:if="${#fields.hasErrors('feeName')}" th:errors="*{feeName}" class="text-danger">Fee Name Error</span>
+            </div>
+            <div class="w-50">
+                <label for="roomTypeCd" class="form-label mt-4 col-sm-2">Room Type</label>
+                <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
+                    <option value="">All</option>
+                    <option th:each="type : ${roomTypeList}"
+                            th:value="${type.roomTypeCd}"
+                            th:text="${type.roomTypeCd}"
+                            th:selected="${type.roomTypeCd == feeDTO.roomTypeCd}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
+            </div>
+            <div class="w-50">
+                <label for="feeAmount" class="form-label mt-4">feeAmount</label>
+                <input th:field="*{feeAmount}" class="form-control" id="feeAmount"></input>
+            </div>
+            <div class="w-50">
+                <label for="remark" class="form-label mt-4">remark</label>
+                <textarea th:field="*{remark}" class="form-control" id="remark" rows="3"></textarea>
+            </div>
+            <button class="btn btn-primary mt-4" type="submit">Create</button>
+        </fieldset>
+    </form>
+</div>
+<a th:href="@{/fees}">Return to list</a>
+</body>
+<script>
+    // 숫자 입력 필드에 숫자와 컴마만 허용하는 기능
+    $(document).ready(function () {
+        $('#feeAmount').on('input', function () {
+            let value = $(this).val();
+            let numberWithCommas = value.replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            $(this).val(numberWithCommas);
+        });
+    });
+</script>
+</html>

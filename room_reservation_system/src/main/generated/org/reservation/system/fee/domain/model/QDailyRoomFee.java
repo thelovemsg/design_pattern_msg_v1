@@ -48,9 +48,11 @@ public class QDailyRoomFee extends EntityPathBase<DailyRoomFee> {
     //inherited
     public final DateTimePath<java.time.ZonedDateTime> modifyDate = _super.modifyDate;
 
-    public final org.reservation.system.fee.value.QMoney money;
+    public final org.reservation.system.fee.value.QMoneyInfo moneyInfo;
 
     public final DatePath<java.time.LocalDate> occurDate = createDate("occurDate", java.time.LocalDate.class);
+
+    public final ListPath<PricingHistory, QPricingHistory> pricingHistoryList = this.<PricingHistory, QPricingHistory>createList("pricingHistoryList", PricingHistory.class, QPricingHistory.class, PathInits.DIRECT2);
 
     public final org.reservation.system.reservation.domain.model.QReservation reservation;
 
@@ -73,7 +75,7 @@ public class QDailyRoomFee extends EntityPathBase<DailyRoomFee> {
     public QDailyRoomFee(Class<? extends DailyRoomFee> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.fee = inits.isInitialized("fee") ? new QFee(forProperty("fee"), inits.get("fee")) : null;
-        this.money = inits.isInitialized("money") ? new org.reservation.system.fee.value.QMoney(forProperty("money")) : null;
+        this.moneyInfo = inits.isInitialized("moneyInfo") ? new org.reservation.system.fee.value.QMoneyInfo(forProperty("moneyInfo")) : null;
         this.reservation = inits.isInitialized("reservation") ? new org.reservation.system.reservation.domain.model.QReservation(forProperty("reservation"), inits.get("reservation")) : null;
     }
 

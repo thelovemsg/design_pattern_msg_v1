@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
+<head>
+    <title>New Reservation Form</title>
+</head>
+<body>
+<div class="m-lg-2">
+    <h1>New Reservation Form</h1>
+    <form th:action="@{/reservations/new}" th:object="${reservationDTO}" method="post">
+        <fieldset class="row">
+            <div class="col">
+                <label for="roomTypeCd" class="form-label mt-4 col-sm-2">Room Type</label>
+                <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
+                    <option value="">All</option>
+                    <option th:each="type : ${roomTypeList}"
+                            th:value="${type.roomTypeCd}"
+                            th:text="${type.roomTypeCd}"
+                            th:selected="${type.roomTypeCd == reservationDTO.roomTypeCd}">
+                    </option>
+                </select>
+                <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
+            </div>
+            <div class="col">
+                <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
+                <select class="form-select" th:field="*{roomNo}" id="roomNo" name="roomTypeCd">
+                    <option value="">All</option>
+                </select>
+                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room No Error</span>
+            </div>
+        </fieldset>
+        <button class="btn btn-primary mt-4" type="submit">Create</button>
+    </form>
+</div>
+<a th:href="@{/reservations}">Return To Reservation List</a>
+</body>
+<script>
+    $(document).ready(function() {
+        $("#roomTypeCd").change(function() {
+            fetchRoomList($(this).val()); // 함수 호출 시 인자를 올바르게 전달합니다.
+        });
+
+        function fetchRoomList(roomTypeCd) {
+            $.ajax({
+                url: '/api/getRoomList', // 요청을 보낼 URL
+                type: 'GET',
+                data: {roomTypeCd: roomTypeCd}, // 방 타입 코드를 데이터로 전달합니다.
+                dataType: 'json',
+                success: function(response) {
+                    updateSelectRoomList(response.data); // 방 목록 업데이트 함수 호출
+                },
+                error: function(error) {
+                    console.log(error); // 에러 로깅
+                    // 에러 발생 시 사용자에게 표시
+                    alert('Error fetching data'); // 간단한 에러 메시지 표시
+                }
+            });
+        }
+
+        function updateSelectRoomList(data) {
+            let roomNoSelect = $('#roomNo');
+            roomNoSelect.empty(); // 기존 목록을 비웁니다.
+
+            const options = data.map(room =>
+                `<option value="${room.roomNo}">${room.roomNo}호 / 이름 : (${room.roomName})</option>`
+            ).join(''); // 배열의 각 요소를 문자열로 변환 후, 이를 하나의 문자열로 결합합니다.
+
+            roomNoSelect.append('<option value="">All</option>' + options); // 기본 옵션과 방 목록 옵션을 추가합니다.
+        }
+    });
+</script>
+</html>

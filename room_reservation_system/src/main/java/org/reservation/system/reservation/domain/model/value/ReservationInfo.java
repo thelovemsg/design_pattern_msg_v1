@@ -18,6 +18,7 @@ public class ReservationInfo {
     private String guestName;
     private String guestTelno;
     private String stayStatus;
+    private Integer roomNo;
     private Integer stayDayCnt;
     private String reserverName;
     private String reserverTelno;

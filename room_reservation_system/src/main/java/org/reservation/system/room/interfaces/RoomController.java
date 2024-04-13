@@ -43,7 +43,7 @@ public class RoomController {
         model.addAttribute("roomList", roomList);
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "rooms/roomList.html";
+        return "pages/rooms/roomList.html";
     }
 
     @GetMapping("/rooms/new")
@@ -53,7 +53,7 @@ public class RoomController {
         model.addAttribute("roomDTO", new RoomDTO());
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "rooms/createRoom";
+        return "pages/rooms/createRoom";
     }
 
     @GetMapping("/rooms/update/{id}")
@@ -64,7 +64,7 @@ public class RoomController {
         model.addAttribute("roomDTO", roomDTO);
         model.addAttribute("roomTypeList", roomTypeList);
 
-        return "rooms/updateRoom";
+        return "pages/rooms/updateRoom";
     }
 
     @PostMapping("/rooms/new")
@@ -82,11 +82,11 @@ public class RoomController {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("roomDTO", roomDTO);
-            return "rooms/createRoom";
+            return "pages/rooms/createRoom";
         }
         roomService.createRoom(roomDTO);
         redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
-        return "redirect:/rooms";
+        return "redirect:pages/rooms";
     }
 
     @PostMapping("/rooms/update/")
@@ -105,19 +105,19 @@ public class RoomController {
         });
 
         if (bindingResult.hasErrors()) {
-            return "rooms/updateRoom";
+            return "pages/rooms/updateRoom";
         }
         roomService.updateRoom(roomDTO);
         model.addAttribute("roomDTO", roomDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "redirect:/rooms/update/" + roomDTO.getId();
+        return "redirect:pages/rooms/update/" + roomDTO.getId();
     }
 
     @DeleteMapping("/rooms/{id}")
     public String deleteRoom(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         roomService.deleteRoom(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제 성공!");
-        return "redirect:/rooms";
+        return "redirect:pages/rooms";
     }
 }

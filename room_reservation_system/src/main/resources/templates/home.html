@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!-- Default Layout Import-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
 <head>
-    <meta charset="UTF-8">
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
-    <title>Room List</title>
+    <title>테스트 페이지 </title>
 </head>
+
 <body>
 <div class="m-lg-2">
-    <a th:href="@{/rooms}">Room List</a>
-    <a th:href="@{/fees}">Fee List</a>
+    <div>
+        <a th:href="@{/rooms}">Room List</a>
+    </div>
+    <div>
+        <a th:href="@{/fees}">Fee List</a>
+    </div>
+    <div>
+        <a th:href="@{/reservations}">Reserve Room</a>
+    </div>
 </div>
 </body>
 </html>

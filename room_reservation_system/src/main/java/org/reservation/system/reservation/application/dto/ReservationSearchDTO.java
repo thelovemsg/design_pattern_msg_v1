@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ReservationSearchDTO {
-    private String gstName;
-    private String gstTelno;
+    private String guestName;
+    private String guestTelno;
     private LocalDate enterRoomDate;
     private LocalDate leaveRoomDate;
     private BigDecimal minSalesAmount;

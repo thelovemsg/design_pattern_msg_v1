@@ -32,18 +32,18 @@ public class QCalender extends EntityPathBase<Calender> {
     //inherited
     public final BooleanPath deleted = _super.deleted;
 
+    public final StringPath holidayDivCd = createString("holidayDivCd");
+
     //inherited
     public final NumberPath<Long> id = _super.id;
 
     //inherited
     public final StringPath lastModifiedBy = _super.lastModifiedBy;
 
-    public final DatePath<java.time.LocalDate> lunarDate = createDate("lunarDate", java.time.LocalDate.class);
-
     //inherited
     public final DateTimePath<java.time.ZonedDateTime> modifyDate = _super.modifyDate;
 
-    public final StringPath peakDivCd = createString("peakDivCd");
+    public final StringPath name = createString("name");
 
     public final StringPath seasonDivCd = createString("seasonDivCd");
 
