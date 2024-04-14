@@ -193,10 +193,9 @@
             $("#addedAmount").val(data.addedAmount);
             $("#salesAmount").val(data.salesAmount);
             $("#discountAmount").val(data.discountAmount);
-            let histories = '';
-            data.pricingHistoryDTOList.forEach(function(history){
-                histories += history.applyReason;
-            })
+            let histories = data.pricingHistoryDTOList.map(function(history) {
+                return history.applyReason;
+            }).join(", ");
 
             $("#addedReasons").val(histories);
         }
