@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,5 +16,7 @@ import java.math.BigDecimal;
 public class ReservationFeeResponseDTO {
     private BigDecimal productAmount;
     private BigDecimal discountAmount;
+    private BigDecimal addedAmount;
     private BigDecimal salesAmount;
+    private List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 }

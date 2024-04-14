@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class FeeRestController {
         List<FeeResponseDTO> feeDTOList = feeService.selectFeeList(feeSearchDTO);
 
         return ApiResponse.<List<FeeResponseDTO>>builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.OK)
                 .message("성공")
                 .data(feeDTOList)
                 .build();
@@ -35,22 +36,28 @@ public class FeeRestController {
 
         BigDecimal allProductAmount = new BigDecimal("0");
         BigDecimal allDiscountAmount = new BigDecimal("0");
-        BigDecimal allSalesAmount;
+        BigDecimal allSalesAmount = new BigDecimal("0");
+        BigDecimal allAddedAmount = new BigDecimal("0");
+
+        List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 
         for (DailyFeeDTO dailyFeeDTO : tempFee) {
             allProductAmount = allProductAmount.add(dailyFeeDTO.getProductAmount());
             allDiscountAmount = allDiscountAmount.add(dailyFeeDTO.getDiscountAmount());
+            allSalesAmount = allSalesAmount.add(dailyFeeDTO.getSalesAmount());
+            allAddedAmount = allAddedAmount.add(dailyFeeDTO.getAddedAmount());
+            dailyFeeDTO.getPricingHistoryDTOList().forEach(pricingHistoryDTOList::add);
         }
 
-        allSalesAmount = allProductAmount.subtract(allDiscountAmount);
-
         return ApiResponse.<ReservationFeeResponseDTO>builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.OK)
                 .message("성공")
                 .data(ReservationFeeResponseDTO.builder()
                         .productAmount(allProductAmount)
                         .discountAmount(allDiscountAmount)
                         .salesAmount(allSalesAmount)
+                        .addedAmount(allAddedAmount)
+                        .pricingHistoryDTOList(pricingHistoryDTOList)
                         .build())
                 .build();
     }

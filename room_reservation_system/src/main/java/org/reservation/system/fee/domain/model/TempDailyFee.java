@@ -35,4 +35,8 @@ public class TempDailyFee extends BaseEntity {
     @Embedded
     private MoneyInfo moneyInfo;
 
+    public void changeMoneyInfo(MoneyInfo moneyInfo) {
+        this.moneyInfo = moneyInfo;
+    }
+
 }

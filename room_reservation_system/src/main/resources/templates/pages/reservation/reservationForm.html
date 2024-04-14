@@ -93,6 +93,12 @@
                 </div>
             </div>
             <div class="col-2">
+                <label for="addedAmount" class="form-label mt-4">Added Amount</label>
+                <div>
+                    <input type="text" id="addedAmount" class="form-control text-md-center" name="addedAmount" readOnly disabled/>
+                </div>
+            </div>
+            <div class="col-2">
                 <label for="discountAmount" class="form-label mt-4">Discount Amount</label>
                 <div>
                     <input type="text" id="discountAmount" class="form-control text-md-center" name="discountAmount" readOnly disabled/>
@@ -105,6 +111,14 @@
                 </div>
             </div>
             <input type="hidden" id="taxAmount" class="form-control text-md-center" name="taxAmount" />
+        </div>
+        <div class="row m-lg-0">
+            <div class="col-4">
+                <label for="addedReasons" class="form-label mt-4">Added Reasons</label>
+                <div>
+                    <input type="text" id="addedReasons" class="form-control text-md-center" name="addedReasons" readOnly disabled/>
+                </div>
+            </div>
         </div>
         <button class="btn btn-primary mt-4" type="submit">Create</button>
     </form>
@@ -176,8 +190,15 @@
 
         function updateAmountInfos(data) {
             $("#productAmount").val(data.productAmount);
+            $("#addedAmount").val(data.addedAmount);
             $("#salesAmount").val(data.salesAmount);
             $("#discountAmount").val(data.discountAmount);
+            let histories = '';
+            data.pricingHistoryDTOList.forEach(function(history){
+                histories += history.applyReason;
+            })
+
+            $("#addedReasons").val(histories);
         }
 
         const enterRoomDate = flatpickr("#enterRoomDate", {
@@ -206,6 +227,7 @@
                 const startDate = enterRoomDate.selectedDates[0];
                 const newLeaveDate = new Date(startDate).fp_incr(stayDays);
                 leaveRoomDate.setDate(newLeaveDate, true);
+                requestTempFee();
             }
         });
 
@@ -222,6 +244,10 @@
         }
 
         $("#feeName").change(function(){
+            requestTempFee();
+        })
+
+        function requestTempFee() {
             let enterRoomDate = $('#enterRoomDate').val();
             if(enterRoomDate == '' || enterRoomDate == undefined || enterRoomDate == null) {
                 alert("Enter Room Date is necessary!");
@@ -236,7 +262,6 @@
 
             let feeName = $('#feeName > option:selected').val()
             if(feeName == '' || feeName == undefined || feeName == null) {
-                alert("Fee name is necessary!");
                 return;
             }
 
@@ -262,7 +287,7 @@
                     alert('Error fetching data'); // 간단한 에러 메시지 표시
                 }
             });
-        })
+        }
 
         function init() {
             updateStayDayCount(); // 페이지 로드 시 실행하여 기본적으로 1일 숙박으로 설정
