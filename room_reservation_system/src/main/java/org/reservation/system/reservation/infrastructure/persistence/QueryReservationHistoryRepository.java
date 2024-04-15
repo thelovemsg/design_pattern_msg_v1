@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface QueryReservationHistoryRepository {
     List<ReservationHistory> findWithComplexConditions(Pageable pageable, ReservationHistorySearchDTO reservationHistorySearchDTO);
+    long countReservationHistoryWithComplexConditions(ReservationHistorySearchDTO reservationHistorySearchDTO);
 }
