@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{common/layouts/layout}"
+      layout:fragment="Content">
+<head>
+    <title>Stay List</title>
+</head>
+<body>
+<div class="m-lg-2">
+    <h1>Stay List</h1>
+    <a th:href="@{/}">To Home</a>
+</div>
+<div th:if="${successMessage}" class="alert alert-success w-25">
+    <p th:text="${successMessage}"></p>
+</div>
+<div class="m-3">
+    <div class="row">
+        <div class="col-3">
+            <div class="d-flex justify-content-between">
+                <div>객실 숙박 현황</div>
+                <button id="searchCurrentStatus" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(document).ready(function () {
+
+    });
+</script>
+
+</html>

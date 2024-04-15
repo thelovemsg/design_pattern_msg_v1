@@ -64,16 +64,13 @@ public class ReservationController {
 
     @GetMapping("/reservation/update/{id}")
     public String getUpdateReservationForm(@PathVariable("id") Long id, Model model) {
-        //TODO : 예약 상세 화면
         ReservationDTO reservationResponse = reservationService.getReservationById(id);
         model.addAttribute("reservation", reservationResponse);
-
         return "pages/reservation/updateReservation";
     }
 
-    @GetMapping("/reservation/update")
+    @PostMapping("/reservation/update")
     public String updateReservation(@ModelAttribute("ReservationDTO") ReservationDTO reservationDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        //TODO : 예약 상세 화면
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
 
@@ -82,6 +79,8 @@ public class ReservationController {
         if (reservationById.isEmpty()) {
             bindingResult.rejectValue("id", "error.id", "reservation does not exist!");
         }
+
+
 
         if (bindingResult.hasErrors()) {
             return "pages/reservation/update";

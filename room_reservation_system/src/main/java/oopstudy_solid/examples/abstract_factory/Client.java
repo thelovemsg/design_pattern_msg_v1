@@ -1,10 +1,10 @@
-package oopstudy_solid.examples.factory.product;
+package oopstudy_solid.examples.abstract_factory;
 
 
-import oopstudy_solid.examples.factory.product.a.AbstractProductA;
-import oopstudy_solid.examples.factory.product.concrete.ConcreteFactory1;
-import oopstudy_solid.examples.factory.product.concrete.ConcreteFactory2;
-import oopstudy_solid.examples.factory.product.factory.AbstractFactory;
+import oopstudy_solid.examples.abstract_factory.a.AbstractProductA;
+import oopstudy_solid.examples.abstract_factory.concrete.ConcreteFactory1;
+import oopstudy_solid.examples.abstract_factory.concrete.ConcreteFactory2;
+import oopstudy_solid.examples.abstract_factory.factory.AbstractFactory;
 
 public class Client {
     public static void main(String[] args) {

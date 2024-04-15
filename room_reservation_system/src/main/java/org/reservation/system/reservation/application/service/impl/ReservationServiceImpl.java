@@ -11,6 +11,7 @@ import org.reservation.system.reservation.application.dto.ReservationSearchDTO;
 import org.reservation.system.reservation.application.service.ReservationService;
 import org.reservation.system.reservation.application.vo.RoomReservationQuery;
 import org.reservation.system.reservation.domain.model.Reservation;
+import org.reservation.system.reservation.domain.repository.ReservationHistoryRepository;
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.reservation.system.reservation.infrastructure.persistence.QueryReservationRepository;
@@ -32,6 +33,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final RoomService roomService;
     private final FeeService feeService;
     private final ReservationRepository reservationRepository;
+    private final ReservationHistoryRepository reservationHistoryRepository;
 
     @Override
     @Transactional
@@ -81,4 +83,5 @@ public class ReservationServiceImpl implements ReservationService {
     public void updateReservation(Reservation reservation) {
 
     }
+
 }

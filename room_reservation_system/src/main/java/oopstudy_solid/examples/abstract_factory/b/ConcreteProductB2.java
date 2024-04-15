@@ -1,4 +1,4 @@
-package oopstudy_solid.examples.factory.product.b;
+package oopstudy_solid.examples.abstract_factory.b;
 
 public class ConcreteProductB2 implements AbstractProductB{
 }
