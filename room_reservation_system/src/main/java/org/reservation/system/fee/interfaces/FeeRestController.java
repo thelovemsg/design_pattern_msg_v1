@@ -2,30 +2,63 @@ package org.reservation.system.fee.interfaces;
 
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.common.api.ApiResponse;
-import org.reservation.system.fee.application.dto.FeeDTO;
-import org.reservation.system.fee.application.dto.FeeSearchDTO;
+import org.reservation.system.fee.application.dto.*;
 import org.reservation.system.fee.application.service.FeeService;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class FeeRestController {
 
     private final FeeService feeService;
 
-    @GetMapping("/fee")
-    public ApiResponse<FeeDTO> getNewFee(FeeSearchDTO feeSearchDTO) {
+    @GetMapping("/getFeeList")
+    public ApiResponse<List<FeeResponseDTO>> getFeeList(@ModelAttribute("feeSearchDTO") FeeSearchDTO feeSearchDTO) {
+        List<FeeResponseDTO> feeDTOList = feeService.selectFeeList(feeSearchDTO);
 
-        //요금 정보를 바탕으로 임시 요금을 생성해서 총 요금을 반환한다.
-        //실제로 임시 요금은 일별로 생성이 되지만 사용자 입장에서는 총 가격만 알면 되기에 총 가격만 반환한다.
-        feeService.createTempFee(feeSearchDTO);
+        return ApiResponse.<List<FeeResponseDTO>>builder()
+                .status(HttpStatus.OK)
+                .message("성공")
+                .data(feeDTOList)
+                .build();
+    }
 
-        return ApiResponse.<FeeDTO>builder()
-                .status(HttpStatus.OK.toString())
-                .message("메시지 넣어주기")
-                .data(new FeeDTO())
+    @PostMapping("/getTempFee")
+    public ApiResponse<ReservationFeeResponseDTO> getNewFee(@RequestBody FeeSearchDTO feeSearchDTO) {
+
+        List<DailyFeeDTO> tempFee = feeService.createTempFee(feeSearchDTO);
+
+        BigDecimal allProductAmount = new BigDecimal("0");
+        BigDecimal allDiscountAmount = new BigDecimal("0");
+        BigDecimal allSalesAmount = new BigDecimal("0");
+        BigDecimal allAddedAmount = new BigDecimal("0");
+
+        List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
+
+        for (DailyFeeDTO dailyFeeDTO : tempFee) {
+            allProductAmount = allProductAmount.add(dailyFeeDTO.getProductAmount());
+            allDiscountAmount = allDiscountAmount.add(dailyFeeDTO.getDiscountAmount());
+            allSalesAmount = allSalesAmount.add(dailyFeeDTO.getSalesAmount());
+            allAddedAmount = allAddedAmount.add(dailyFeeDTO.getAddedAmount());
+            dailyFeeDTO.getPricingHistoryDTOList().forEach(pricingHistoryDTOList::add);
+        }
+
+        return ApiResponse.<ReservationFeeResponseDTO>builder()
+                .status(HttpStatus.OK)
+                .message("성공")
+                .data(ReservationFeeResponseDTO.builder()
+                        .productAmount(allProductAmount)
+                        .discountAmount(allDiscountAmount)
+                        .salesAmount(allSalesAmount)
+                        .addedAmount(allAddedAmount)
+                        .pricingHistoryDTOList(pricingHistoryDTOList)
+                        .build())
                 .build();
     }
 }

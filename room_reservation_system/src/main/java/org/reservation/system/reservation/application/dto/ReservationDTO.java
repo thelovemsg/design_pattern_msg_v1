@@ -19,6 +19,9 @@ import java.time.format.DateTimeFormatter;
 public class ReservationDTO {
     private Long id;
     private Integer roomNo;
+    private Integer custNo;
+    private Integer custNm;
+    private String feeName;
     private String roomTypeCd;
     private String reservationMethod;
     private String guestName;

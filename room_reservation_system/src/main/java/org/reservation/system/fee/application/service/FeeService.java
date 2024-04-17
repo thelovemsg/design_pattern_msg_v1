@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface FeeService {
     Page<FeeResponseDTO> selectFeeList(Pageable pageable, FeeSearchDTO feeSearchDTO);
+    List<FeeResponseDTO> selectFeeList(FeeSearchDTO feeSearchDTO);
+
     FeeResponseDTO createFee(FeeDTO feeDTO);
     FeeResponseDTO updateFee(FeeDTO feeDTO);
     FeeResponseDTO selectFeeById(Long id);

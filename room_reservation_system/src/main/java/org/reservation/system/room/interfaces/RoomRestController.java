@@ -8,7 +8,6 @@ import org.reservation.system.room.application.dto.RoomSearchDTO;
 import org.reservation.system.room.application.dto.RoomTypeResponseDTO;
 import org.reservation.system.room.application.service.RoomService;
 import org.reservation.system.room.application.service.RoomTypeService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class RoomRestController {
     public ApiResponse<List<RoomResponseDTO>> getRoomList(@ModelAttribute("roomSearchDTO") RoomSearchDTO roomSearchDTO) {
         List<RoomResponseDTO> roomResponseDTOList = roomService.selectRoomList(roomSearchDTO);
         return ApiResponse.<List<RoomResponseDTO>>builder()
-                    .status(HttpStatus.OK.toString())
+                    .status(HttpStatus.OK)
                     .message("room list fetched successfully")
                     .data(roomResponseDTOList)
                     .build();
@@ -36,7 +35,7 @@ public class RoomRestController {
     public ApiResponse<List<RoomTypeResponseDTO>> getRoomTypeList() {
         List<RoomTypeResponseDTO> roomTypeResponseDTOList = roomTypeService.selectAllRoomType();
         return ApiResponse.<List<RoomTypeResponseDTO>>builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.OK)
                 .message("room list fetched successfully")
                 .data(roomTypeResponseDTOList)
                 .build();
@@ -46,7 +45,7 @@ public class RoomRestController {
     public ApiResponse<List<RoomCurrentStatusDTO>> getRoomCurrentStatusByDates(@RequestBody RoomSearchDTO roomSearchDTO) {
         List<RoomCurrentStatusDTO> roomTypeResponseDTOList = roomService.selectRoomCurrentStatusByType(roomSearchDTO);
         return ApiResponse.<List<RoomCurrentStatusDTO>>builder()
-                .status(HttpStatus.OK.toString())
+                .status(HttpStatus.OK)
                 .message("room list fetched successfully")
                 .data(roomTypeResponseDTOList)
                 .build();

@@ -33,9 +33,9 @@ public class MoneyInfo {
     public MoneyInfo addAmount(BigDecimal addingAmount) {
         BigDecimal newProductAmount = this.productAmount.add(addingAmount);
         BigDecimal newAddedAmount = this.addedAmount.add(addingAmount);
-        BigDecimal newSalesAmount = newProductAmount.subtract(this.discountAmount);
+        BigDecimal newSalesAmount = newProductAmount.subtract(discountAmount);
         newSalesAmount = newSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : newSalesAmount;
-        BigDecimal newTaxAmount = newSalesAmount.add(addingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
+        BigDecimal newTaxAmount = newSalesAmount.multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
 
         return this.toBuilder()
                 .productAmount(newProductAmount)
@@ -51,7 +51,7 @@ public class MoneyInfo {
         BigDecimal newDiscountAmount = this.discountAmount.add(subtractingAmount);
         BigDecimal newSalesAmount = newProductAmount.subtract(newDiscountAmount);
         newSalesAmount = newSalesAmount.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : newSalesAmount;
-        BigDecimal newTaxAmount = newSalesAmount.subtract(subtractingAmount).multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
+        BigDecimal newTaxAmount = newSalesAmount.multiply(new BigDecimal("0.1")).setScale(0, RoundingMode.DOWN);
 
         return this.toBuilder()
                 .productAmount(newProductAmount)

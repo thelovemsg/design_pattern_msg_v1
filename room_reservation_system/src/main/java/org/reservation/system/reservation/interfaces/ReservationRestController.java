@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +28,7 @@ public class ReservationRestController {
     public ApiResponse<Page<ReservationDTO>> getReservationList(@RequestBody ReservationSearchDTO reservationSearchDTO, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ReservationDTO> reservationResponseList = reservationService.selectReservationList(pageable, reservationSearchDTO);
         return ApiResponse.<Page<ReservationDTO>>builder()
-                .status("success")
+                .status(HttpStatus.OK)
                 .message("Reservations fetched successfully.")
                 .data(reservationResponseList)
                 .build();

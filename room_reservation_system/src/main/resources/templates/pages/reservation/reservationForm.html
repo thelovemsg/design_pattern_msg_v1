@@ -11,9 +11,9 @@
 <div class="m-lg-2">
     <h1>New Reservation Form</h1>
     <form th:action="@{/reservations/new}" th:object="${reservationDTO}" method="post">
-        <fieldset class="row">
-            <div class="col">
-                <label for="roomTypeCd" class="form-label mt-4 col-sm-2">Room Type</label>
+        <div class="row m-lg-0">
+            <div class="col-2">
+                <label for="roomTypeCd" class="form-label mt-4">Room Type</label>
                 <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
                     <option value="">All</option>
                     <option th:each="type : ${roomTypeList}"
@@ -24,23 +24,112 @@
                 </select>
                 <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
             </div>
-            <div class="col">
-                <label for="roomNo" class="form-label mt-4 col-sm-2">Room No</label>
+            <div class="col-2">
+                <label for="roomNo" class="form-label mt-4">Room No</label>
                 <select class="form-select" th:field="*{roomNo}" id="roomNo" name="roomTypeCd">
                     <option value="">All</option>
                 </select>
-                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}" class="text-danger">Room No Error</span>
+                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}"
+                      class="text-danger">Room No Error</span>
             </div>
-        </fieldset>
+            <div class="col-1">
+                <label for="enterRoomDate" class="form-label mt-4">Enter Room Date</label>
+                <div>
+                    <input type="text" id="enterRoomDate" class="form-control text-md-center" name="enterRoomDate" readonly/>
+                </div>
+            </div>
+            <div class="col-1">
+                <label for="leaveRoomDate" class="form-label mt-4">Leave Room Date</label>
+                <div>
+                    <input type="text" id="leaveRoomDate" class="form-control text-md-center" name="leaveRoomDate" readonly/>
+                </div>
+            </div>
+            <div class="col-1">
+                <label for="stayDayCount" class="form-label mt-4">Stay Day Count</label>
+                <div>
+                    <input type="text" id="stayDayCount" class="form-control text-md-center" name="stayDayCount"/>
+                </div>
+            </div>
+            <div class="col-3">
+                <label for="feeName" class="form-label mt-4">Fee Name List</label>
+                <select class="form-select" th:field="*{feeName}" id="feeName" name="feeName">
+                    <option value="">All</option>
+                </select>
+                <span th:if="${#fields.hasErrors('feeName')}" th:errors="*{feeName}"
+                      class="text-danger">Fee Name Error</span>
+            </div>
+        </div>
+        <div class="row m-lg-0">
+            <div class="col-2">
+                <label for="guestName" class="form-label mt-4">Guest Name</label>
+                <div>
+                    <input type="text" id="guestName" class="form-control text-md-center" name="guestName"/>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="guestTelno" class="form-label mt-4">Guest Tel no</label>
+                <div>
+                    <input type="text" id="guestTelno" class="form-control text-md-center" name="guestTelno"/>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="reserverName" class="form-label mt-4">Reserver Name</label>
+                <div>
+                    <input type="text" id="reserverName" class="form-control text-md-center" name="reserverName"/>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="reserverTelno" class="form-label mt-4">Reserver Telno</label>
+                <div>
+                    <input type="text" id="reserverTelno" class="form-control text-md-center" name="reserverTelno"/>
+                </div>
+            </div>
+        </div>
+        <div class="row m-lg-0">
+            <div class="col-2">
+                <label for="productAmount" class="form-label mt-4">Product Amount</label>
+                <div>
+                    <input type="text" id="productAmount" class="form-control text-md-center" name="productAmount" readOnly disabled />
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="addedAmount" class="form-label mt-4">Added Amount</label>
+                <div>
+                    <input type="text" id="addedAmount" class="form-control text-md-center" name="addedAmount" readOnly disabled/>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="discountAmount" class="form-label mt-4">Discount Amount</label>
+                <div>
+                    <input type="text" id="discountAmount" class="form-control text-md-center" name="discountAmount" readOnly disabled/>
+                </div>
+            </div>
+            <div class="col-2">
+                <label for="salesAmount" class="form-label mt-4">Sales Amount</label>
+                <div>
+                    <input type="text" id="salesAmount" class="form-control text-md-center" name="salesAmount" readOnly disabled/>
+                </div>
+            </div>
+            <input type="hidden" id="taxAmount" class="form-control text-md-center" name="taxAmount" />
+        </div>
+        <div class="row m-lg-0">
+            <div class="col-4">
+                <label for="addedReasons" class="form-label mt-4">Added Reasons</label>
+                <div>
+                    <input type="text" id="addedReasons" class="form-control text-md-center" name="addedReasons" readOnly disabled/>
+                </div>
+            </div>
+        </div>
         <button class="btn btn-primary mt-4" type="submit">Create</button>
     </form>
 </div>
 <a th:href="@{/reservations}">Return To Reservation List</a>
 </body>
 <script>
-    $(document).ready(function() {
-        $("#roomTypeCd").change(function() {
+    $(document).ready(function () {
+        $("#roomTypeCd").change(function () {
             fetchRoomList($(this).val()); // 함수 호출 시 인자를 올바르게 전달합니다.
+            fetchFeeList($(this).val());
         });
 
         function fetchRoomList(roomTypeCd) {
@@ -49,10 +138,27 @@
                 type: 'GET',
                 data: {roomTypeCd: roomTypeCd}, // 방 타입 코드를 데이터로 전달합니다.
                 dataType: 'json',
-                success: function(response) {
+                success: function (response) {
                     updateSelectRoomList(response.data); // 방 목록 업데이트 함수 호출
                 },
-                error: function(error) {
+                error: function (error) {
+                    console.log(error); // 에러 로깅
+                    // 에러 발생 시 사용자에게 표시
+                    alert('Error fetching data'); // 간단한 에러 메시지 표시
+                }
+            });
+        }
+
+        function fetchFeeList(roomTypeCd) {
+            $.ajax({
+                url: '/api/getFeeList', // 요청을 보낼 URL
+                type: 'GET',
+                data: {roomTypeCd: roomTypeCd}, // 방 타입 코드를 데이터로 전달합니다.
+                dataType: 'json',
+                success: function (response) {
+                    updateSelectFeeList(response.data); // 방 목록 업데이트 함수 호출
+                },
+                error: function (error) {
                     console.log(error); // 에러 로깅
                     // 에러 발생 시 사용자에게 표시
                     alert('Error fetching data'); // 간단한 에러 메시지 표시
@@ -66,10 +172,127 @@
 
             const options = data.map(room =>
                 `<option value="${room.roomNo}">${room.roomNo}호 / 이름 : (${room.roomName})</option>`
-            ).join(''); // 배열의 각 요소를 문자열로 변환 후, 이를 하나의 문자열로 결합합니다.
+            ).join('');
 
-            roomNoSelect.append('<option value="">All</option>' + options); // 기본 옵션과 방 목록 옵션을 추가합니다.
+            roomNoSelect.append('<option value="">All</option>' + options);
         }
+
+        function updateSelectFeeList(data) {
+            let feeNameSelect = $('#feeName')
+            feeNameSelect.empty();
+
+            const options = data.map(fee =>
+                `<option value="${fee.feeName}">명칭 : ${fee.feeName} / 가격 : (${fee.feeAmount})</option>`
+            ).join('');
+
+            feeNameSelect.append('<option value="">All</options>' + options);
+        }
+
+        function updateAmountInfos(data) {
+            $("#productAmount").val(data.productAmount);
+            $("#addedAmount").val(data.addedAmount);
+            $("#salesAmount").val(data.salesAmount);
+            $("#discountAmount").val(data.discountAmount);
+            let histories = data.pricingHistoryDTOList.map(function(history) {
+                return history.applyReason;
+            }).join(", ");
+
+            $("#addedReasons").val(histories);
+        }
+
+        const enterRoomDate = flatpickr("#enterRoomDate", {
+            defaultDate: new Date(), // 기본 값으로 오늘 설정
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates) {
+                const enterDate = selectedDates[0];
+                leaveRoomDate.set('minDate', enterDate.fp_incr(1)); // 최소 종료 날짜를 선택된 시작 날짜의 다음 날로 설정
+                updateStayDayCount();
+            }
+        });
+
+        const leaveRoomDate = flatpickr("#leaveRoomDate", {
+            defaultDate: new Date().fp_incr(1), // 기본 값으로 내일 설정
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates) {
+                const leaveDate = selectedDates[0];
+                enterRoomDate.set('maxDate', leaveDate.fp_incr(-1));
+                updateStayDayCount();
+            }
+        });
+
+        $('#stayDayCount').change(function() {
+            const stayDays = parseInt($(this).val(), 10);
+            if (stayDays && stayDays > 0 && enterRoomDate.selectedDates.length > 0) {
+                const startDate = enterRoomDate.selectedDates[0];
+                const newLeaveDate = new Date(startDate).fp_incr(stayDays);
+                leaveRoomDate.setDate(newLeaveDate, true);
+                requestTempFee();
+            }
+        });
+
+        function updateStayDayCount() {
+            const enterDate = enterRoomDate.selectedDates[0];
+            const leaveDate = leaveRoomDate.selectedDates[0];
+            if (enterDate && leaveDate) {
+                const diffTime = Math.abs(leaveDate - enterDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // 차이를 일수로 계산
+                $('#stayDayCount').val(diffDays); // 숙박 일수 업데이트
+            } else {
+                $('#stayDayCount').val(''); // 날짜 선택이 완료되지 않았다면 필드를 비움
+            }
+        }
+
+        $("#feeName").change(function(){
+            requestTempFee();
+        })
+
+        function requestTempFee() {
+            let enterRoomDate = $('#enterRoomDate').val();
+            if(enterRoomDate == '' || enterRoomDate == undefined || enterRoomDate == null) {
+                alert("Enter Room Date is necessary!");
+                return;
+            }
+
+            let stayDayCount = $('#stayDayCount').val()
+            if(stayDayCount == '' || stayDayCount == undefined || stayDayCount == null) {
+                alert("Stay Day Count is necessary!");
+                return;
+            }
+
+            let feeName = $('#feeName > option:selected').val()
+            if(feeName == '' || feeName == undefined || feeName == null) {
+                return;
+            }
+
+            let dataForm = {
+                enterRoomDate : enterRoomDate,
+                stayDayCnt : stayDayCount,
+                feeName : feeName,
+            };
+
+            $.ajax({
+                url: '/api/getTempFee', // 요청을 보낼 URL
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dataForm), // 방 타입 코드를 데이터로 전달합니다.
+                dataType: 'json',
+                success: function (response) {
+                    if(response.data != null)
+                        updateAmountInfos(response.data);
+                },
+                error: function (error) {
+                    console.log(error); // 에러 로깅
+                    // 에러 발생 시 사용자에게 표시
+                    alert('Error fetching data'); // 간단한 에러 메시지 표시
+                }
+            });
+        }
+
+        function init() {
+            updateStayDayCount(); // 페이지 로드 시 실행하여 기본적으로 1일 숙박으로 설정
+        }
+
+        init();
     });
 </script>
 </html>

@@ -51,6 +51,18 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
+    public List<FeeResponseDTO> selectFeeList(FeeSearchDTO feeSearchDTO) {
+        List<Fee> feeWithComplexConditions = queryFeeRepository.findFeeWithComplexConditions(null, feeSearchDTO);
+        return feeWithComplexConditions.stream().map(fee -> FeeResponseDTO.builder()
+                .id(fee.getId())
+                .feeName(fee.getFeeName())
+                .feeAmount(decimalFormat.format(fee.getFeeAmount()))
+                .roomTypeCd(fee.getRoomType().getRoomTypeCd())
+                .remark(fee.getRemark())
+                .build()).toList();
+    }
+
+    @Override
     public FeeResponseDTO createFee(FeeDTO feeDTO) {
         RoomType roomType = roomTypeRepository.findByRoomTypeCdAndDeletedIsFalse(feeDTO.getRoomTypeCd()).orElseThrow(() -> new EntityNotFoundException("RoomType not found with typeCd " + feeDTO.getRoomTypeCd()));
 

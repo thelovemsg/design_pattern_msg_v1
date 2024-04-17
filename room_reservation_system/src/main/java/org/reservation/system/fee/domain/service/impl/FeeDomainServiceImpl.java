@@ -59,11 +59,11 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         LocalDate enterRoomDate = feeSearchDTO.getEnterRoomDate();
         LocalDate leaveRoomDate = enterRoomDate.plusDays(feeSearchDTO.getStayDayCnt());
 
-        List<Calender> calenders = calenderService.selectCalenderInfoBySolarDateBetween(enterRoomDate, leaveRoomDate);
-        List<PricingHistory> pricingHistoryList = new ArrayList<>();
-        List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
+        List<Calender> calenders = calenderService.selectCalenderInfoBySolarDateExceptEndDate(enterRoomDate, leaveRoomDate);
 
         for (Calender calender : calenders) {
+            List<PricingHistory> pricingHistoryList = new ArrayList<>();
+            List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 
             TempDailyFee tempDailyFee = tempDailyFeeFactory.create(fee, calender);
             applyPrices(calender, tempDailyFee, pricingHistoryList);
@@ -113,6 +113,8 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         if (calender.getSeasonDivCd().equals("Y")) {
             SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getSeasonalStrategy();
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
+            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice() ,ChargeEnum.CHARGE));
+
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
                     .applyReason("Seasonal Surcharge")
@@ -130,6 +132,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
             SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getPeakStrategy();
 
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
+            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice() ,ChargeEnum.CHARGE));
 
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
