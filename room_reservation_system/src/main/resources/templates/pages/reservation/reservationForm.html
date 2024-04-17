@@ -10,117 +10,143 @@
 <body>
 <div class="m-lg-2">
     <h1>New Reservation Form</h1>
-    <form th:action="@{/reservations/new}" th:object="${reservationDTO}" method="post">
-        <div class="row m-lg-0">
-            <div class="col-2">
-                <label for="roomTypeCd" class="form-label mt-4">Room Type</label>
-                <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd" name="roomTypeCd">
-                    <option value="">All</option>
-                    <option th:each="type : ${roomTypeList}"
-                            th:value="${type.roomTypeCd}"
-                            th:text="${type.roomTypeCd}"
-                            th:selected="${type.roomTypeCd == reservationDTO.roomTypeCd}">
-                    </option>
-                </select>
-                <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
-            </div>
-            <div class="col-2">
-                <label for="roomNo" class="form-label mt-4">Room No</label>
-                <select class="form-select" th:field="*{roomNo}" id="roomNo" name="roomTypeCd">
-                    <option value="">All</option>
-                </select>
-                <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}"
-                      class="text-danger">Room No Error</span>
-            </div>
-            <div class="col-1">
-                <label for="enterRoomDate" class="form-label mt-4">Enter Room Date</label>
-                <div>
-                    <input type="text" id="enterRoomDate" class="form-control text-md-center" name="enterRoomDate" readonly/>
+    <form th:action="@{/reservations/new}" th:object="${reservationCreationDTO}" method="post">
+        <fieldset>
+            <div class="row m-lg-0">
+                <div class="col-2">
+                    <label for="roomTypeCd" class="form-label mt-4">Room Type</label>
+                    <select class="form-select" th:field="*{roomTypeCd}" id="roomTypeCd">
+                        <option value="">All</option>
+                        <option th:each="type : ${roomTypeList}"
+                                th:value="${type.roomTypeCd}"
+                                th:text="${type.roomTypeCd}"
+                                th:selected="${type.roomTypeCd == reservationDTO.roomTypeCd}">
+                        </option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('roomTypeCd')}" th:errors="*{roomTypeCd}" class="text-danger">Room Type Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="roomNo" class="form-label mt-4">Room No</label>
+                    <select class="form-select" th:field="*{roomNo}" id="roomNo">
+                        <option value="">All</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('roomNo')}" th:errors="*{roomNo}"
+                          class="text-danger">Room No Error</span>
+                </div>
+                <div class="col-1">
+                    <label for="enterRoomDate" class="form-label mt-4">Enter Room Date</label>
+                    <div>
+                        <input type="text" id="enterRoomDate" th:field="*{enterRoomDate}"
+                               class="form-control text-md-center" readonly/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('enterRoomDate')}" th:errors="*{enterRoomDate}"
+                          class="text-danger">Enter Room Date Error</span>
+                </div>
+                <div class="col-1">
+                    <label for="leaveRoomDate" class="form-label mt-4">Leave Room Date</label>
+                    <div>
+                        <input type="text" id="leaveRoomDate" th:field="*{leaveRoomDate}"
+                               class="form-control text-md-center" readonly/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('leaveRoomDate')}" th:errors="*{leaveRoomDate}"
+                          class="text-danger">Leave Room Date Error</span>
+                </div>
+                <div class="col-1">
+                    <label for="stayDayCnt" class="form-label mt-4">Stay Day Count</label>
+                    <div>
+                        <input type="text" id="stayDayCnt" th:field="*{stayDayCnt}"
+                               class="form-control text-md-center"/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('stayDayCnt')}" th:errors="*{stayDayCnt}" class="text-danger">Stay Day Count Error</span>
+                </div>
+                <div class="col-3">
+                    <label for="feeName" class="form-label mt-4">Fee Name List</label>
+                    <select class="form-select" th:field="*{feeName}" id="feeName">
+                        <option value="">All</option>
+                    </select>
+                    <span th:if="${#fields.hasErrors('feeName')}" th:errors="*{feeName}"
+                          class="text-danger">Fee Name Error</span>
                 </div>
             </div>
-            <div class="col-1">
-                <label for="leaveRoomDate" class="form-label mt-4">Leave Room Date</label>
-                <div>
-                    <input type="text" id="leaveRoomDate" class="form-control text-md-center" name="leaveRoomDate" readonly/>
+            <div class="row m-lg-0">
+                <div class="col-2">
+                    <label for="guestName" class="form-label mt-4">Guest Name</label>
+                    <div>
+                        <input type="text" id="guestName" th:field="*{guestName}" class="form-control text-md-center"/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('guestName')}" th:errors="*{guestName}" class="text-danger">Guest Name Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="guestTelno" class="form-label mt-4">Guest Tel no</label>
+                    <div>
+                        <input type="text" id="guestTelno" th:field="*{guestTelno}" class="form-control text-md-center"
+                               maxlength="13"/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('guestTelno')}" th:errors="*{guestTelno}" class="text-danger">Guest Tel no Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="reserverName" class="form-label mt-4">Reserver Name</label>
+                    <div>
+                        <input type="text" id="reserverName" th:field="*{reserverName}"
+                               class="form-control text-md-center"/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('reserverName')}" th:errors="*{reserverName}" class="text-danger">Reserver Name Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="reserverTelno" class="form-label mt-4">Reserver Telno</label>
+                    <div>
+                        <input type="text" id="reserverTelno" th:field="*{reserverTelno}"
+                               class="form-control text-md-center" name="reserverTelno" maxlength="13"/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('reserverTelno')}" th:errors="*{reserverTelno}"
+                          class="text-danger">Reserver Telno Error</span>
                 </div>
             </div>
-            <div class="col-1">
-                <label for="stayDayCount" class="form-label mt-4">Stay Day Count</label>
-                <div>
-                    <input type="text" id="stayDayCount" class="form-control text-md-center" name="stayDayCount"/>
+            <div class="row m-lg-0">
+                <div class="col-2">
+                    <label for="productAmount" class="form-label mt-4">Product Amount</label>
+                    <div>
+                        <input type="text" id="productAmount" th:field="*{productAmount}"
+                               class="form-control text-md-center" readOnly/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('productAmount')}" th:errors="*{productAmount}"
+                          class="text-danger">Product Amount Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="addedAmount" class="form-label mt-4">Added Amount</label>
+                    <div>
+                        <input type="text" id="addedAmount" class="form-control text-md-center" readOnly/>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label for="discountAmount" class="form-label mt-4">Discount Amount</label>
+                    <div>
+                        <input type="text" id="discountAmount" th:field="*{discountAmount}"
+                               class="form-control text-md-center" readOnly/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('discountAmount')}" th:errors="*{discountAmount}"
+                          class="text-danger">Discount Amount Error</span>
+                </div>
+                <div class="col-2">
+                    <label for="salesAmount" class="form-label mt-4">Sales Amount</label>
+                    <div>
+                        <input type="text" id="salesAmount" th:field="*{salesAmount}"
+                               class="form-control text-md-center" readOnly/>
+                    </div>
+                    <span th:if="${#fields.hasErrors('salesAmount')}" th:errors="*{salesAmount}" class="text-danger">Sales Amount Error</span>
                 </div>
             </div>
-            <div class="col-3">
-                <label for="feeName" class="form-label mt-4">Fee Name List</label>
-                <select class="form-select" th:field="*{feeName}" id="feeName" name="feeName">
-                    <option value="">All</option>
-                </select>
-                <span th:if="${#fields.hasErrors('feeName')}" th:errors="*{feeName}"
-                      class="text-danger">Fee Name Error</span>
-            </div>
-        </div>
-        <div class="row m-lg-0">
-            <div class="col-2">
-                <label for="guestName" class="form-label mt-4">Guest Name</label>
-                <div>
-                    <input type="text" id="guestName" class="form-control text-md-center" name="guestName"/>
+            <div class="row m-lg-0">
+                <div class="col-4">
+                    <label for="addedReasons" class="form-label mt-4">Added Reasons</label>
+                    <div>
+                        <input type="text" id="addedReasons" class="form-control text-md-center" name="addedReasons"
+                               readOnly disabled/>
+                    </div>
                 </div>
             </div>
-            <div class="col-2">
-                <label for="guestTelno" class="form-label mt-4">Guest Tel no</label>
-                <div>
-                    <input type="text" id="guestTelno" class="form-control text-md-center" name="guestTelno"/>
-                </div>
-            </div>
-            <div class="col-2">
-                <label for="reserverName" class="form-label mt-4">Reserver Name</label>
-                <div>
-                    <input type="text" id="reserverName" class="form-control text-md-center" name="reserverName"/>
-                </div>
-            </div>
-            <div class="col-2">
-                <label for="reserverTelno" class="form-label mt-4">Reserver Telno</label>
-                <div>
-                    <input type="text" id="reserverTelno" class="form-control text-md-center" name="reserverTelno"/>
-                </div>
-            </div>
-        </div>
-        <div class="row m-lg-0">
-            <div class="col-2">
-                <label for="productAmount" class="form-label mt-4">Product Amount</label>
-                <div>
-                    <input type="text" id="productAmount" class="form-control text-md-center" name="productAmount" readOnly disabled />
-                </div>
-            </div>
-            <div class="col-2">
-                <label for="addedAmount" class="form-label mt-4">Added Amount</label>
-                <div>
-                    <input type="text" id="addedAmount" class="form-control text-md-center" name="addedAmount" readOnly disabled/>
-                </div>
-            </div>
-            <div class="col-2">
-                <label for="discountAmount" class="form-label mt-4">Discount Amount</label>
-                <div>
-                    <input type="text" id="discountAmount" class="form-control text-md-center" name="discountAmount" readOnly disabled/>
-                </div>
-            </div>
-            <div class="col-2">
-                <label for="salesAmount" class="form-label mt-4">Sales Amount</label>
-                <div>
-                    <input type="text" id="salesAmount" class="form-control text-md-center" name="salesAmount" readOnly disabled/>
-                </div>
-            </div>
-            <input type="hidden" id="taxAmount" class="form-control text-md-center" name="taxAmount" />
-        </div>
-        <div class="row m-lg-0">
-            <div class="col-4">
-                <label for="addedReasons" class="form-label mt-4">Added Reasons</label>
-                <div>
-                    <input type="text" id="addedReasons" class="form-control text-md-center" name="addedReasons" readOnly disabled/>
-                </div>
-            </div>
-        </div>
-        <button class="btn btn-primary mt-4" type="submit">Create</button>
+            <button class="btn btn-primary mt-4" type="submit">Create</button>
+        </fieldset>
     </form>
 </div>
 <a th:href="@{/reservations}">Return To Reservation List</a>
@@ -128,6 +154,9 @@
 <script>
     $(document).ready(function () {
         $("#roomTypeCd").change(function () {
+            let roomTypeCd = $(this).val();
+            if (roomTypeCd == null || roomTypeCd == undefined || roomTypeCd == '')
+                return;
             fetchRoomList($(this).val()); // 함수 호출 시 인자를 올바르게 전달합니다.
             fetchFeeList($(this).val());
         });
@@ -193,7 +222,10 @@
             $("#addedAmount").val(data.addedAmount);
             $("#salesAmount").val(data.salesAmount);
             $("#discountAmount").val(data.discountAmount);
-            let histories = data.pricingHistoryDTOList.map(function(history) {
+
+            // TODO : 나중에 정확히 어떤 정책으로 얼만큼 금액이 추가가 됬는지 history에 좀 구분해서 넣어줘야 함.
+
+            let histories = data.pricingHistoryDTOList.map(function (history) {
                 return history.applyReason;
             }).join(", ");
 
@@ -203,24 +235,24 @@
         const enterRoomDate = flatpickr("#enterRoomDate", {
             defaultDate: new Date(), // 기본 값으로 오늘 설정
             dateFormat: "Y-m-d",
-            onChange: function(selectedDates) {
+            onChange: function (selectedDates) {
                 const enterDate = selectedDates[0];
                 leaveRoomDate.set('minDate', enterDate.fp_incr(1)); // 최소 종료 날짜를 선택된 시작 날짜의 다음 날로 설정
-                updateStayDayCount();
+                updatestayDayCnt();
             }
         });
 
         const leaveRoomDate = flatpickr("#leaveRoomDate", {
             defaultDate: new Date().fp_incr(1), // 기본 값으로 내일 설정
             dateFormat: "Y-m-d",
-            onChange: function(selectedDates) {
+            onChange: function (selectedDates) {
                 const leaveDate = selectedDates[0];
                 enterRoomDate.set('maxDate', leaveDate.fp_incr(-1));
-                updateStayDayCount();
+                updatestayDayCnt();
             }
         });
 
-        $('#stayDayCount').change(function() {
+        $('#stayDayCnt').change(function () {
             const stayDays = parseInt($(this).val(), 10);
             if (stayDays && stayDays > 0 && enterRoomDate.selectedDates.length > 0) {
                 const startDate = enterRoomDate.selectedDates[0];
@@ -230,44 +262,44 @@
             }
         });
 
-        function updateStayDayCount() {
+        function updatestayDayCnt() {
             const enterDate = enterRoomDate.selectedDates[0];
             const leaveDate = leaveRoomDate.selectedDates[0];
             if (enterDate && leaveDate) {
                 const diffTime = Math.abs(leaveDate - enterDate);
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // 차이를 일수로 계산
-                $('#stayDayCount').val(diffDays); // 숙박 일수 업데이트
+                $('#stayDayCnt').val(diffDays); // 숙박 일수 업데이트
             } else {
-                $('#stayDayCount').val(''); // 날짜 선택이 완료되지 않았다면 필드를 비움
+                $('#stayDayCnt').val(''); // 날짜 선택이 완료되지 않았다면 필드를 비움
             }
         }
 
-        $("#feeName").change(function(){
+        $("#feeName").change(function () {
             requestTempFee();
         })
 
         function requestTempFee() {
             let enterRoomDate = $('#enterRoomDate').val();
-            if(enterRoomDate == '' || enterRoomDate == undefined || enterRoomDate == null) {
+            if (enterRoomDate == '' || enterRoomDate == undefined || enterRoomDate == null) {
                 alert("Enter Room Date is necessary!");
                 return;
             }
 
-            let stayDayCount = $('#stayDayCount').val()
-            if(stayDayCount == '' || stayDayCount == undefined || stayDayCount == null) {
+            let stayDayCnt = $('#stayDayCnt').val()
+            if (stayDayCnt == '' || stayDayCnt == undefined || stayDayCnt == null) {
                 alert("Stay Day Count is necessary!");
                 return;
             }
 
             let feeName = $('#feeName > option:selected').val()
-            if(feeName == '' || feeName == undefined || feeName == null) {
+            if (feeName == '' || feeName == undefined || feeName == null) {
                 return;
             }
 
             let dataForm = {
-                enterRoomDate : enterRoomDate,
-                stayDayCnt : stayDayCount,
-                feeName : feeName,
+                enterRoomDate: enterRoomDate,
+                stayDayCnt: stayDayCnt,
+                feeName: feeName,
             };
 
             $.ajax({
@@ -277,7 +309,7 @@
                 data: JSON.stringify(dataForm), // 방 타입 코드를 데이터로 전달합니다.
                 dataType: 'json',
                 success: function (response) {
-                    if(response.data != null)
+                    if (response.data != null)
                         updateAmountInfos(response.data);
                 },
                 error: function (error) {
@@ -289,9 +321,42 @@
         }
 
         function init() {
-            updateStayDayCount(); // 페이지 로드 시 실행하여 기본적으로 1일 숙박으로 설정
+            updatestayDayCnt(); // 페이지 로드 시 실행하여 기본적으로 1일 숙박으로 설정
         }
 
+        $("#guestTelno,#reserverTelno").keyup(function () {
+            let val = $(this).val().replace(/[^0-9]/g, '');
+            if (val.length > 3 && val.length < 6) {
+                var tmp = val.substring(0, 2)
+                if (tmp == "02") {
+                    $(this).val(val.substring(0, 2) + "-" + val.substring(2));
+                } else {
+                    $(this).val(val.substring(0, 3) + "-" + val.substring(3));
+                }
+            } else if (val.length > 6) {
+                var tmp = val.substring(0, 2)
+                var tmp2 = val.substring(0, 4)
+                if (tmp == "02") {
+                    if (val.length == "10") {
+                        $(this).val(val.substring(0, 2) + "-" + val.substring(2, 6) + "-" + val.substring(6));
+                    } else {
+                        $(this).val(val.substring(0, 2) + "-" + val.substring(2, 5) + "-" + val.substring(5));
+                    }
+                } else if (tmp2 == "0505") {
+                    if (val.length == "12") {
+                        $(this).val(val.substring(0, 4) + "-" + val.substring(4, 8) + "-" + val.substring(8));
+                    } else {
+                        $(this).val(val.substring(0, 4) + "-" + val.substring(4, 7) + "-" + val.substring(7));
+                    }
+                } else {
+                    if (val.length == "11") {
+                        $(this).val(val.substring(0, 3) + "-" + val.substring(3, 7) + "-" + val.substring(7));
+                    } else {
+                        $(this).val(val.substring(0, 3) + "-" + val.substring(3, 6) + "-" + val.substring(6));
+                    }
+                }
+            }
+        });
         init();
     });
 </script>

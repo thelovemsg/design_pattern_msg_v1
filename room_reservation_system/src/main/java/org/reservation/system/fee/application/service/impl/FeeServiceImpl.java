@@ -121,14 +121,13 @@ public class FeeServiceImpl implements FeeService {
 
     @Override
     public void deleteFee(Long id) {
-        Fee fee = feeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Fee not found with id " + id));
+        Fee fee = feeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Fee not found with id " + id));
         fee.delete();
         feeRepository.save(fee);
     }
 
     @Override
-    public List<DailyFeeDTO> makeReservationFeeInfoList(FeeCreateVO feeCreateVO) {
+    public List<DailyFeeDTO> makeFeeInfosForReservation(FeeCreateVO feeCreateVO) {
 //        return feeDomainService.createDailyFee(feeCreateVO);
         return null;
     }

@@ -15,5 +15,4 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByIdAndDeletedIsFalse(final Long id);
     Optional<List<Room>> findByRoomTypeAndDeletedIsFalse(final RoomType roomType);
     Page<Room> findByDeletedIsFalse(Pageable pageable);
-
 }

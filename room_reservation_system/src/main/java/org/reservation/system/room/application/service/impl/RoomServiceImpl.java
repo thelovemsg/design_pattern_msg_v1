@@ -144,6 +144,12 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public RoomDTO findRoomIdByRoomNo(Integer roomNo) {
+        Room room = roomRepository.findByRoomNoAndDeletedIsFalse(roomNo).orElseThrow(() -> new EntityNotFoundException("room doesn't exist"));
+        return RoomDTO.roomToDTO(room);
+    }
+
+    @Override
     public List<RoomCurrentStatusDTO> selectRoomCurrentStatusByType(RoomSearchDTO roomSearchDTO) {
         return queryRoomRepository.findRoomCurrentStatusByRoomTypes(roomSearchDTO);
     }

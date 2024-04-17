@@ -15,6 +15,7 @@ import org.reservation.system.reservation.domain.repository.ReservationHistoryRe
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.reservation.system.reservation.infrastructure.persistence.QueryReservationRepository;
+import org.reservation.system.room.application.dto.RoomDTO;
 import org.reservation.system.room.application.service.RoomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,12 +40,15 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationCreationDTO makeRoomReservation(ReservationCreationDTO creationDTO) {
 
-        // 1. 현재 객실이 이미 예약중, 현재 객실이 블럭 상태인지 확인 => 내부적으로 에러 반환
-        roomService.findIsRoomReservationPossible(new RoomReservationQuery(creationDTO.getRoomId(), creationDTO.getEnterRoomDate(), creationDTO.getStayDayCnt()));
+        // 객실 정보 조회
+        RoomDTO roomIdByRoomNo = roomService.findRoomIdByRoomNo(creationDTO.getRoomNo());
+
+        // 1. 현재 객실이 이미 예약중인지, 블럭 상태인지 확인 => 내부적으로 에러 반환
+        roomService.findIsRoomReservationPossible(new RoomReservationQuery(roomIdByRoomNo.getId(), creationDTO.getEnterRoomDate(), creationDTO.getStayDayCnt()));
 
         // 2. 예약 정보를 바탕으로 요금 정보를 생성한다.
         // => 임시 요금이 있으니 그것을 통해서 그대로 생성한다.
-        List<DailyFeeDTO> dailyFeeDTOS = feeService.makeReservationFeeInfoList(
+        List<DailyFeeDTO> dailyFeeDTOS = feeService.makeFeeInfosForReservation(
                 FeeCreateVO.builder()
                         .roomNo(creationDTO.getRoomNo())
                         .roomTypeCd(creationDTO.getRoomTypeCd())
@@ -67,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService {
     public Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
         List<Reservation> reservationWithComplexConditions = queryReservationRepository.findReservationWithComplexConditions(pageable, reservationSearchDTO);
         List<ReservationDTO> reservationDTOList = reservationWithComplexConditions.stream()
-                                        .map(reservation -> ReservationDTO.ReservationToDTO(reservation)).toList();
+                .map(reservation -> ReservationDTO.reservationToDTO(reservation)).toList();
         long total = queryReservationRepository.countReservationWithComplexConditions(reservationSearchDTO);
         return new PageImpl<>(reservationDTOList, pageable, total);
     }
@@ -76,7 +80,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDTO getReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("reservation does not exist"));
-        return ReservationDTO.ReservationToDTO(reservation);
+        return ReservationDTO.reservationToDTO(reservation);
     }
 
     @Override

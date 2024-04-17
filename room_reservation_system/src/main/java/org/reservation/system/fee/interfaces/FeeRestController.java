@@ -57,6 +57,7 @@ public class FeeRestController {
                         .discountAmount(allDiscountAmount)
                         .salesAmount(allSalesAmount)
                         .addedAmount(allAddedAmount)
+                        .taxAmount(allSalesAmount.multiply(new BigDecimal("0.9")))
                         .pricingHistoryDTOList(pricingHistoryDTOList)
                         .build())
                 .build();

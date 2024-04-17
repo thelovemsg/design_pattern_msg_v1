@@ -111,13 +111,13 @@ public class RoomController {
         model.addAttribute("roomDTO", roomDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "redirect:pages/rooms/update/" + roomDTO.getId();
+        return "redirect:/rooms/update/" + roomDTO.getId();
     }
 
     @DeleteMapping("/rooms/{id}")
     public String deleteRoom(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         roomService.deleteRoom(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제 성공!");
-        return "redirect:pages/rooms";
+        return "redirect:/rooms";
     }
 }

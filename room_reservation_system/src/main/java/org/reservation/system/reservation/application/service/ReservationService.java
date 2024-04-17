@@ -14,5 +14,4 @@ public interface ReservationService {
     Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO);
     ReservationDTO getReservationById(Long id);
     void updateReservation(Reservation reservation);
-
 }

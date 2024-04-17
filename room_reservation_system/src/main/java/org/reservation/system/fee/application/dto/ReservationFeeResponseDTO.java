@@ -18,5 +18,6 @@ public class ReservationFeeResponseDTO {
     private BigDecimal discountAmount;
     private BigDecimal addedAmount;
     private BigDecimal salesAmount;
+    private BigDecimal taxAmount;
     private List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 }

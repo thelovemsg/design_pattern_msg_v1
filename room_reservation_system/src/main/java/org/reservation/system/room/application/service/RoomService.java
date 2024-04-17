@@ -18,6 +18,7 @@ public interface RoomService {
     RoomResponseDTO updateRoom(RoomDTO roomDTO);
     List<RoomResponseDTO> selectRoomList(RoomSearchDTO roomSearchDTO);
     void findIsRoomReservationPossible(RoomReservationQuery roomReservationQuery);
+    RoomDTO findRoomIdByRoomNo(Integer roomNo);
     List<RoomCurrentStatusDTO> selectRoomCurrentStatusByType(RoomSearchDTO roomSearchDTO);
 
 }

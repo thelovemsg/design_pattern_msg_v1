@@ -39,7 +39,7 @@ public class ReservationRestController {
         // TODO : 히스토리 조회 잘 되는지 확인하기
         Page<ReservationHistoryDTO> reservationHistoryList = reservationHistoryService.selectReservationHistoryList(pageable, reservationHistorySearchDTO);
         return ApiResponse.<Page<ReservationHistoryDTO>>builder()
-                .status("success")
+                .status(HttpStatus.OK)
                 .message("Reservations fetched successfully.")
                 .data(reservationHistoryList)
                 .build();

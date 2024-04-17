@@ -1,6 +1,8 @@
 package org.reservation.system.reservation.interfaces;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
 import org.reservation.system.reservation.application.dto.ReservationDTO;
 import org.reservation.system.reservation.application.dto.ReservationSearchDTO;
 import org.reservation.system.reservation.application.service.ReservationService;
@@ -14,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,7 +37,7 @@ public class ReservationController {
     @GetMapping("/reservations")
     public String showReservationList(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
-        model.addAttribute("rooTypeList", roomTypeList);
+        model.addAttribute("roomTypeList", roomTypeList);
         return "pages/reservation/reservationList";
     }
 
@@ -47,19 +50,21 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations/new")
-    public String saveReservationForm(@ModelAttribute("reservationSearchDTO") ReservationDTO reservationDTO, Model model, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-
+    public String saveReservationForm(@ModelAttribute("reservationCreationDTO") @Valid ReservationCreationDTO reservationCreationDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("reservationCreationDTO", reservationCreationDTO);
             return "/pages/reservation/reservationForm";
         }
 
+        // TODO: 실제 예약 정보를 저장
+        reservationService.makeRoomReservation(reservationCreationDTO);
+
         redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
 
-
-        return "redirect:/pages/reservation/reservations";
+        return "redirect:/reservations";
     }
 
     @GetMapping("/reservation/update/{id}")
@@ -90,7 +95,7 @@ public class ReservationController {
         model.addAttribute("reservationDTO", reservationDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "redirect:/pages/reservation/update/" + reservationDTO.getId();
+        return "redirect:/reservation/update/" + reservationDTO.getId();
     }
 
 }

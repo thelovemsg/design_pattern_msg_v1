@@ -68,7 +68,7 @@ public class FeeController {
 
         redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
 
-        return "redirect:/pages/fees";
+        return "redirect:/fees";
     }
 
     @GetMapping("/fees/update/{id}")
@@ -101,13 +101,13 @@ public class FeeController {
         model.addAttribute("feeDTO", feeDTO);
         redirectAttributes.addFlashAttribute("successMessage", "업데이트 성공!");
 
-        return "redirect:/pages/fees/update/" + feeDTO.getId();
+        return "redirect:/fees/update/" + feeDTO.getId();
     }
 
     @DeleteMapping("/fees/{id}")
     public String deleteFee(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         feeService.deleteFee(id);
         redirectAttributes.addFlashAttribute("successMessage", "삭제 성공!");
-        return "redirect:/pages/fees";
+        return "redirect:/fees";
     }
 }
