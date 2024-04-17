@@ -33,8 +33,8 @@
                     </div>
                 </form>
             </div>
-            <div>
-                <table id="currentStatusByDates" class="table table-hover">
+            <div class="scrollable-table-w-4">
+                <table id="currentStatusByDates" class="table table-hover table-bordered table-responsive-10">
                     <thead class="text-md-center">
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                 </div>
             </form>
             <div>
-                <table id="reservationTable" class="table table-hover">
+                <table id="reservationTable" class="table table-hover table-bordered">
                     <thead>
                     <tr>
                         <th class="col-1">Sequence</th>
@@ -116,7 +116,7 @@
             thead.empty();
 
             let topHeaderRow = $('<tr>').addClass('text-md-center');
-            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle; width:120px;">Date</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
             topHeaderRow.append(`<th colspan="${data.length}">Room Type</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
 
             let bottomHeaderRow = $('<tr>').addClass('text-md-center');
@@ -128,11 +128,10 @@
             thead.append(topHeaderRow); // thead에 상단 헤더 행 추가
             thead.append(bottomHeaderRow); // thead에 하단 헤더 행 추가
 
-            thead.append(`
-                            <th>Possible Reservation Room</th>
-                            <th>Total Room Count</th>
-                            <th>Reservation Rate</th>
-                        `)
+            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Possible Reservation Room</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Total Room Count</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+            topHeaderRow.append(`<th rowspan="2" class="text-center" style="vertical-align: middle;">Reservation Rate</th>`); // 'Room Type' 라벨과 이에 해당하는 방 유형의 수만큼 colspan 적용
+
         }
 
         function fetchRoomTypes() {

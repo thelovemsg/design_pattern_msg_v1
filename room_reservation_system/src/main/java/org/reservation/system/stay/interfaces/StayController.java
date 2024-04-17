@@ -14,8 +14,8 @@ public class StayController {
 
     private final RoomTypeService roomTypeService;
 
-    @GetMapping("/reservations")
-    public String showReservationList(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model) {
+    @GetMapping("/stay/stayList")
+    public String showStayList(@ModelAttribute("reservationSearchDTO") ReservationSearchDTO reservationSearchDTO, Model model) {
         return "pages/stay/stayList";
     }
 
