@@ -19,7 +19,7 @@ public interface FeeService {
     FeeResponseDTO selectFeeById(Long id);
     void deleteFee(Long id);
 
-    List<DailyFeeDTO> makeFeeInfosForReservation(FeeCreateVO feeCreateVO);
+    List<DailyFeeDTO> makeFeeInfosForReservationByTempFee(FeeCreateVO feeCreateVO);
 
     List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO);
 }

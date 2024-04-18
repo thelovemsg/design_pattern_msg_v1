@@ -2,6 +2,7 @@ package org.reservation.system.reservation.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
+import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class ReservationDomainServiceImpl implements ReservationDomainService {
 
     @Override
     public ReservationCreationDTO makeReservationInfo(ReservationCreationDTO reservationCreationDTO) {
+        Reservation reservation = Reservation.creationDtoToEntity(reservationCreationDTO);
+        Reservation savedReservation = reservationRepository.save(reservation);
+
         //예약 정보 실제 저장
         return null;
     }

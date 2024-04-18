@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.domain.model.DailyRoomFee;
 import org.reservation.system.message.domain.Message;
+import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
 import org.reservation.system.reservation.domain.model.other.RoomReservation;
 import org.reservation.system.reservation.domain.model.value.ReservationInfo;
 import org.reservation.system.stay.domain.Stay;
@@ -44,5 +45,33 @@ public class Reservation extends BaseEntity {
 
     @OneToOne(mappedBy = "reservation", orphanRemoval = true)
     private Stay stay;
+
+    public static Reservation creationDtoToEntity(ReservationCreationDTO creationDTO) {
+        return Reservation
+                .builder()
+                .reservationMethod(creationDTO.getReservationMethod())
+                .reservationInfo(ReservationInfo
+                                    .builder()
+                                    .couponCode(creationDTO.getCouponCode())
+                                    .vipDivCd(creationDTO.getVipDivCd())
+                                    .guestName(creationDTO.getGuestName())
+                                    .guestTelno(creationDTO.getGuestTelno())
+                                    .stayStatus(creationDTO.getStayStatus())
+                                    .roomNo(creationDTO.getRoomNo())
+                                    .stayDayCnt(creationDTO.getStayDayCnt())
+                                    .reserverName(creationDTO.getReserverName())
+                                    .reserverTelno(creationDTO.getReserverTelno())
+                                    .enterRoomDate(creationDTO.getEnterRoomDate())
+                                    .leaveRoomDate(creationDTO.getLeaveRoomDate())
+                                    .discountAmount(creationDTO.getDiscountAmount())
+                                    .salesAmount(creationDTO.getSalesAmount())
+                                    .productAmount(creationDTO.getProductAmount())
+                                    .taxAmount(creationDTO.getTaxAmount())
+                                    .vipDivCd(creationDTO.getVipDivCd())
+                                    .couponCode(creationDTO.getCouponCode())
+                                    .build())
+                .build();
+
+    }
 
 }

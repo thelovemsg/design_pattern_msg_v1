@@ -46,9 +46,11 @@ public class ReservationServiceImpl implements ReservationService {
         // 1. 현재 객실이 이미 예약중인지, 블럭 상태인지 확인 => 내부적으로 에러 반환
         roomService.findIsRoomReservationPossible(new RoomReservationQuery(roomIdByRoomNo.getId(), creationDTO.getEnterRoomDate(), creationDTO.getStayDayCnt()));
 
+        ReservationCreationDTO reservationCreationDTO = reservationDomainService.makeReservationInfo(creationDTO);
+
         // 2. 예약 정보를 바탕으로 요금 정보를 생성한다.
         // => 임시 요금이 있으니 그것을 통해서 그대로 생성한다.
-        List<DailyFeeDTO> dailyFeeDTOS = feeService.makeFeeInfosForReservation(
+        List<DailyFeeDTO> dailyFeeDTOS = feeService.makeFeeInfosForReservationByTempFee(
                 FeeCreateVO.builder()
                         .roomNo(creationDTO.getRoomNo())
                         .roomTypeCd(creationDTO.getRoomTypeCd())
@@ -57,8 +59,6 @@ public class ReservationServiceImpl implements ReservationService {
                         .stayDayCnt(creationDTO.getStayDayCnt())
                         .build());
 
-        // 3. 해당 정보를 저장 및 반환한다.
-        ReservationCreationDTO reservationCreationDTO = reservationDomainService.makeReservationInfo(creationDTO);
 
         reservationCreationDTO.setDailyFeeDTOS(dailyFeeDTOS);
 

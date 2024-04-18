@@ -127,7 +127,7 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public List<DailyFeeDTO> makeFeeInfosForReservation(FeeCreateVO feeCreateVO) {
+    public List<DailyFeeDTO> makeFeeInfosForReservationByTempFee(FeeCreateVO feeCreateVO) {
 //        return feeDomainService.createDailyFee(feeCreateVO);
         return null;
     }
