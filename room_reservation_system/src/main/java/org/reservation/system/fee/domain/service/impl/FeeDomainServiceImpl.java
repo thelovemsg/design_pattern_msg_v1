@@ -4,19 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.reservation.system.calander.application.service.CalenderService;
 import org.reservation.system.calander.application.service.enums.DayDivEnum;
 import org.reservation.system.calander.domain.Calender;
-import org.reservation.system.fee.application.dto.DailyFeeDTO;
+import org.reservation.system.fee.application.dto.DailyRoomFeeDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.dto.PricingHistoryDTO;
 import org.reservation.system.fee.application.enums.ChargeEnum;
+import org.reservation.system.fee.application.vo.FeeCreateVO;
 import org.reservation.system.fee.application.vo.PriceVO;
 import org.reservation.system.fee.domain.TempDailyFeeFactory;
 import org.reservation.system.fee.domain.model.*;
-import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.domain.service.factory.SurgingStrategyFactory;
 import org.reservation.system.fee.domain.service.pricing.SurchargingStrategy;
 import org.reservation.system.fee.infrastructure.persistence.*;
 import org.reservation.system.fee.value.MoneyInfo;
+import org.reservation.system.reservation.domain.model.Reservation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,28 +31,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FeeDomainServiceImpl implements FeeDomainService {
 
-    private final FeeRepository feeRepository;
     private final DailyRoomFeeRepository dailyRoomFeeRepository;
     private final QueryFeeRepository queryFeeRepository;
     private final CalenderService calenderService;
     private final PricingHistoryRepository pricingHistoryRepository;
-    private final TempDailyFeeRepository tempDailyFeeRepository;
     private final TempDailyFeeFactory tempDailyFeeFactory;
     private final EventRepository eventRepository;
     private final SurgingStrategyFactory surgingStrategyFactory;
+    private final TempDailyFeeRepository tempDailyFeeRepository;
 
-    @Override
-    public DailyFeeDTO createDailyFee(Fee fee, Calender calender) {
-
-
-        return null;
-    }
 
     @Override
     @Transactional
-    public List<DailyFeeDTO> createTempDailyFee(FeeSearchDTO feeSearchDTO) {
+    public List<DailyRoomFeeDTO> createTempDailyFee(FeeSearchDTO feeSearchDTO) {
 
-        List<DailyFeeDTO> result = new ArrayList<>();
+        List<DailyRoomFeeDTO> result = new ArrayList<>();
         Fee fee = queryFeeRepository.findOneFeeWithConditions(feeSearchDTO);
 
         if (fee == null)
@@ -68,16 +62,6 @@ public class FeeDomainServiceImpl implements FeeDomainService {
             TempDailyFee tempDailyFee = tempDailyFeeFactory.create(fee, calender);
             applyPrices(calender, tempDailyFee, pricingHistoryList);
 
-            DailyRoomFee newDailyRoomFee = DailyRoomFee.builder()
-                    .occurDate(calender.getSolarDate())
-                    .fee(fee)
-                    .pricingHistoryList(pricingHistoryList)
-                    .moneyInfo(tempDailyFee.getMoneyInfo())
-                    .currentCode(feeSearchDTO.getCurrentCode())
-                    .build();
-
-            dailyRoomFeeRepository.save(newDailyRoomFee);
-
             for (PricingHistory pricingHistory : pricingHistoryList) {
                 pricingHistoryDTOList.add(PricingHistoryDTO.builder()
                         .appliedPrice(pricingHistory.getAppliedPrice())
@@ -86,18 +70,17 @@ public class FeeDomainServiceImpl implements FeeDomainService {
                         .build());
             }
 
-            DailyFeeDTO dailyFeeDTO = DailyFeeDTO.builder()
+            DailyRoomFeeDTO dailyRoomFeeDTO = DailyRoomFeeDTO.builder()
                     .feeName(fee.getFeeName())
-                    .salesAmount(newDailyRoomFee.getMoneyInfo().getSalesAmount())
-                    .addedAmount(newDailyRoomFee.getMoneyInfo().getAddedAmount())
-                    .discountAmount(newDailyRoomFee.getMoneyInfo().getDiscountAmount())
+                    .salesAmount(tempDailyFee.getMoneyInfo().getSalesAmount())
+                    .addedAmount(tempDailyFee.getMoneyInfo().getAddedAmount())
+                    .discountAmount(tempDailyFee.getMoneyInfo().getDiscountAmount())
                     .occurDate(calender.getSolarDate())
-                    .currentCode(newDailyRoomFee.getCurrentCode())
                     .productAmount(fee.getFeeAmount())
                     .pricingHistoryDTOList(pricingHistoryDTOList)
                     .build();
 
-            result.add(dailyFeeDTO);
+            result.add(dailyRoomFeeDTO);
         }
 
         return result;
@@ -113,7 +96,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
         if (calender.getSeasonDivCd().equals("Y")) {
             SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getSeasonalStrategy();
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
-            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice() ,ChargeEnum.CHARGE));
+            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice(), ChargeEnum.CHARGE));
 
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
@@ -132,7 +115,7 @@ public class FeeDomainServiceImpl implements FeeDomainService {
             SurchargingStrategy surchargingStrategy = surgingStrategyFactory.getPeakStrategy();
 
             PriceVO surchargedPrice = surchargingStrategy.surchargeFee(tempDailyFee.getMoneyInfo());
-            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice() ,ChargeEnum.CHARGE));
+            tempDailyFee.changeMoneyInfo(updateMoneyInfo(tempDailyFee.getMoneyInfo(), surchargedPrice.getSurchargedPrice(), ChargeEnum.CHARGE));
 
             PricingHistory pricingHistory = PricingHistory.builder()
                     .tempDailyFee(tempDailyFee)
@@ -175,8 +158,45 @@ public class FeeDomainServiceImpl implements FeeDomainService {
     }
 
     @Override
-    public List<DailyFeeDTO> applyDiscountPolicy(Fee fee) {
+    public List<DailyRoomFeeDTO> applyDiscountPolicy(Fee fee) {
         return null;
+    }
+
+    @Override
+    public List<DailyRoomFeeDTO> createDailyRoomFeeByTemp(Reservation reservation, FeeCreateVO feeCreateVO) {
+
+        List<DailyRoomFeeDTO> dailyRoomFeeDTOList = new ArrayList<>();
+
+        List<TempDailyFee> tempDailyFeeList = tempDailyFeeRepository.findByOccurDateBetween(feeCreateVO.getEnterRoomDate(), feeCreateVO.getEnterRoomDate().plusDays(feeCreateVO.getStayDayCnt()))
+                .orElseThrow(() -> new IllegalArgumentException("No Fee Exists"));
+
+
+        for (TempDailyFee tempDailyFee : tempDailyFeeList) {
+            DailyRoomFee dailyRoomFee = DailyRoomFee.builder()
+                    .fee(tempDailyFee.getFee())
+                    .occurDate(tempDailyFee.getOccurDate())
+                    .reservation(reservation)
+                    .moneyInfo(tempDailyFee.getMoneyInfo())
+                    .build();
+
+            List<PricingHistory> pricingHistoryList = new ArrayList<>(tempDailyFee.getPricingHistoryList());
+
+            for (PricingHistory pricingHistory : pricingHistoryList) {
+                PricingHistory newPricingHistory = PricingHistory
+                                                        .builder()
+                                                        .appliedPrice(pricingHistory.getAppliedPrice())
+                                                        .applyReason(pricingHistory.getApplyReason())
+                                                        .pricingType(pricingHistory.getPricingType())
+                                                        .build();
+                dailyRoomFee.addPricingHistory(newPricingHistory);
+            }
+
+
+            DailyRoomFee savedDailyRoomFee = dailyRoomFeeRepository.save(dailyRoomFee);
+            dailyRoomFeeDTOList.add(savedDailyRoomFee.entityToDTO(dailyRoomFee));
+        }
+
+        return dailyRoomFeeDTOList;
     }
 }
 

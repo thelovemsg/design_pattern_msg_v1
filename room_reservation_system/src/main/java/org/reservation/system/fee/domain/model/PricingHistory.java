@@ -1,10 +1,7 @@
 package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.application.dto.PricingHistoryDTO;
 import org.reservation.system.fee.application.enums.ChargeEnum;
@@ -21,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
+@Setter(AccessLevel.PROTECTED)
 public class PricingHistory extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

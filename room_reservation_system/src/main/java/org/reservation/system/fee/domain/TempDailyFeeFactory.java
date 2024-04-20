@@ -19,6 +19,7 @@ public class TempDailyFeeFactory {
 
     public TempDailyFee create(Fee fee, Calender calender) {
         TempDailyFee tempDailyFee = TempDailyFee.builder()
+                .fee(fee)
                 .feeName(fee.getFeeName())
                 .roomTypeCd(fee.getRoomType().getRoomTypeCd())
                 .occurDate(calender.getSolarDate())

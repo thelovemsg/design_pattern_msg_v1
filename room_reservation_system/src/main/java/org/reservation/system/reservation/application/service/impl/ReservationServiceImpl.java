@@ -2,7 +2,7 @@ package org.reservation.system.reservation.application.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.reservation.system.fee.application.dto.DailyFeeDTO;
+import org.reservation.system.fee.application.dto.DailyRoomFeeDTO;
 import org.reservation.system.fee.application.service.FeeService;
 import org.reservation.system.fee.application.vo.FeeCreateVO;
 import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
@@ -38,40 +38,34 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationCreationDTO makeRoomReservation(ReservationCreationDTO creationDTO) {
+    public ReservationDTO makeRoomReservation(ReservationDTO reservationDTO) {
 
         // 객실 정보 조회
-        RoomDTO roomIdByRoomNo = roomService.findRoomIdByRoomNo(creationDTO.getRoomNo());
+        RoomDTO roomIdByRoomNo = roomService.findRoomIdByRoomNo(reservationDTO.getRoomNo());
 
         // 1. 현재 객실이 이미 예약중인지, 블럭 상태인지 확인 => 내부적으로 에러 반환
-        roomService.findIsRoomReservationPossible(new RoomReservationQuery(roomIdByRoomNo.getId(), creationDTO.getEnterRoomDate(), creationDTO.getStayDayCnt()));
+        roomService.findIsRoomReservationPossible(new RoomReservationQuery(roomIdByRoomNo.getId(), reservationDTO.getEnterRoomDate(), reservationDTO.getStayDayCnt()));
 
-        ReservationCreationDTO reservationCreationDTO = reservationDomainService.makeReservationInfo(creationDTO);
+        Reservation reservation = reservationDomainService.makeReservationInfo(reservationDTO);
 
-        // 2. 예약 정보를 바탕으로 요금 정보를 생성한다.
-        // => 임시 요금이 있으니 그것을 통해서 그대로 생성한다.
-        List<DailyFeeDTO> dailyFeeDTOS = feeService.makeFeeInfosForReservationByTempFee(
-                FeeCreateVO.builder()
-                        .roomNo(creationDTO.getRoomNo())
-                        .roomTypeCd(creationDTO.getRoomTypeCd())
-                        .custNo(creationDTO.getCustNo())
-                        .enterRoomDate(creationDTO.getEnterRoomDate())
-                        .stayDayCnt(creationDTO.getStayDayCnt())
-                        .build());
+        FeeCreateVO fee = FeeCreateVO.builder()
+                .roomNo(reservationDTO.getRoomNo())
+                .roomTypeCd(reservationDTO.getRoomTypeCd())
+                .custNo(reservationDTO.getCustNo())
+                .enterRoomDate(reservationDTO.getEnterRoomDate())
+                .stayDayCnt(reservationDTO.getStayDayCnt())
+                .build();
 
+        List<DailyRoomFeeDTO> dailyRoomFeeDTOList = feeService.makeFeeInfosForReservationByTempFee(reservation, fee);
 
-        reservationCreationDTO.setDailyFeeDTOS(dailyFeeDTOS);
-
-        //3. 정보 세팅
-
-        return reservationCreationDTO;
+        return Reservation.entityToDTO(reservation, dailyRoomFeeDTOList);
     }
 
     @Override
     public Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO) {
         List<Reservation> reservationWithComplexConditions = queryReservationRepository.findReservationWithComplexConditions(pageable, reservationSearchDTO);
         List<ReservationDTO> reservationDTOList = reservationWithComplexConditions.stream()
-                .map(reservation -> ReservationDTO.reservationToDTO(reservation)).toList();
+                .map(entity -> Reservation.entityToDTO(entity, null)).toList();
         long total = queryReservationRepository.countReservationWithComplexConditions(reservationSearchDTO);
         return new PageImpl<>(reservationDTOList, pageable, total);
     }
@@ -80,7 +74,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public ReservationDTO getReservationById(Long id) {
         Reservation reservation = reservationRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("reservation does not exist"));
-        return ReservationDTO.reservationToDTO(reservation);
+        return Reservation.entityToDTO(reservation, null);
     }
 
     @Override

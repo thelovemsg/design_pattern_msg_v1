@@ -2,6 +2,7 @@ package org.reservation.system.reservation.domain.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
+import org.reservation.system.reservation.application.dto.ReservationDTO;
 import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.reservation.domain.repository.ReservationRepository;
 import org.reservation.system.reservation.domain.service.ReservationDomainService;
@@ -14,16 +15,7 @@ public class ReservationDomainServiceImpl implements ReservationDomainService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public void checkIfReservationPossible(ReservationCreationDTO creationDTO) {
-
-    }
-
-    @Override
-    public ReservationCreationDTO makeReservationInfo(ReservationCreationDTO reservationCreationDTO) {
-        Reservation reservation = Reservation.creationDtoToEntity(reservationCreationDTO);
-        Reservation savedReservation = reservationRepository.save(reservation);
-
-        //예약 정보 실제 저장
-        return null;
+    public Reservation makeReservationInfo(ReservationDTO reservationDTO) {
+        return reservationRepository.save(ReservationDTO.dtoToEntity(reservationDTO));
     }
 }

@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.reservation.system.fee.application.dto.DailyFeeDTO;
+import org.reservation.system.fee.application.dto.DailyRoomFeeDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -51,9 +51,9 @@ public class ReservationCreationDTO {
     private String vipDivCd;
     private String couponCode;
 
-    private List<DailyFeeDTO> dailyFeeDTOS;
+    private List<DailyRoomFeeDTO> dailyRoomFeeDTOS;
 
-    public void setDailyFeeDTOS(List<DailyFeeDTO> dailyFeeDTOS) {
-        this.dailyFeeDTOS = dailyFeeDTOS;
+    public void setDailyRoomFeeDTOS(List<DailyRoomFeeDTO> dailyRoomFeeDTOS) {
+        this.dailyRoomFeeDTOS = dailyRoomFeeDTOS;
     }
 }

@@ -10,7 +10,7 @@
 <body>
 <div class="m-lg-2">
     <h1>New Reservation Form</h1>
-    <form th:action="@{/reservations/new}" th:object="${reservationCreationDTO}" method="post">
+    <form th:action="@{/reservations/new}" th:object="${reservationDTO}" method="post">
         <fieldset>
             <div class="row m-lg-0">
                 <div class="col-2">
@@ -36,7 +36,7 @@
                 <div class="col-1">
                     <label for="enterRoomDate" class="form-label mt-4">Enter Room Date</label>
                     <div>
-                        <input type="text" id="enterRoomDate" th:field="*{enterRoomDate}"
+                        <input type="date" id="enterRoomDate" th:field="*{enterRoomDate}"
                                class="form-control text-md-center" readonly/>
                     </div>
                     <span th:if="${#fields.hasErrors('enterRoomDate')}" th:errors="*{enterRoomDate}"
@@ -45,7 +45,7 @@
                 <div class="col-1">
                     <label for="leaveRoomDate" class="form-label mt-4">Leave Room Date</label>
                     <div>
-                        <input type="text" id="leaveRoomDate" th:field="*{leaveRoomDate}"
+                        <input type="date" id="leaveRoomDate" th:field="*{leaveRoomDate}"
                                class="form-control text-md-center" readonly/>
                     </div>
                     <span th:if="${#fields.hasErrors('leaveRoomDate')}" th:errors="*{leaveRoomDate}"

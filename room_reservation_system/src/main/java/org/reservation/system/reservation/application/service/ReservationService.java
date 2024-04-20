@@ -10,7 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface ReservationService {
-    ReservationCreationDTO makeRoomReservation(ReservationCreationDTO ReservationCreationDTO);
+    ReservationDTO makeRoomReservation(ReservationDTO reservationDTO);
     Page<ReservationDTO> selectReservationList(Pageable pageable, ReservationSearchDTO reservationSearchDTO);
     ReservationDTO getReservationById(Long id);
     void updateReservation(Reservation reservation);

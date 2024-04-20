@@ -54,6 +54,8 @@ public class QFee extends EntityPathBase<Fee> {
 
     public final org.reservation.system.room.domain.model.QRoomType roomType;
 
+    public final ListPath<TempDailyFee, QTempDailyFee> tempDailyFeeList = this.<TempDailyFee, QTempDailyFee>createList("tempDailyFeeList", TempDailyFee.class, QTempDailyFee.class, PathInits.DIRECT2);
+
     public QFee(String variable) {
         this(Fee.class, forVariable(variable), INITS);
     }

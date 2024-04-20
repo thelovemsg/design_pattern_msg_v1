@@ -1,15 +1,13 @@
 package org.reservation.system.fee.domain.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.reservation.system.common.entity.BaseEntity;
 import org.reservation.system.fee.value.MoneyInfo;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +27,10 @@ public class TempDailyFee extends BaseEntity {
     private String feeName;
     private String roomTypeCd;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fee_id")
+    private Fee fee;
+
     @OneToMany(mappedBy = "tempDailyFee")
     private List<PricingHistory> pricingHistoryList;
 
@@ -37,6 +39,24 @@ public class TempDailyFee extends BaseEntity {
 
     public void changeMoneyInfo(MoneyInfo moneyInfo) {
         this.moneyInfo = moneyInfo;
+    }
+
+    public void addPricingHistory(PricingHistory pricingHistory) {
+        if (pricingHistoryList == null) {
+            pricingHistoryList = new ArrayList<>();
+        }
+        pricingHistoryList.add(pricingHistory);
+        if (pricingHistory.getTempDailyFee() != this) {
+            pricingHistory.setTempDailyFee(this);
+        }
+    }
+
+    public void removePricingHistory(PricingHistory pricingHistory) {
+        if (pricingHistoryList != null && pricingHistoryList.remove(pricingHistory)) {
+            if (pricingHistory.getTempDailyFee() == this) {
+                pricingHistory.setTempDailyFee(null);
+            }
+        }
     }
 
 }

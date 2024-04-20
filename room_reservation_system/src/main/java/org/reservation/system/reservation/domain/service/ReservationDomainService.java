@@ -1,9 +1,9 @@
 package org.reservation.system.reservation.domain.service;
 
-import org.reservation.system.reservation.application.dto.ReservationCreationDTO;
+import org.reservation.system.reservation.application.dto.ReservationDTO;
+import org.reservation.system.reservation.domain.model.Reservation;
 
 public interface ReservationDomainService {
-    void checkIfReservationPossible(ReservationCreationDTO creationDTO);
-    ReservationCreationDTO makeReservationInfo(ReservationCreationDTO reservationCreationDTO);
+    Reservation makeReservationInfo(ReservationDTO reservationDTO);
 
 }

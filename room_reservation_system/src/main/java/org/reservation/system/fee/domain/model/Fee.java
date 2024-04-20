@@ -35,6 +35,9 @@ public class Fee extends BaseEntity {
     @OneToMany(mappedBy = "fee")
     private List<DailyRoomFee> dailyRoomFeeList;
 
+    @OneToMany(mappedBy = "fee")
+    private List<TempDailyFee> tempDailyFeeList;
+
     @Builder
     public Fee(String feeName, Boolean isUsed, String remark, BigDecimal feeAmount, RoomType roomType) {
         this.feeName = feeName;

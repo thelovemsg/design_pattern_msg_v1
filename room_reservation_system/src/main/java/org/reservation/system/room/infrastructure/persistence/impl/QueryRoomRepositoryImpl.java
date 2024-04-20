@@ -70,7 +70,7 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
     public List<RoomVO> findAnyReservedRoomByReservationInfo(RoomReservationQuery roomReservationQuery) {
         LocalDate enterRoomDate = roomReservationQuery.enterRoomDate();
         LocalDate leaveRoomDate = enterRoomDate.plusDays(roomReservationQuery.stayDayCnt() + 1L);
-        return queryFactory.select(Projections.constructor(RoomVO.class, room.roomNo, room.roomName, room.roomType, room.remark))
+        return queryFactory.select(Projections.constructor(RoomVO.class, room.roomNo, room.roomName, room.roomType.roomTypeCd))
                 .from(roomReservation)
                 .join(roomReservation.reservation, reservation)
                 .where(reservation.reservationInfo.enterRoomDate.before(leaveRoomDate)
@@ -90,7 +90,8 @@ public class QueryRoomRepositoryImpl implements QueryRoomRepository {
                         , roomAndRoomBlock.roomBlock.roomBlockType
                         , roomAndRoomBlock.roomBlock.blockStartDate
                         , roomAndRoomBlock.roomBlock.blockEndPlanDate
-                        , roomAndRoomBlock.roomBlock.blockEndDate))
+                        , roomAndRoomBlock.roomBlock.blockEndDate
+                        , room.remark))
                 .from(roomAndRoomBlock)
                 .join(roomAndRoomBlock.room, room)
                 .where(room.id.eq(roomReservationQuery.roomId())

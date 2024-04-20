@@ -16,11 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -50,21 +46,20 @@ public class ReservationController {
     }
 
     @PostMapping("/reservations/new")
-    public String saveReservationForm(@ModelAttribute("reservationCreationDTO") @Valid ReservationCreationDTO reservationCreationDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String saveReservationForm(@ModelAttribute("reservationDTO") @Valid ReservationDTO reservationDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         List<RoomTypeResponseDTO> roomTypeList = roomTypeService.selectAllRoomType();
         model.addAttribute("roomTypeList", roomTypeList);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("reservationCreationDTO", reservationCreationDTO);
+            model.addAttribute("reservationDTO", reservationDTO);
             return "/pages/reservation/reservationForm";
         }
 
-        // TODO: 실제 예약 정보를 저장
-        reservationService.makeRoomReservation(reservationCreationDTO);
+        ReservationDTO newReservationDTO = reservationService.makeRoomReservation(reservationDTO);
 
         redirectAttributes.addFlashAttribute("successMessage", "생성 성공!");
 
-        return "redirect:/reservations";
+        return "redirect:/reservations/update" + newReservationDTO.getId();
     }
 
     @GetMapping("/reservation/update/{id}")

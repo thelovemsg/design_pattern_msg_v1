@@ -32,7 +32,7 @@ public class FeeRestController {
     @PostMapping("/getTempFee")
     public ApiResponse<ReservationFeeResponseDTO> getNewFee(@RequestBody FeeSearchDTO feeSearchDTO) {
 
-        List<DailyFeeDTO> tempFee = feeService.createTempFee(feeSearchDTO);
+        List<DailyRoomFeeDTO> tempFee = feeService.createTempFee(feeSearchDTO);
 
         BigDecimal allProductAmount = new BigDecimal("0");
         BigDecimal allDiscountAmount = new BigDecimal("0");
@@ -41,12 +41,12 @@ public class FeeRestController {
 
         List<PricingHistoryDTO> pricingHistoryDTOList = new ArrayList<>();
 
-        for (DailyFeeDTO dailyFeeDTO : tempFee) {
-            allProductAmount = allProductAmount.add(dailyFeeDTO.getProductAmount());
-            allDiscountAmount = allDiscountAmount.add(dailyFeeDTO.getDiscountAmount());
-            allSalesAmount = allSalesAmount.add(dailyFeeDTO.getSalesAmount());
-            allAddedAmount = allAddedAmount.add(dailyFeeDTO.getAddedAmount());
-            dailyFeeDTO.getPricingHistoryDTOList().forEach(pricingHistoryDTOList::add);
+        for (DailyRoomFeeDTO dailyRoomFeeDTO : tempFee) {
+            allProductAmount = allProductAmount.add(dailyRoomFeeDTO.getProductAmount());
+            allDiscountAmount = allDiscountAmount.add(dailyRoomFeeDTO.getDiscountAmount());
+            allSalesAmount = allSalesAmount.add(dailyRoomFeeDTO.getSalesAmount());
+            allAddedAmount = allAddedAmount.add(dailyRoomFeeDTO.getAddedAmount());
+            dailyRoomFeeDTO.getPricingHistoryDTOList().forEach(pricingHistoryDTOList::add);
         }
 
         return ApiResponse.<ReservationFeeResponseDTO>builder()

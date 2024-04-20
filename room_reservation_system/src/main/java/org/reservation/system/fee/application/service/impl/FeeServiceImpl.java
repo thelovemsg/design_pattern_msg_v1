@@ -2,7 +2,7 @@ package org.reservation.system.fee.application.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.reservation.system.fee.application.dto.DailyFeeDTO;
+import org.reservation.system.fee.application.dto.DailyRoomFeeDTO;
 import org.reservation.system.fee.application.dto.FeeDTO;
 import org.reservation.system.fee.application.dto.FeeResponseDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
@@ -12,6 +12,7 @@ import org.reservation.system.fee.domain.model.Fee;
 import org.reservation.system.fee.domain.repository.FeeRepository;
 import org.reservation.system.fee.domain.service.FeeDomainService;
 import org.reservation.system.fee.infrastructure.persistence.QueryFeeRepository;
+import org.reservation.system.reservation.domain.model.Reservation;
 import org.reservation.system.room.domain.model.RoomType;
 import org.reservation.system.room.domain.repository.RoomTypeRepository;
 import org.springframework.data.domain.Page;
@@ -127,13 +128,12 @@ public class FeeServiceImpl implements FeeService {
     }
 
     @Override
-    public List<DailyFeeDTO> makeFeeInfosForReservationByTempFee(FeeCreateVO feeCreateVO) {
-//        return feeDomainService.createDailyFee(feeCreateVO);
-        return null;
+    public List<DailyRoomFeeDTO> makeFeeInfosForReservationByTempFee(Reservation reservation, FeeCreateVO feeCreateVO) {
+        return feeDomainService.createDailyRoomFeeByTemp(reservation, feeCreateVO);
     }
 
     @Override
-    public List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO) {
+    public List<DailyRoomFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO) {
         return feeDomainService.createTempDailyFee(feeSearchDTO);
     }
 

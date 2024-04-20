@@ -17,4 +17,5 @@ public class FeeCreateVO {
     String roomTypeCd;
     Integer stayDayCnt;
     LocalDate enterRoomDate;
+    Long reservationId;
 }

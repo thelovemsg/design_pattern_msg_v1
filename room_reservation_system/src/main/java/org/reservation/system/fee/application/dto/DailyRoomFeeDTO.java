@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.reservation.system.fee.domain.model.PricingHistory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DailyFeeDTO {
+public class DailyRoomFeeDTO {
 
     private String feeName;
     private LocalDate occurDate;

@@ -1,10 +1,11 @@
 package org.reservation.system.fee.application.service;
 
-import org.reservation.system.fee.application.dto.DailyFeeDTO;
+import org.reservation.system.fee.application.dto.DailyRoomFeeDTO;
 import org.reservation.system.fee.application.dto.FeeDTO;
 import org.reservation.system.fee.application.dto.FeeResponseDTO;
 import org.reservation.system.fee.application.dto.FeeSearchDTO;
 import org.reservation.system.fee.application.vo.FeeCreateVO;
+import org.reservation.system.reservation.domain.model.Reservation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,7 +20,7 @@ public interface FeeService {
     FeeResponseDTO selectFeeById(Long id);
     void deleteFee(Long id);
 
-    List<DailyFeeDTO> makeFeeInfosForReservationByTempFee(FeeCreateVO feeCreateVO);
+    List<DailyRoomFeeDTO> makeFeeInfosForReservationByTempFee(Reservation reservation, FeeCreateVO feeCreateVO);
 
-    List<DailyFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO);
+    List<DailyRoomFeeDTO> createTempFee(FeeSearchDTO feeSearchDTO);
 }

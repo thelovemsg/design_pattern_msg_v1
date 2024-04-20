@@ -33,6 +33,8 @@ public class QTempDailyFee extends EntityPathBase<TempDailyFee> {
     //inherited
     public final BooleanPath deleted = _super.deleted;
 
+    public final QFee fee;
+
     public final StringPath feeName = createString("feeName");
 
     //inherited
@@ -72,6 +74,7 @@ public class QTempDailyFee extends EntityPathBase<TempDailyFee> {
 
     public QTempDailyFee(Class<? extends TempDailyFee> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.fee = inits.isInitialized("fee") ? new QFee(forProperty("fee"), inits.get("fee")) : null;
         this.moneyInfo = inits.isInitialized("moneyInfo") ? new org.reservation.system.fee.value.QMoneyInfo(forProperty("moneyInfo")) : null;
     }
 
